@@ -1,4 +1,5 @@
-import 'package:multiversa/core/common/domain/entities/user_entity.dart';
+import '../supplementary_structures/file_location.dart';
+import 'user_entity.dart';
 
 class FileEntity {
   final String id;
@@ -6,11 +7,10 @@ class FileEntity {
   final int sizeInBytes;
   final DateTime dateCreated;
   final UserEntity author;
+  final FileLocation location;
   final String? description;
-  final List<String> tags; //TODO TagEntity
+  final List<String> tagIds;
   final bool isFavourite;
-
-  // TODO versions???
 
   const FileEntity({
     required this.id,
@@ -18,8 +18,9 @@ class FileEntity {
     required this.sizeInBytes,
     required this.dateCreated,
     required this.author,
+    required this.location,
     this.description,
-    this.tags = const [],
+    this.tagIds = const [],
     this.isFavourite = false,
   });
 }
