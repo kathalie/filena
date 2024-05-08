@@ -1,8 +1,6 @@
 import '../entities/file_version_entity.dart';
 
-abstract class IVersionControlRepository {
-  Future<FileVersionEntity> getFileVersion(String fileVersionId);
-
+abstract class IFileVersionRepository {
   Future<List<FileVersionEntity>> getVersionsOfFile(String fileId);
 
   Future<void> createFileVersion(FileVersionEntity newFileVersion);
