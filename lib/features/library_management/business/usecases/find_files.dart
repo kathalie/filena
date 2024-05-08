@@ -1,5 +1,5 @@
+import '../../../../core/common/business/entities/file_entity.dart';
 import '../../../../core/common/business/repository_interfaces/file_repository.dart';
-import '../../../../core/common/domain/entities/file_entity.dart';
 import '../../../../core/use_case/use_case.dart';
 import '../params/find_files_params.dart';
 

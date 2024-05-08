@@ -1,4 +1,4 @@
-import '../../../../core/common/domain/entities/file_entity.dart';
+import '../../../../core/common/business/entities/file_entity.dart';
 
 class AddFileParams {
   final FileEntity fileEntity;

@@ -1,4 +1,4 @@
-import '../../domain/entities/file_version_entity.dart';
+import '../entities/file_version_entity.dart';
 
 abstract class IVersionControlRepository {
   Future<FileVersionEntity> getFileVersion(String fileVersionId);

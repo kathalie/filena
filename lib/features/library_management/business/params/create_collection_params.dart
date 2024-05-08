@@ -1,4 +1,4 @@
-import '../../../../core/common/domain/entities/collection_entity.dart';
+import '../../../../core/common/business/entities/collection_entity.dart';
 
 class CreateCollectionParams {
   final CollectionEntity newCollectionEntity;

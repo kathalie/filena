@@ -1,4 +1,4 @@
-import '../../domain/entities/collection_entity.dart';
+import '../entities/collection_entity.dart';
 
 abstract class ICollectionRepository {
   Future<CollectionEntity> getCollection(String collectionId);

@@ -1,4 +1,4 @@
-import '../supplementary_structures/file_location.dart';
+import '../../domain/supplementary_structures/file_location.dart';
 
 class FileEntity {
   final String id;

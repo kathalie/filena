@@ -1,4 +1,4 @@
-import '../../domain/entities/file_entity.dart';
+import '../entities/file_entity.dart';
 
 abstract class IFileRepository {
   Future<FileEntity> getFile(String fileId);
