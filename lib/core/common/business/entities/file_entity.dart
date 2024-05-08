@@ -5,7 +5,6 @@ class FileEntity {
   final String name;
   final int sizeInBytes;
   final DateTime dateCreated;
-  final String authorId;
   final FileLocation location;
   final String? description;
   final List<String> tagIds;
@@ -16,7 +15,6 @@ class FileEntity {
     required this.name,
     required this.sizeInBytes,
     required this.dateCreated,
-    required this.authorId,
     required this.location,
     this.description,
     this.tagIds = const [],
