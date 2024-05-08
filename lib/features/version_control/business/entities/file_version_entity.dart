@@ -1,4 +1,4 @@
-import '../supplementary_structures/file_location.dart';
+import '../../../../core/common/domain/supplementary_structures/file_location.dart';
 
 class FileVersionEntity {
   final String id;
