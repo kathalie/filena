@@ -14,6 +14,6 @@ class FileVersionEntity {
     required this.sizeInBytes,
     required this.dateEdited,
     required this.editorId,
-    required this.location
+    required this.location,
   });
 }
