@@ -2,7 +2,7 @@ import '../../../../core/common/business/repository_interfaces/file_repository.d
 import '../../../../core/use_case/use_case.dart';
 import '../entities/file_version_entity.dart';
 import '../params/get_current_file_version_params.dart';
-import '../repository_interface/file_version_repository.dart';
+import '../repository_interfaces/file_version_repository.dart';
 
 class GetCurrentFileVersionUseCase
     implements UseCase<FileVersionEntity, GetCurrentFileVersionParams> {

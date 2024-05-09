@@ -1,3 +1,1 @@
-class DeleteExpiredVersionsParams {
-// Intentionally blank
-}
+class DeleteExpiredVersionsParams {}
