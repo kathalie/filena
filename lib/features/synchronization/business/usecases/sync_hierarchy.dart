@@ -5,9 +5,9 @@ import '../params/sync_hierarchy_params.dart';
 import '../repository_interfaces/device_repository.dart';
 
 class SyncHierarchyUseCase implements UseCase<void, SyncHierarchyParams> {
-  final IDeviceRepository deviceRepository;
-  final ICollectionRepository collectionRepository;
-  final IFileRepository fileRepository;
+  final DeviceRepository deviceRepository;
+  final CollectionRepository collectionRepository;
+  final FileRepository fileRepository;
 
   const SyncHierarchyUseCase({
     required this.deviceRepository,

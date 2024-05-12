@@ -3,7 +3,7 @@ import '../params/deny_connection_params.dart';
 import '../repository_interfaces/device_repository.dart';
 
 class DenyConnectionUseCase implements UseCase<void, DenyConnectionParams> {
-  final IDeviceRepository deviceRepository;
+  final DeviceRepository deviceRepository;
 
   const DenyConnectionUseCase({
     required this.deviceRepository,

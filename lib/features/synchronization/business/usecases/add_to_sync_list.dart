@@ -3,8 +3,8 @@ import '../../../version_control/business/repository_interfaces/file_version_rep
 import '../repository_interfaces/device_repository.dart';
 
 class AddToSyncListUseCase implements UseCase<void, AddToSyncListUseCase> {
-  final IDeviceRepository deviceRepository;
-  final IFileVersionRepository fileVersionRepository;
+  final DeviceRepository deviceRepository;
+  final FileVersionRepository fileVersionRepository;
 
   const AddToSyncListUseCase({
     required this.deviceRepository,

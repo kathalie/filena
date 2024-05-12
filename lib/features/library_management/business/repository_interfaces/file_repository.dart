@@ -1,6 +1,6 @@
 import '../entities/file_entity.dart';
 
-abstract class IFileRepository {
+abstract interface class FileRepository {
   Future<FileEntity> getFile(String fileId);
 
   Future<List<FileEntity>> getFilesFromCollection(String collectionId);

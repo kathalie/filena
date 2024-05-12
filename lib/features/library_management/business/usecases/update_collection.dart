@@ -3,7 +3,7 @@ import '../../../../core/use_case/use_case.dart';
 import '../params/update_collection_params.dart';
 
 class UpdateCollectionUseCase implements UseCase<void, UpdateCollectionParams> {
-  final ICollectionRepository collectionRepository;
+  final CollectionRepository collectionRepository;
 
   const UpdateCollectionUseCase({
     required this.collectionRepository,

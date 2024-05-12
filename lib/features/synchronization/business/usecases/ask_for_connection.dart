@@ -3,7 +3,7 @@ import '../params/ask_for_connection_params.dart';
 import '../repository_interfaces/device_repository.dart';
 
 class AskForConnectionUseCase implements UseCase<void, AskForConnectionParams> {
-  final IDeviceRepository deviceRepository;
+  final DeviceRepository deviceRepository;
 
   const AskForConnectionUseCase({
     required this.deviceRepository,

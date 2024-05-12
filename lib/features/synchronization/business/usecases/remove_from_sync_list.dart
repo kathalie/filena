@@ -5,8 +5,8 @@ import '../repository_interfaces/device_repository.dart';
 
 class RemoveFromSyncListUseCase
     implements UseCase<void, RemoveFromSyncListParams> {
-  final IDeviceRepository deviceRepository;
-  final IFileVersionRepository fileVersionRepository;
+  final DeviceRepository deviceRepository;
+  final FileVersionRepository fileVersionRepository;
 
   const RemoveFromSyncListUseCase({
     required this.deviceRepository,

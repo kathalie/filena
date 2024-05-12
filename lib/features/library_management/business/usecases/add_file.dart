@@ -3,7 +3,7 @@ import '../../../../core/use_case/use_case.dart';
 import '../params/add_file_params.dart';
 
 class AddFileUseCase implements UseCase<void, AddFileParams> {
-  final IFileRepository fileRepository;
+  final FileRepository fileRepository;
 
   const AddFileUseCase({
     required this.fileRepository,

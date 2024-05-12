@@ -5,8 +5,8 @@ import '../repository_interfaces/device_repository.dart';
 
 class SyncStorageElementsUseCase
     implements UseCase<void, SyncStorageElementsParams> {
-  final IDeviceRepository deviceRepository;
-  final IFileVersionRepository fileVersionRepository;
+  final DeviceRepository deviceRepository;
+  final FileVersionRepository fileVersionRepository;
 
   const SyncStorageElementsUseCase({
     required this.deviceRepository,

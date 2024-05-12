@@ -5,7 +5,7 @@ import '../repository_interfaces/file_version_repository.dart';
 
 class GetVersionsOfFileUseCase
     implements UseCase<FileVersionEntity, GetVersionsOfFileParams> {
-  final IFileVersionRepository fileVersionRepository;
+  final FileVersionRepository fileVersionRepository;
 
   const GetVersionsOfFileUseCase({
     required this.fileVersionRepository,

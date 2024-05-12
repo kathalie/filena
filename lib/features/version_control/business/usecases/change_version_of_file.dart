@@ -4,7 +4,7 @@ import '../params/change_version_of_file_params.dart';
 
 class ChangeVersionOfFileUseCase
     implements UseCase<void, ChangeVersionOfFileParams> {
-  final IFileRepository fileRepository;
+  final FileRepository fileRepository;
 
   const ChangeVersionOfFileUseCase({
     required this.fileRepository,

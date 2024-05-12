@@ -3,7 +3,7 @@ import '../../../../core/use_case/use_case.dart';
 import '../params/delete_file_params.dart';
 
 class DeleteFileUseCase implements UseCase<void, DeleteFileParams> {
-  final IFileRepository fileRepository;
+  final FileRepository fileRepository;
 
   const DeleteFileUseCase({
     required this.fileRepository,

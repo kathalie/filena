@@ -4,7 +4,7 @@ import '../params/set_file_version_lifetime_params.dart';
 
 class SetFileVersionLifetimeUseCase
     implements UseCase<void, SetFileVersionLifetimeParams> {
-  final IUserRepository userRepository;
+  final UserRepository userRepository;
 
   const SetFileVersionLifetimeUseCase({
     required this.userRepository,

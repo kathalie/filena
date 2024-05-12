@@ -3,7 +3,7 @@ import '../../../version_control/business/repository_interfaces/file_version_rep
 import '../params/watch_changes_params.dart';
 
 class WatchChangesUseCase implements UseCase<void, WatchChangesParams> {
-  final IFileVersionRepository fileVersionRepository;
+  final FileVersionRepository fileVersionRepository;
 
   const WatchChangesUseCase({
     required this.fileVersionRepository,

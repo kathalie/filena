@@ -1,6 +1,6 @@
 import '../entities/category_entity.dart';
 
-abstract class ICategoryRepository {
+abstract interface class CategoryRepository {
   Future<CategoryEntity> getCategory(String categoryId);
 
   Future<List<CategoryEntity>> getCategories();

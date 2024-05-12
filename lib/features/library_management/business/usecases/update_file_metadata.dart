@@ -4,7 +4,7 @@ import '../params/update_file_metadata_params.dart';
 
 class UpdateFileMetadataUseCase
     implements UseCase<void, UpdateFileMetadataParams> {
-  final IFileRepository fileRepository;
+  final FileRepository fileRepository;
 
   const UpdateFileMetadataUseCase({
     required this.fileRepository,

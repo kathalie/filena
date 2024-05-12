@@ -3,7 +3,7 @@ import '../../../version_control/business/repository_interfaces/file_version_rep
 import '../params/both_modified_params.dart';
 
 class BothModifiedUseCase implements UseCase<void, BothModifiedParams> {
-  final IFileVersionRepository fileVersionRepository;
+  final FileVersionRepository fileVersionRepository;
 
   const BothModifiedUseCase({
     required this.fileVersionRepository,

@@ -5,8 +5,8 @@ import '../repository_interfaces/file_version_repository.dart';
 
 class DeleteExpiredVersionsUseCase
     implements UseCase<void, DeleteExpiredVersionsParams> {
-  final IFileVersionRepository fileVersionRepository;
-  final IUserRepository userRepository;
+  final FileVersionRepository fileVersionRepository;
+  final UserRepository userRepository;
 
   const DeleteExpiredVersionsUseCase({
     required this.fileVersionRepository,

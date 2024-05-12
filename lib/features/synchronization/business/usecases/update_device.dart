@@ -3,7 +3,7 @@ import '../params/update_device_params.dart';
 import '../repository_interfaces/device_repository.dart';
 
 class UpdateDeviceUseCase implements UseCase<void, UpdateDeviceParams> {
-  final IDeviceRepository deviceRepository;
+  final DeviceRepository deviceRepository;
 
   const UpdateDeviceUseCase({
     required this.deviceRepository,

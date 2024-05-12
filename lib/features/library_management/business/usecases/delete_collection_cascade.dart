@@ -4,7 +4,7 @@ import '../params/delete_collection_cascade_params.dart';
 
 class DeleteCollectionCascadeUseCase
     implements UseCase<void, DeleteCollectionCascadeParams> {
-  final ICollectionRepository collectionRepository;
+  final CollectionRepository collectionRepository;
 
   const DeleteCollectionCascadeUseCase({
     required this.collectionRepository,

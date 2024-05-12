@@ -1,6 +1,6 @@
 import '../entities/collection_entity.dart';
 
-abstract class ICollectionRepository {
+abstract interface class CollectionRepository {
   Future<CollectionEntity> getCollection(String collectionId);
 
   Future<List<CollectionEntity>> getCollectionsInCategory(String categoryId);

@@ -4,7 +4,7 @@ import '../repository_interfaces/file_version_repository.dart';
 
 class DeleteFileVersionUseCase
     implements UseCase<void, DeleteFileVersionParams> {
-  final IFileVersionRepository fileVersionRepository;
+  final FileVersionRepository fileVersionRepository;
 
   const DeleteFileVersionUseCase({
     required this.fileVersionRepository,

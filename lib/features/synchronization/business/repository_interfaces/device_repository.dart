@@ -1,6 +1,6 @@
 import '../entities/device_entity.dart';
 
-abstract class IDeviceRepository {
+abstract interface class DeviceRepository {
    Future<List<DeviceEntity>> getAllDevices();
 
    Future<DeviceEntity> getDevice(String deviceId);

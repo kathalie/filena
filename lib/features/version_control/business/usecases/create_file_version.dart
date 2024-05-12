@@ -4,7 +4,7 @@ import '../repository_interfaces/file_version_repository.dart';
 
 class CreateFileVersionUseCase
     implements UseCase<void, CreateFileVersionParams> {
-  final IFileVersionRepository fileVersionRepository;
+  final FileVersionRepository fileVersionRepository;
 
   const CreateFileVersionUseCase({
     required this.fileVersionRepository,

@@ -4,7 +4,7 @@ import '../../../../core/use_case/use_case.dart';
 import '../params/find_files_params.dart';
 
 class FindFilesUseCase implements UseCase<List<FileEntity>, FindFilesParams> {
-  final IFileRepository fileRepository;
+  final FileRepository fileRepository;
 
   const FindFilesUseCase({
     required this.fileRepository,
