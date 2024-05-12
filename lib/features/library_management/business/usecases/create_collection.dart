@@ -1,4 +1,4 @@
-import '../../../../core/common/business/repository_interfaces/collection_repository.dart';
+import '../repository_interfaces/collection_repository.dart';
 import '../../../../core/use_case/use_case.dart';
 import '../params/create_collection_params.dart';
 

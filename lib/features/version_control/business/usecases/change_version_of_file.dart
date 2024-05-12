@@ -1,4 +1,4 @@
-import '../../../../core/common/business/repository_interfaces/file_repository.dart';
+import '../../../library_management/business/repository_interfaces/file_repository.dart';
 import '../../../../core/use_case/use_case.dart';
 import '../params/change_version_of_file_params.dart';
 

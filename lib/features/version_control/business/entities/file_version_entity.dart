@@ -1,4 +1,4 @@
-import '../../../../core/common/business/entities/supplementary_structures/file_location.dart';
+import '../../../library_management/business/entities/supplementary_structures/file_location.dart';
 
 class FileVersionEntity {
   final String id;
@@ -6,12 +6,18 @@ class FileVersionEntity {
   final int sizeInBytes;
   final DateTime dateEdited;
   final FileLocation location;
-//TODO bytes array?
+  final String? description;
+  final List<String> tagIds;
+  final bool isFavourite;
+
   const FileVersionEntity({
     required this.id,
     required this.fileId,
     required this.sizeInBytes,
     required this.dateEdited,
     required this.location,
+    this.description,
+    this.tagIds = const [],
+    this.isFavourite = false,
   });
 }

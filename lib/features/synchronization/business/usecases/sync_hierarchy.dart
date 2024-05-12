@@ -1,5 +1,5 @@
-import '../../../../core/common/business/repository_interfaces/collection_repository.dart';
-import '../../../../core/common/business/repository_interfaces/file_repository.dart';
+import '../../../library_management/business/repository_interfaces/collection_repository.dart';
+import '../../../library_management/business/repository_interfaces/file_repository.dart';
 import '../../../../core/use_case/use_case.dart';
 import '../params/sync_hierarchy_params.dart';
 import '../repository_interfaces/device_repository.dart';
