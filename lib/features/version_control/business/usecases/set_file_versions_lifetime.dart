@@ -1,13 +1,13 @@
-import '../../../../core/common/business/repository_interfaces/preferences_repository.dart';
+import '../../../../core/common/business/repository_interfaces/user_repository.dart';
 import '../../../../core/use_case/use_case.dart';
 import '../params/set_file_version_lifetime_params.dart';
 
 class SetFileVersionLifetimeUseCase
     implements UseCase<void, SetFileVersionLifetimeParams> {
-  final IPreferencesRepository preferencesRepository;
+  final IUserRepository userRepository;
 
   const SetFileVersionLifetimeUseCase({
-    required this.preferencesRepository,
+    required this.userRepository,
   });
 
   @override
