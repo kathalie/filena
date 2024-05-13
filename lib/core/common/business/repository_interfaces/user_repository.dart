@@ -3,7 +3,9 @@ import '../entities/user_entity.dart';
 abstract interface class UserRepository {
   Future<UserEntity> getUser();
 
-  Future<void> updateUser(UserEntity updatedPreferences);
+  Future<void> createUser(UserEntity newUser);
+
+  Future<void> updateUser(UserEntity updatedUser);
 
   Future<bool> wantsEncryption();
 

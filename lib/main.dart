@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:dcdg/dcdg.dart';
+
+import 'core/common/data/db/database.dart';
 
 void main() {
+  // final isarDb = await isarDbConnection();
   runApp(const MyApp());
 }
 
