@@ -48,15 +48,21 @@ TagRepository tagRepository(TagRepositoryRef ref) {
 
 @riverpod
 FileVersionRepository fileVersionRepository(FileVersionRepositoryRef ref) {
-  return FileVersionRepositoryImpl();
+  return FileVersionRepositoryImpl(
+    fileVersionDataSource: ref.watch(fileVersionDaoProvider),
+  );
 }
 
 @riverpod
 UserRepository userRepository(UserRepositoryRef ref) {
-  return UserRepositoryImpl(userDataSource: ref.watch(userDaoProvider));
+  return UserRepositoryImpl(
+    userDataSource: ref.watch(userDaoProvider),
+  );
 }
 
 @riverpod
 DeviceRepository deviceRepository(DeviceRepositoryRef ref) {
-  return DeviceRepositoryImpl();
+  return DeviceRepositoryImpl(
+    deviceDataSource: ref.watch(deviceDaoProvider),
+  );
 }

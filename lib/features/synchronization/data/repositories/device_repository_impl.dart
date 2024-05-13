@@ -1,34 +1,36 @@
 import '../../business/entities/device_entity.dart';
 import '../../business/repository_interfaces/device_repository.dart';
+import '../data_source_interfaces/device_data_source.dart';
 
 class DeviceRepositoryImpl implements DeviceRepository {
+  final DeviceDataSource deviceDataSource;
+
+  const DeviceRepositoryImpl({
+    required this.deviceDataSource,
+  });
+
   @override
   Future<void> createDevice(DeviceEntity newDevice) {
-    // TODO: implement createDevice
-    throw UnimplementedError();
+    return deviceDataSource.createDevice(newDevice);
   }
 
   @override
   Future<void> deleteDevice(String deviceId) {
-    // TODO: implement deleteDevice
-    throw UnimplementedError();
+    return deviceDataSource.deleteDevice(deviceId);
   }
 
   @override
   Future<List<DeviceEntity>> getAllDevices() {
-    // TODO: implement getAllDevices
-    throw UnimplementedError();
+    return deviceDataSource.getAllDevices();
   }
 
   @override
   Future<DeviceEntity> getDevice(String deviceId) {
-    // TODO: implement getDevice
-    throw UnimplementedError();
+    return deviceDataSource.getDevice(deviceId);
   }
 
   @override
   Future<void> updateDevice(DeviceEntity updatedDevice) {
-    // TODO: implement updateDevice
-    throw UnimplementedError();
+    return deviceDataSource.updateDevice(updatedDevice);
   }
 }

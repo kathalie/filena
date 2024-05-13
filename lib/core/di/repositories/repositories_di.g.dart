@@ -7,7 +7,7 @@ part of 'repositories_di.dart';
 // **************************************************************************
 
 String _$categoryRepositoryHash() =>
-    r'869f6fa82817e5cf27216d12bd3632a71b04fe32';
+    r'd88f78eff5ab63657197f3b9d37c21e352830bc0';
 
 /// See also [categoryRepository].
 @ProviderFor(categoryRepository)
@@ -24,7 +24,7 @@ final categoryRepositoryProvider =
 
 typedef CategoryRepositoryRef = AutoDisposeProviderRef<CategoryRepository>;
 String _$collectionRepositoryHash() =>
-    r'a4d272e9ea5981880ed1c060ebd4de9766400044';
+    r'a379d52e4c2c13a850d94d069fa9cccf1b4b8605';
 
 /// See also [collectionRepository].
 @ProviderFor(collectionRepository)
@@ -40,7 +40,7 @@ final collectionRepositoryProvider =
 );
 
 typedef CollectionRepositoryRef = AutoDisposeProviderRef<CollectionRepository>;
-String _$fileRepositoryHash() => r'e4e1c4c74465b06cbf47a12517cad6906696de40';
+String _$fileRepositoryHash() => r'2223f5b0d33cfeba136701852bab131df9021b95';
 
 /// See also [fileRepository].
 @ProviderFor(fileRepository)
@@ -55,7 +55,7 @@ final fileRepositoryProvider = AutoDisposeProvider<FileRepository>.internal(
 );
 
 typedef FileRepositoryRef = AutoDisposeProviderRef<FileRepository>;
-String _$tagRepositoryHash() => r'c4c5c3ab8c37d34d4899de25abe88daa757c5e6d';
+String _$tagRepositoryHash() => r'd312f4fcf04909150c23df24770cfc0c4a644a80';
 
 /// See also [tagRepository].
 @ProviderFor(tagRepository)
@@ -71,7 +71,7 @@ final tagRepositoryProvider = AutoDisposeProvider<TagRepository>.internal(
 
 typedef TagRepositoryRef = AutoDisposeProviderRef<TagRepository>;
 String _$fileVersionRepositoryHash() =>
-    r'74cf9bacd6f937419592928413354425761de21b';
+    r'5e3749430d8b9879288b3b56209064fc96e2aae1';
 
 /// See also [fileVersionRepository].
 @ProviderFor(fileVersionRepository)

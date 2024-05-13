@@ -8,6 +8,10 @@ import '../../../features/library_management/data/data_source_interfaces/categor
 import '../../../features/library_management/data/data_source_interfaces/collection_data_source.dart';
 import '../../../features/library_management/data/data_source_interfaces/file_data_source.dart';
 import '../../../features/library_management/data/data_source_interfaces/tag_data_source.dart';
+import '../../../features/synchronization/data/dao/device_dao.dart';
+import '../../../features/synchronization/data/data_source_interfaces/device_data_source.dart';
+import '../../../features/version_control/data/dao/file_version_dao.dart';
+import '../../../features/version_control/data/data_source_interfaces/file_version_data_source.dart';
 import '../../common/data/dao/user_dao.dart';
 import '../../common/data/data_source_interfaces/user_data_source.dart';
 
@@ -36,4 +40,14 @@ CollectionDataSource collectionDao(CollectionDaoRef ref) {
 @riverpod
 FileDataSource fileDao(FileDaoRef ref) {
   return FileDao();
+}
+
+@riverpod
+DeviceDataSource deviceDao(DeviceDaoRef ref) {
+  return DeviceDao();
+}
+
+@riverpod
+FileVersionDataSource fileVersionDao(FileVersionDaoRef ref) {
+  return FileVersionDao();
 }

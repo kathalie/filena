@@ -78,5 +78,35 @@ final fileDaoProvider = AutoDisposeProvider<FileDataSource>.internal(
 );
 
 typedef FileDaoRef = AutoDisposeProviderRef<FileDataSource>;
+String _$deviceDaoHash() => r'35adfb92717c53a1bcca27380192d82f94b93e01';
+
+/// See also [deviceDao].
+@ProviderFor(deviceDao)
+final deviceDaoProvider = AutoDisposeProvider<DeviceDataSource>.internal(
+  deviceDao,
+  name: r'deviceDaoProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$deviceDaoHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DeviceDaoRef = AutoDisposeProviderRef<DeviceDataSource>;
+String _$fileVersionDaoHash() => r'cdc950950af979f9279338b68ab4c2019182d7e3';
+
+/// See also [fileVersionDao].
+@ProviderFor(fileVersionDao)
+final fileVersionDaoProvider =
+    AutoDisposeProvider<FileVersionDataSource>.internal(
+  fileVersionDao,
+  name: r'fileVersionDaoProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$fileVersionDaoHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef FileVersionDaoRef = AutoDisposeProviderRef<FileVersionDataSource>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

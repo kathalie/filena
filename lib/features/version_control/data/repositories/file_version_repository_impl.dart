@@ -1,23 +1,26 @@
 import '../../business/entities/file_version_entity.dart';
 import '../../business/repository_interfaces/file_version_repository.dart';
+import '../data_source_interfaces/file_version_data_source.dart';
 
 class FileVersionRepositoryImpl implements FileVersionRepository {
+  final FileVersionDataSource fileVersionDataSource;
+
+  const FileVersionRepositoryImpl({
+    required this.fileVersionDataSource,
+  });
+
   @override
   Future<void> createFileVersion(FileVersionEntity newFileVersion) {
-    // TODO: implement createFileVersion
-    throw UnimplementedError();
+    return fileVersionDataSource.createFileVersion(newFileVersion);
   }
 
   @override
   Future<void> deleteFileVersion(String fileVersionId) {
-    // TODO: implement deleteFileVersion
-    throw UnimplementedError();
+    return deleteFileVersion(fileVersionId);
   }
 
   @override
   Future<List<FileVersionEntity>> getVersionsOfFile(String fileId) {
-    // TODO: implement getVersionsOfFile
-    throw UnimplementedError();
+    return fileVersionDataSource.getVersionsOfFile(fileId);
   }
-  
-} 
+}
