@@ -7,7 +7,7 @@ part of 'repositories_di.dart';
 // **************************************************************************
 
 String _$categoryRepositoryHash() =>
-    r'ba62408aa3fa2b1b91c066b6aaee086aae355d5c';
+    r'869f6fa82817e5cf27216d12bd3632a71b04fe32';
 
 /// See also [categoryRepository].
 @ProviderFor(categoryRepository)
@@ -88,7 +88,7 @@ final fileVersionRepositoryProvider =
 
 typedef FileVersionRepositoryRef
     = AutoDisposeProviderRef<FileVersionRepository>;
-String _$userRepositoryHash() => r'86d57f59ef71f6dfe25fa7337895e49f94d75fdd';
+String _$userRepositoryHash() => r'7f332d41ffc08bcba7f50380bb95f5b2c6b10832';
 
 /// See also [userRepository].
 @ProviderFor(userRepository)

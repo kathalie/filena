@@ -1,6 +1,6 @@
-import '../entities/tag_entity.dart';
+import '../../business/entities/tag_entity.dart';
 
-abstract interface class TagRepository {
+abstract interface class TagDataSource {
   Future<List<TagEntity>> getTags();
 
   Future<TagEntity> getTag(String tagId);

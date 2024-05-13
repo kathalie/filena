@@ -1,35 +1,43 @@
 import '../../business/entities/collection_entity.dart';
 import '../../business/repository_interfaces/collection_repository.dart';
+import '../data_source_interfaces/collection_data_source.dart';
 
 class CollectionRepositoryImpl implements CollectionRepository {
+  final CollectionDataSource collectionDataSource;
+
+  const CollectionRepositoryImpl({
+    required this.collectionDataSource,
+  });
+
   @override
   Future<void> createCollection(CollectionEntity newCollection) {
-    // TODO: implement createCollection
-    throw UnimplementedError();
+    return collectionDataSource.createCollection(newCollection);
   }
 
   @override
   Future<void> deleteCollection(String collectionId) {
-    // TODO: implement deleteCollection
-    throw UnimplementedError();
+    return collectionDataSource.deleteCollection(collectionId);
   }
 
   @override
   Future<CollectionEntity> getCollection(String collectionId) {
-    // TODO: implement getCollection
-    throw UnimplementedError();
+    return collectionDataSource.getCollection(collectionId);
   }
 
   @override
-  Future<List<CollectionEntity>> getCollectionsInCategory(String categoryId) {
-    // TODO: implement getCollectionsInCategory
-    throw UnimplementedError();
+  Future<CollectionEntity> getParentCollection(String categoryId) {
+    return collectionDataSource.getParentCollection(categoryId);
   }
 
   @override
-  Future<CollectionEntity> updateCollection(CollectionEntity updatedCollection) {
-    // TODO: implement updateCollection
-    throw UnimplementedError();
+  Future<List<CollectionEntity>> getChildrenCollections(String collectionId) {
+    return collectionDataSource.getChildrenCollections(collectionId);
   }
-  
+
+  @override
+  Future<void> updateCollection(
+    CollectionEntity updatedCollection,
+  ) {
+    return collectionDataSource.updateCollection(updatedCollection);
+  }
 }

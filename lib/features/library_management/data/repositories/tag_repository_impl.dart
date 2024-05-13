@@ -1,29 +1,36 @@
 import '../../business/entities/tag_entity.dart';
 import '../../business/repository_interfaces/tag_repository.dart';
+import '../data_source_interfaces/tag_data_source.dart';
 
 class TagRepositoryImpl implements TagRepository {
+  final TagDataSource tagDataSource;
+
+  const TagRepositoryImpl({
+    required this.tagDataSource,
+  });
+
   @override
   Future<void> createTag(TagEntity newTag) {
-    // TODO: implement createTag
-    throw UnimplementedError();
+    return tagDataSource.createTag(newTag);
   }
 
   @override
   Future<void> deleteTag(String tagId) {
-    // TODO: implement deleteTag
-    throw UnimplementedError();
+    return tagDataSource.getTag(tagId);
+  }
+
+  @override
+  Future<TagEntity> getTag(String tagId) {
+    return tagDataSource.getTag(tagId);
   }
 
   @override
   Future<List<TagEntity>> getTags() {
-    // TODO: implement getTags
-    throw UnimplementedError();
+    return tagDataSource.getTags();
   }
 
   @override
   Future<void> updateTag(TagEntity updatedTag) {
-    // TODO: implement updateTag
-    throw UnimplementedError();
+    return tagDataSource.updateTag(updatedTag);
   }
-  
 }
