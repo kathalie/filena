@@ -1,4 +1,4 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../features/library_management/business/repository_interfaces/category_repository.dart';
 import '../../features/library_management/business/repository_interfaces/collection_repository.dart';
@@ -15,30 +15,39 @@ import '../../features/version_control/data/repositories/file_version_repository
 import '../common/business/repository_interfaces/user_repository.dart';
 import '../common/data/repositories/user_repository_impl.dart';
 
-final categoryRepoProvider = Provider<CategoryRepository>((ref) {
+part 'repositories.g.dart';
+
+@riverpod
+CategoryRepository categoryRepository(CategoryRepositoryRef ref) {
   return CategoryRepositoryImpl();
-});
+}
 
-final collectionRepoProvider = Provider<CollectionRepository>((ref) {
+@riverpod
+CollectionRepository collectionRepository(CollectionRepositoryRef ref) {
   return CollectionRepositoryImpl();
-});
+}
 
-final fileRepoProvider = Provider<FileRepository>((ref) {
+@riverpod
+FileRepository fileRepository(FileRepositoryRef ref) {
   return FileRepositoryImpl();
-});
+}
 
-final tagRepoProvider = Provider<TagRepository>((ref) {
+@riverpod
+TagRepository tagRepository(TagRepositoryRef ref) {
   return TagRepositoryImpl();
-});
+}
 
-final fileVersionRepoProvider = Provider<FileVersionRepository>((ref) {
+@riverpod
+FileVersionRepository fileVersionRepository(FileVersionRepositoryRef ref) {
   return FileVersionRepositoryImpl();
-});
+}
 
-final userRepoProvider = Provider<UserRepository>((ref) {
+@riverpod
+UserRepository userRepository(UserRepositoryRef ref) {
   return UserRepositoryImpl();
-});
+}
 
-final deviceRepoProvider = Provider<DeviceRepository>((ref) {
+@riverpod
+DeviceRepository deviceRepository(DeviceRepositoryRef ref) {
   return DeviceRepositoryImpl();
-});
+}
