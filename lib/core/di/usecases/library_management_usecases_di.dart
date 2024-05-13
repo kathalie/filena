@@ -12,7 +12,7 @@ import '../../../features/library_management/business/usecases/move_file.dart';
 import '../../../features/library_management/business/usecases/update_collection.dart';
 import '../../../features/library_management/business/usecases/update_file_metadata.dart';
 import '../../../features/library_management/business/usecases/update_tag.dart';
-import '../repositories.dart';
+import '../repositories/repositories_di.dart';
 
 part 'library_management_usecases_di.g.dart';
 
