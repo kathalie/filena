@@ -6,11 +6,11 @@ part 'user_model.g.dart';
 class User {
   Id id = Isar.autoIncrement;
 
-  String? email;
+  late String email;
 
-  String? username;
+  late String username;
 
-  String? passwordHash;
+  late String passwordHash;
 
   int versionsLifetimeInDays = 30;
 

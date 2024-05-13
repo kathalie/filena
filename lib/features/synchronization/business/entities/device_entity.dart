@@ -4,7 +4,6 @@ class DeviceEntity {
   final String ipAddress;
   final int port;
   final List<String> fileVersionIdsToSync;
-  final bool syncCollectionsHierarchy;
 
   const DeviceEntity({
     required this.id,
@@ -12,6 +11,5 @@ class DeviceEntity {
     required this.port,
     required this.ipAddress,
     this.fileVersionIdsToSync = const [],
-    this.syncCollectionsHierarchy = true,
   });
 }
