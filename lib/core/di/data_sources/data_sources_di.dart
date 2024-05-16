@@ -11,7 +11,7 @@ import '../../../features/library_management/data/data_source_interfaces/tag_dat
 import '../../../features/synchronization/data/dao/device_dao.dart';
 import '../../../features/synchronization/data/data_source_interfaces/device_data_source.dart';
 import '../../../features/version_control/data/dao/file_version_dao.dart';
-import '../../../features/version_control/data/data_source_interfaces/file_version_data_source.dart';
+import '../../../features/version_control/data/interfaces/file_version_data_source.dart';
 import '../../common/data/dao/user_dao.dart';
 import '../../common/data/data_source_interfaces/user_data_source.dart';
 

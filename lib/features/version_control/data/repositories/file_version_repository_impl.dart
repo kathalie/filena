@@ -1,6 +1,6 @@
 import '../../business/entities/file_version_entity.dart';
 import '../../business/repository_interfaces/file_version_repository.dart';
-import '../data_source_interfaces/file_version_data_source.dart';
+import '../interfaces/file_version_data_source.dart';
 
 class FileVersionRepositoryImpl implements FileVersionRepository {
   final FileVersionDataSource fileVersionDataSource;
