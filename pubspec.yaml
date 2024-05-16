@@ -41,6 +41,8 @@ dependencies:
   flutter_riverpod: ^2.5.1
   riverpod_annotation: ^2.3.5
   dcdg: ^4.1.0
+  minio_new: ^1.0.2
+  chunked_stream: ^1.4.2
 
 dev_dependencies:
   flutter_test:
