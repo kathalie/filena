@@ -43,6 +43,7 @@ dependencies:
   dcdg: ^4.1.0
   minio_new: ^1.0.2
   chunked_stream: ^1.4.2
+  file_picker: ^8.0.3
 
 dev_dependencies:
   flutter_test:

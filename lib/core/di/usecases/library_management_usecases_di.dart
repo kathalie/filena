@@ -1,3 +1,4 @@
+import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../features/library_management/business/usecases/add_file.dart';
@@ -7,6 +8,7 @@ import '../../../features/library_management/business/usecases/delete_collection
 import '../../../features/library_management/business/usecases/delete_file.dart';
 import '../../../features/library_management/business/usecases/delete_tag.dart';
 import '../../../features/library_management/business/usecases/find_files.dart';
+import '../../../features/library_management/business/usecases/get_categories.dart';
 import '../../../features/library_management/business/usecases/get_file.dart';
 import '../../../features/library_management/business/usecases/move_file.dart';
 import '../../../features/library_management/business/usecases/update_collection.dart';
@@ -74,6 +76,14 @@ FindFilesUseCase findFilesUsecase(
 ) {
   return FindFilesUseCase(
     fileRepository: ref.watch(fileRepositoryProvider),
+    fileVersionRepository: ref.watch(fileVersionRepositoryProvider),
+  );
+}
+
+@riverpod
+GetCategoriesUseCase getCategoriesUseCase(GetCategoriesUseCaseRef ref) {
+  return GetCategoriesUseCase(
+    categoryRepository: ref.watch(categoryRepositoryProvider),
   );
 }
 

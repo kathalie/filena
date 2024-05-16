@@ -103,7 +103,7 @@ final deleteTagUsecaseProvider = AutoDisposeProvider<DeleteTagUseCase>.internal(
 );
 
 typedef DeleteTagUsecaseRef = AutoDisposeProviderRef<DeleteTagUseCase>;
-String _$findFilesUsecaseHash() => r'6ca319bb91ed86bcd6d730ec0f71e57d906db45a';
+String _$findFilesUsecaseHash() => r'ec850f1e266f41aaee8b970796c68bfaa8d6d00a';
 
 /// See also [findFilesUsecase].
 @ProviderFor(findFilesUsecase)
@@ -118,6 +118,23 @@ final findFilesUsecaseProvider = AutoDisposeProvider<FindFilesUseCase>.internal(
 );
 
 typedef FindFilesUsecaseRef = AutoDisposeProviderRef<FindFilesUseCase>;
+String _$getCategoriesUseCaseHash() =>
+    r'2941ca5b6e4a1c5d6dce11ee65e900e29fa10d96';
+
+/// See also [getCategoriesUseCase].
+@ProviderFor(getCategoriesUseCase)
+final getCategoriesUseCaseProvider =
+    AutoDisposeProvider<GetCategoriesUseCase>.internal(
+  getCategoriesUseCase,
+  name: r'getCategoriesUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getCategoriesUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetCategoriesUseCaseRef = AutoDisposeProviderRef<GetCategoriesUseCase>;
 String _$getFileUsecaseHash() => r'01a69a8c060d3565a7e32842da51a39e3d4ad899';
 
 /// See also [getFileUsecase].

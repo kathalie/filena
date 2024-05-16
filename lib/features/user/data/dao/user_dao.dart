@@ -1,8 +1,8 @@
 import 'package:isar/isar.dart';
 
+import '../../../../core/db/database.dart';
 import '../../business/entities/user_entity.dart';
 import '../data_source_interfaces/user_data_source.dart';
-import '../db/database.dart';
 
 class UserDao implements UserDataSource {
   late Future<Isar> db;

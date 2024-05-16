@@ -10,10 +10,10 @@ import '../../../features/library_management/data/repositories/file_repository_i
 import '../../../features/library_management/data/repositories/tag_repository_impl.dart';
 import '../../../features/synchronization/business/repository_interfaces/device_repository.dart';
 import '../../../features/synchronization/data/repositories/device_repository_impl.dart';
+import '../../../features/user/business/repository_interfaces/user_repository.dart';
+import '../../../features/user/data/repositories/user_repository_impl.dart';
 import '../../../features/version_control/business/repository_interfaces/file_version_repository.dart';
 import '../../../features/version_control/data/repositories/file_version_repository_impl.dart';
-import '../../common/business/repository_interfaces/user_repository.dart';
-import '../../common/data/repositories/user_repository_impl.dart';
 import '../data_sources/data_sources_di.dart';
 
 part 'repositories_di.g.dart';

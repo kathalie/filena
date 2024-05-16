@@ -1,6 +1,6 @@
 import 'package:isar/isar.dart';
 
-import '../../../../core/common/data/db/database.dart';
+import '../../../../core/db/database.dart';
 import '../../business/entities/file_version_entity.dart';
 import '../interfaces/file_version_data_source.dart';
 

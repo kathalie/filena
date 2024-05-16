@@ -10,10 +10,10 @@ import '../../../features/library_management/data/data_source_interfaces/file_da
 import '../../../features/library_management/data/data_source_interfaces/tag_data_source.dart';
 import '../../../features/synchronization/data/dao/device_dao.dart';
 import '../../../features/synchronization/data/data_source_interfaces/device_data_source.dart';
+import '../../../features/user/data/dao/user_dao.dart';
+import '../../../features/user/data/data_source_interfaces/user_data_source.dart';
 import '../../../features/version_control/data/dao/file_version_dao.dart';
 import '../../../features/version_control/data/interfaces/file_version_data_source.dart';
-import '../../common/data/dao/user_dao.dart';
-import '../../common/data/data_source_interfaces/user_data_source.dart';
 
 part 'data_sources_di.g.dart';
 

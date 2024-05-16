@@ -1,6 +1,6 @@
 import 'package:isar/isar.dart';
 
-import '../../../../core/common/data/db/database.dart';
+import '../../../../core/db/database.dart';
 import '../../business/entities/collection_entity.dart';
 import '../data_source_interfaces/collection_data_source.dart';
 import '../models/collection_model.dart';

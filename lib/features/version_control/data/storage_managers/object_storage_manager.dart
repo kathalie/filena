@@ -26,7 +26,7 @@ class ObjectStorageManager implements StorageManager<ObjectLocation> {
   }
 
   Future<void> _initializeBuckets() async {
-    const defaultBuckets = DefaultBucket.values;
+    const defaultBuckets = DefaultCategories.values;
 
     for (final defaultBucket in defaultBuckets) {
       final bucketExists = await minio.bucketExists(defaultBucket.name);
