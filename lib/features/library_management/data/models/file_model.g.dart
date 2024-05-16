@@ -35,12 +35,6 @@ const FileSchema = CollectionSchema(
   idName: r'id',
   indexes: {},
   links: {
-    r'parentCollection': LinkSchema(
-      id: -2189727000819485259,
-      name: r'parentCollection',
-      target: r'FilesCollection',
-      single: true,
-    ),
     r'currentFileVersion': LinkSchema(
       id: -5091094390097241603,
       name: r'currentFileVersion',
@@ -53,6 +47,13 @@ const FileSchema = CollectionSchema(
       target: r'FileVersion',
       single: false,
       linkName: r'file',
+    ),
+    r'parentCollections': LinkSchema(
+      id: 5630507023842752208,
+      name: r'parentCollections',
+      target: r'FilesCollection',
+      single: false,
+      linkName: r'files',
     )
   },
   embeddedSchemas: {},
@@ -117,20 +118,20 @@ Id _fileGetId(File object) {
 
 List<IsarLinkBase<dynamic>> _fileGetLinks(File object) {
   return [
-    object.parentCollection,
     object.currentFileVersion,
-    object.allFileVersions
+    object.allFileVersions,
+    object.parentCollections
   ];
 }
 
 void _fileAttach(IsarCollection<dynamic> col, Id id, File object) {
   object.id = id;
-  object.parentCollection.attach(
-      col, col.isar.collection<FilesCollection>(), r'parentCollection', id);
   object.currentFileVersion.attach(
       col, col.isar.collection<FileVersion>(), r'currentFileVersion', id);
   object.allFileVersions
       .attach(col, col.isar.collection<FileVersion>(), r'allFileVersions', id);
+  object.parentCollections.attach(
+      col, col.isar.collection<FilesCollection>(), r'parentCollections', id);
 }
 
 extension FileQueryWhereSort on QueryBuilder<File, File, QWhere> {
@@ -446,19 +447,6 @@ extension FileQueryFilter on QueryBuilder<File, File, QFilterCondition> {
 extension FileQueryObject on QueryBuilder<File, File, QFilterCondition> {}
 
 extension FileQueryLinks on QueryBuilder<File, File, QFilterCondition> {
-  QueryBuilder<File, File, QAfterFilterCondition> parentCollection(
-      FilterQuery<FilesCollection> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'parentCollection');
-    });
-  }
-
-  QueryBuilder<File, File, QAfterFilterCondition> parentCollectionIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'parentCollection', 0, true, 0, true);
-    });
-  }
-
   QueryBuilder<File, File, QAfterFilterCondition> currentFileVersion(
       FilterQuery<FileVersion> q) {
     return QueryBuilder.apply(this, (query) {
@@ -527,6 +515,67 @@ extension FileQueryLinks on QueryBuilder<File, File, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
           r'allFileVersions', lower, includeLower, upper, includeUpper);
+    });
+  }
+
+  QueryBuilder<File, File, QAfterFilterCondition> parentCollections(
+      FilterQuery<FilesCollection> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'parentCollections');
+    });
+  }
+
+  QueryBuilder<File, File, QAfterFilterCondition>
+      parentCollectionsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'parentCollections', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<File, File, QAfterFilterCondition> parentCollectionsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'parentCollections', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<File, File, QAfterFilterCondition>
+      parentCollectionsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'parentCollections', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<File, File, QAfterFilterCondition>
+      parentCollectionsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'parentCollections', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<File, File, QAfterFilterCondition>
+      parentCollectionsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'parentCollections', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<File, File, QAfterFilterCondition>
+      parentCollectionsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'parentCollections', lower, includeLower, upper, includeUpper);
     });
   }
 }

@@ -13,10 +13,11 @@ class File {
 
   late DateTime timeCreated;
 
-  final parentCollection = IsarLink<FilesCollection>();
-
   final currentFileVersion = IsarLink<FileVersion>();
 
   @Backlink(to: 'file')
   final allFileVersions = IsarLinks<FileVersion>();
+
+  @Backlink(to: 'files')
+  final parentCollections = IsarLinks<FilesCollection>();
 }

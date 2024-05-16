@@ -1,7 +1,16 @@
+import 'package:isar/isar.dart';
+
+import '../../../../core/common/data/db/database.dart';
 import '../../business/entities/device_entity.dart';
 import '../data_source_interfaces/device_data_source.dart';
 
 class DeviceDao implements DeviceDataSource {
+  late Future<Isar> db;
+
+  DeviceDao() {
+    db = isarDbConnection();
+  }
+
   @override
   Future<void> createDevice(DeviceEntity newDevice) {
     // TODO: implement createDevice

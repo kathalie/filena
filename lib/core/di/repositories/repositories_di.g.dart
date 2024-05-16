@@ -71,7 +71,7 @@ final tagRepositoryProvider = AutoDisposeProvider<TagRepository>.internal(
 
 typedef TagRepositoryRef = AutoDisposeProviderRef<TagRepository>;
 String _$fileVersionRepositoryHash() =>
-    r'5e3749430d8b9879288b3b56209064fc96e2aae1';
+    r'3149e65b7b56f1c9f96da4163783561da8036427';
 
 /// See also [fileVersionRepository].
 @ProviderFor(fileVersionRepository)
@@ -103,7 +103,7 @@ final userRepositoryProvider = AutoDisposeProvider<UserRepository>.internal(
 );
 
 typedef UserRepositoryRef = AutoDisposeProviderRef<UserRepository>;
-String _$deviceRepositoryHash() => r'216c0dde5535d014ec1e5b86fc1bada1cd32d56f';
+String _$deviceRepositoryHash() => r'5cf55213e0557436a8fbf042ea84a3346d95246a';
 
 /// See also [deviceRepository].
 @ProviderFor(deviceRepository)

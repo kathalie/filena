@@ -1,11 +1,25 @@
+import 'package:isar/isar.dart';
+
+import '../../../../core/common/data/db/database.dart';
 import '../../business/entities/collection_entity.dart';
 import '../data_source_interfaces/collection_data_source.dart';
+import '../models/collection_model.dart';
 
 class CollectionDao implements CollectionDataSource {
+  late Future<Isar> db;
+
+  CollectionDao() {
+    db = isarDbConnection();
+  }
+
   @override
-  Future<void> createCollection(CollectionEntity newCollection) {
-    // TODO: implement createCollection
-    throw UnimplementedError();
+  Future<void> createCollection(CollectionEntity newCollection) async {
+    final isar = await db;
+
+    final newCollectionModel = FilesCollection()
+      ..name = newCollection.name;
+
+    isar.writeTxnSync(() => isar.filesCollections.putSync(newCollectionModel));
   }
 
   @override

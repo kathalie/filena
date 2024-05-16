@@ -37,11 +37,10 @@ const FilesCollectionSchema = CollectionSchema(
       single: false,
     ),
     r'files': LinkSchema(
-      id: -2188057443979530597,
+      id: -2012144287293347268,
       name: r'files',
       target: r'File',
       single: false,
-      linkName: r'parentCollection',
     )
   },
   embeddedSchemas: {},

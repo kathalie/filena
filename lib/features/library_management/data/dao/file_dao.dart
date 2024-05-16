@@ -1,7 +1,16 @@
+import 'package:isar/isar.dart';
+
+import '../../../../core/common/data/db/database.dart';
 import '../../business/entities/file_entity.dart';
 import '../data_source_interfaces/file_data_source.dart';
 
 class FileDao implements FileDataSource {
+  late Future<Isar> db;
+
+  FileDao() {
+    db = isarDbConnection();
+  }
+
   @override
   Future<void> createFile(FileEntity newFile) {
     // TODO: implement createFile

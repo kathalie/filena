@@ -15,6 +15,5 @@ class FilesCollection {
   // @Backlink(to: 'childCollections')
   // final parentCollection = IsarLink<Collection?>();
 
-  @Backlink(to: 'parentCollection')
   final files = IsarLinks<File>();
 }

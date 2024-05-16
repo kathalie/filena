@@ -32,13 +32,19 @@ const UserSchema = CollectionSchema(
       name: r'passwordHash',
       type: IsarType.string,
     ),
-    r'username': PropertySchema(
+    r'storageLocation': PropertySchema(
       id: 3,
+      name: r'storageLocation',
+      type: IsarType.byte,
+      enumMap: _UserstorageLocationEnumValueMap,
+    ),
+    r'username': PropertySchema(
+      id: 4,
       name: r'username',
       type: IsarType.string,
     ),
     r'versionsLifetimeInDays': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'versionsLifetimeInDays',
       type: IsarType.long,
     )
@@ -78,8 +84,9 @@ void _userSerialize(
   writer.writeString(offsets[0], object.email);
   writer.writeBool(offsets[1], object.encryptFiles);
   writer.writeString(offsets[2], object.passwordHash);
-  writer.writeString(offsets[3], object.username);
-  writer.writeLong(offsets[4], object.versionsLifetimeInDays);
+  writer.writeByte(offsets[3], object.storageLocation.index);
+  writer.writeString(offsets[4], object.username);
+  writer.writeLong(offsets[5], object.versionsLifetimeInDays);
 }
 
 User _userDeserialize(
@@ -93,8 +100,11 @@ User _userDeserialize(
   object.encryptFiles = reader.readBool(offsets[1]);
   object.id = id;
   object.passwordHash = reader.readString(offsets[2]);
-  object.username = reader.readString(offsets[3]);
-  object.versionsLifetimeInDays = reader.readLong(offsets[4]);
+  object.storageLocation =
+      _UserstorageLocationValueEnumMap[reader.readByteOrNull(offsets[3])] ??
+          StorageLocation.personalDevice;
+  object.username = reader.readString(offsets[4]);
+  object.versionsLifetimeInDays = reader.readLong(offsets[5]);
   return object;
 }
 
@@ -112,13 +122,27 @@ P _userDeserializeProp<P>(
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
+      return (_UserstorageLocationValueEnumMap[reader.readByteOrNull(offset)] ??
+          StorageLocation.personalDevice) as P;
     case 4:
+      return (reader.readString(offset)) as P;
+    case 5:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
+
+const _UserstorageLocationEnumValueMap = {
+  'personalDevice': 0,
+  'nas': 1,
+  'cloud': 2,
+};
+const _UserstorageLocationValueEnumMap = {
+  0: StorageLocation.personalDevice,
+  1: StorageLocation.nas,
+  2: StorageLocation.cloud,
+};
 
 Id _userGetId(User object) {
   return object.id;
@@ -528,6 +552,59 @@ extension UserQueryFilter on QueryBuilder<User, User, QFilterCondition> {
     });
   }
 
+  QueryBuilder<User, User, QAfterFilterCondition> storageLocationEqualTo(
+      StorageLocation value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'storageLocation',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> storageLocationGreaterThan(
+    StorageLocation value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'storageLocation',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> storageLocationLessThan(
+    StorageLocation value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'storageLocation',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> storageLocationBetween(
+    StorageLocation lower,
+    StorageLocation upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'storageLocation',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<User, User, QAfterFilterCondition> usernameEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -754,6 +831,18 @@ extension UserQuerySortBy on QueryBuilder<User, User, QSortBy> {
     });
   }
 
+  QueryBuilder<User, User, QAfterSortBy> sortByStorageLocation() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'storageLocation', Sort.asc);
+    });
+  }
+
+  QueryBuilder<User, User, QAfterSortBy> sortByStorageLocationDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'storageLocation', Sort.desc);
+    });
+  }
+
   QueryBuilder<User, User, QAfterSortBy> sortByUsername() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'username', Sort.asc);
@@ -828,6 +917,18 @@ extension UserQuerySortThenBy on QueryBuilder<User, User, QSortThenBy> {
     });
   }
 
+  QueryBuilder<User, User, QAfterSortBy> thenByStorageLocation() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'storageLocation', Sort.asc);
+    });
+  }
+
+  QueryBuilder<User, User, QAfterSortBy> thenByStorageLocationDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'storageLocation', Sort.desc);
+    });
+  }
+
   QueryBuilder<User, User, QAfterSortBy> thenByUsername() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'username', Sort.asc);
@@ -874,6 +975,12 @@ extension UserQueryWhereDistinct on QueryBuilder<User, User, QDistinct> {
     });
   }
 
+  QueryBuilder<User, User, QDistinct> distinctByStorageLocation() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'storageLocation');
+    });
+  }
+
   QueryBuilder<User, User, QDistinct> distinctByUsername(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -910,6 +1017,13 @@ extension UserQueryProperty on QueryBuilder<User, User, QQueryProperty> {
   QueryBuilder<User, String, QQueryOperations> passwordHashProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'passwordHash');
+    });
+  }
+
+  QueryBuilder<User, StorageLocation, QQueryOperations>
+      storageLocationProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'storageLocation');
     });
   }
 
