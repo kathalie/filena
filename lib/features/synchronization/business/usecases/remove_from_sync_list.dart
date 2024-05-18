@@ -1,10 +1,7 @@
-import '../../../../core/use_case/use_case.dart';
 import '../../../version_control/business/repository_interfaces/file_version_repository.dart';
-import '../params/remove_from_sync_list_params.dart';
 import '../repository_interfaces/device_repository.dart';
 
-class RemoveFromSyncListUseCase
-    implements UseCase<void, RemoveFromSyncListParams> {
+class RemoveFromSyncListUseCase {
   final DeviceRepository deviceRepository;
   final FileVersionRepository fileVersionRepository;
 
@@ -13,8 +10,10 @@ class RemoveFromSyncListUseCase
     required this.fileVersionRepository,
   });
 
-  @override
-  Future<void> call(RemoveFromSyncListParams params) {
+  Future<void> call({
+    required List<String> fileVersionIds,
+    required String destinationDeviceId,
+  }) {
     // TODO: implement call
     throw UnimplementedError();
   }

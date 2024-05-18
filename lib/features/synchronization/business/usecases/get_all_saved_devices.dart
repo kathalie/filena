@@ -1,17 +1,14 @@
-import '../../../../core/use_case/use_case.dart';
 import '../entities/device_entity.dart';
 import '../repository_interfaces/device_repository.dart';
 
-class GetAllSavedDevicesUseCase
-    implements UseCase<List<DeviceEntity>, GetAllSavedDevicesUseCase> {
+class GetAllSavedDevicesUseCase {
   final DeviceRepository deviceRepository;
 
   const GetAllSavedDevicesUseCase({
     required this.deviceRepository,
   });
 
-  @override
-  Future<List<DeviceEntity>> call(GetAllSavedDevicesUseCase params) {
+  Future<List<DeviceEntity>> call() {
     // TODO: implement call
     throw UnimplementedError();
   }

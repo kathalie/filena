@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/di/usecases/library_management_usecases_di.dart';
 import '../../business/entities/category_entity.dart';
-import '../../business/params/get_categories_params.dart';
 import 'collection_page.dart';
 
 class LibraryManagementPage extends ConsumerStatefulWidget {
@@ -18,7 +17,7 @@ class _LibraryManagementPageState extends ConsumerState<LibraryManagementPage> {
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(getCategoriesUseCaseProvider)(GetCategoriesParams()).then(
+    ref.watch(getCategoriesUseCaseProvider)().then(
           (value) => {
             setState(() {
               _categories = value;

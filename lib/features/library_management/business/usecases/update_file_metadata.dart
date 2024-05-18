@@ -1,17 +1,18 @@
 import '../repository_interfaces/file_repository.dart';
-import '../../../../core/use_case/use_case.dart';
-import '../params/update_file_metadata_params.dart';
 
-class UpdateFileMetadataUseCase
-    implements UseCase<void, UpdateFileMetadataParams> {
+class UpdateFileMetadataUseCase {
   final FileRepository fileRepository;
 
   const UpdateFileMetadataUseCase({
     required this.fileRepository,
   });
 
-  @override
-  Future<void> call(UpdateFileMetadataParams params) {
+  Future<void> call({
+    required String fileId,
+    List<String>? newTagIds,
+    String? description,
+    bool? isFavourite,
+  }) {
     // TODO: implement call
     throw UnimplementedError();
   }

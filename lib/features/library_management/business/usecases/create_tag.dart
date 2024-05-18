@@ -1,16 +1,15 @@
-import '../../../../core/use_case/use_case.dart';
-import '../params/create_tag_params.dart';
 import '../repository_interfaces/tag_repository.dart';
 
-class CreateTagUseCase implements UseCase<void, CreateTagParams> {
+class CreateTagUseCase {
   final TagRepository tagRepository;
 
   const CreateTagUseCase({
     required this.tagRepository,
   });
 
-  @override
-  Future<void> call(CreateTagParams params) {
+  Future<void> call({
+    required String tagName,
+  }) {
     // TODO: implement call
     throw UnimplementedError();
   }

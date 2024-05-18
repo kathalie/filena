@@ -1,18 +1,16 @@
 import '../entities/collection_entity.dart';
 import '../repository_interfaces/collection_repository.dart';
 
-class CreateCollectionUseCase {
+class GetCollectionsWithinCollectionUseCase {
   final CollectionRepository collectionRepository;
 
-  const CreateCollectionUseCase({
+  const GetCollectionsWithinCollectionUseCase({
     required this.collectionRepository,
   });
 
-  Future<void> call({
-    required CollectionEntity newCollectionEntity,
+  Future<List<CollectionEntity>> call({
     required String parentCollectionId,
   }) {
-    // TODO: implement call
-    throw UnimplementedError();
+    return collectionRepository.getChildrenCollections(parentCollectionId);
   }
 }

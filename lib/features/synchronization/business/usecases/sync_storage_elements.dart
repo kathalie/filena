@@ -1,10 +1,7 @@
-import '../../../../core/use_case/use_case.dart';
 import '../../../version_control/business/repository_interfaces/file_version_repository.dart';
-import '../params/sync_storage_elements_params.dart';
 import '../repository_interfaces/device_repository.dart';
 
-class SyncStorageElementsUseCase
-    implements UseCase<void, SyncStorageElementsParams> {
+class SyncStorageElementsUseCase {
   final DeviceRepository deviceRepository;
   final FileVersionRepository fileVersionRepository;
 
@@ -13,8 +10,9 @@ class SyncStorageElementsUseCase
     required this.fileVersionRepository,
   });
 
-  @override
-  Future<void> call(SyncStorageElementsParams params) {
+  Future<void> call({
+    required String destinationDeviceId,
+  }) {
     // TODO: implement call
     throw UnimplementedError();
   }

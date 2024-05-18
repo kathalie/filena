@@ -1,10 +1,17 @@
 import '../../../version_control/business/repository_interfaces/file_version_repository.dart';
 import '../entities/file_entity.dart';
 import '../repository_interfaces/file_repository.dart';
-import '../../../../core/use_case/use_case.dart';
-import '../params/find_files_params.dart';
 
-class FindFilesUseCase implements UseCase<List<FileEntity>, FindFilesParams> {
+enum SortOrder {
+  asc,
+  desc,
+}
+
+enum SortField {
+  date,
+}
+
+class FindFilesUseCase {
   final FileRepository fileRepository;
   final FileVersionRepository fileVersionRepository;
 
@@ -13,8 +20,15 @@ class FindFilesUseCase implements UseCase<List<FileEntity>, FindFilesParams> {
     required this.fileVersionRepository,
   });
 
-  @override
-  Future<List<FileEntity>> call(FindFilesParams params) async {
-    return await fileRepository.getFilesFromCollection(params.collectionId);
+  Future<List<FileEntity>> call({
+    required String collectionId,
+    SortField sortField = SortField.date,
+    SortOrder sortOrder = SortOrder.asc,
+    String? descriptionPart,
+    List<String>? tagIds,
+    bool? isChosen,
+    (DateTime dateCreatedFrom, DateTime dateCreatedTo)? dateCreatedRange,
+  }) async {
+    return await fileRepository.getFilesFromCollection(collectionId);
   }
 }

@@ -1,16 +1,17 @@
+import '../entities/file_entity.dart';
 import '../repository_interfaces/file_repository.dart';
-import '../../../../core/use_case/use_case.dart';
-import '../params/add_file_params.dart';
 
-class AddFileUseCase implements UseCase<void, AddFileParams> {
+class AddFileUseCase {
   final FileRepository fileRepository;
 
   const AddFileUseCase({
     required this.fileRepository,
   });
 
-  @override
-  Future<void> call(AddFileParams params) {
+  Future<void> call({
+    required FileEntity fileEntity,
+    required String destinationAlbumId,
+  }) {
     // TODO: implement call
     throw UnimplementedError();
   }

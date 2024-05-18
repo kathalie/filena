@@ -1,16 +1,15 @@
-import '../../../../core/use_case/use_case.dart';
-import '../params/delete_device_params.dart';
 import '../repository_interfaces/device_repository.dart';
 
-class DeleteDeviceUseCase implements UseCase<void, DeleteDeviceParams> {
+class DeleteDeviceUseCase {
   final DeviceRepository deviceRepository;
 
   const DeleteDeviceUseCase({
     required this.deviceRepository,
   });
 
-  @override
-  Future<void> call(DeleteDeviceParams params) {
+  Future<void> call({
+    required String deviceId,
+  }) {
     // TODO: implement call
     throw UnimplementedError();
   }

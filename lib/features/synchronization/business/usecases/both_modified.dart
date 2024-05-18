@@ -1,16 +1,17 @@
-import '../../../../core/use_case/use_case.dart';
+import '../../../version_control/business/entities/file_version_entity.dart';
 import '../../../version_control/business/repository_interfaces/file_version_repository.dart';
-import '../params/both_modified_params.dart';
 
-class BothModifiedUseCase implements UseCase<void, BothModifiedParams> {
+class BothModifiedUseCase {
   final FileVersionRepository fileVersionRepository;
 
   const BothModifiedUseCase({
     required this.fileVersionRepository,
   });
 
-  @override
-  Future<void> call(BothModifiedParams params) {
+  Future<void> call({
+    required FileVersionEntity remoteFileVersion,
+    required String localFileVersionId,
+  }) {
     // TODO: implement call
     throw UnimplementedError();
   }

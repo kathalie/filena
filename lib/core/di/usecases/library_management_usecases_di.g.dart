@@ -135,21 +135,42 @@ final getCategoriesUseCaseProvider =
 );
 
 typedef GetCategoriesUseCaseRef = AutoDisposeProviderRef<GetCategoriesUseCase>;
-String _$getFileUsecaseHash() => r'01a69a8c060d3565a7e32842da51a39e3d4ad899';
+String _$getFilesWithinCollectionUsecaseHash() =>
+    r'fb5306c568f394ff1b9aa06ae6ccfbae4b245b38';
 
-/// See also [getFileUsecase].
-@ProviderFor(getFileUsecase)
-final getFileUsecaseProvider = AutoDisposeProvider<GetFileUseCase>.internal(
-  getFileUsecase,
-  name: r'getFileUsecaseProvider',
+/// See also [getFilesWithinCollectionUsecase].
+@ProviderFor(getFilesWithinCollectionUsecase)
+final getFilesWithinCollectionUsecaseProvider =
+    AutoDisposeProvider<GetFilesWithinCollectionUseCase>.internal(
+  getFilesWithinCollectionUsecase,
+  name: r'getFilesWithinCollectionUsecaseProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$getFileUsecaseHash,
+      : _$getFilesWithinCollectionUsecaseHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef GetFileUsecaseRef = AutoDisposeProviderRef<GetFileUseCase>;
+typedef GetFilesWithinCollectionUsecaseRef
+    = AutoDisposeProviderRef<GetFilesWithinCollectionUseCase>;
+String _$getCollectionsWithinCollectionUsecaseHash() =>
+    r'533cd380dfd6da6e5f4f805f5e914a4114017fe0';
+
+/// See also [getCollectionsWithinCollectionUsecase].
+@ProviderFor(getCollectionsWithinCollectionUsecase)
+final getCollectionsWithinCollectionUsecaseProvider =
+    AutoDisposeProvider<GetCollectionsWithinCollectionUseCase>.internal(
+  getCollectionsWithinCollectionUsecase,
+  name: r'getCollectionsWithinCollectionUsecaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getCollectionsWithinCollectionUsecaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetCollectionsWithinCollectionUsecaseRef
+    = AutoDisposeProviderRef<GetCollectionsWithinCollectionUseCase>;
 String _$moveFileUsecaseHash() => r'4c22d29a57f65e3275b927f8bf7fdab4caede71b';
 
 /// See also [moveFileUsecase].

@@ -1,8 +1,7 @@
-import '../../../../core/use_case/use_case.dart';
 import '../../../version_control/business/repository_interfaces/file_version_repository.dart';
 import '../repository_interfaces/device_repository.dart';
 
-class AddToSyncListUseCase implements UseCase<void, AddToSyncListUseCase> {
+class AddToSyncListUseCase {
   final DeviceRepository deviceRepository;
   final FileVersionRepository fileVersionRepository;
 
@@ -11,8 +10,10 @@ class AddToSyncListUseCase implements UseCase<void, AddToSyncListUseCase> {
     required this.fileVersionRepository,
   });
 
-  @override
-  Future<void> call(AddToSyncListUseCase params) {
+  Future<void> call({
+    required List<String> fileVersionIds,
+    required String destinationDeviceId,
+  }) {
     // TODO: implement call
     throw UnimplementedError();
   }

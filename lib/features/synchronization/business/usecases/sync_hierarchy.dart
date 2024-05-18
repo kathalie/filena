@@ -1,10 +1,8 @@
 import '../../../library_management/business/repository_interfaces/collection_repository.dart';
 import '../../../library_management/business/repository_interfaces/file_repository.dart';
-import '../../../../core/use_case/use_case.dart';
-import '../params/sync_hierarchy_params.dart';
 import '../repository_interfaces/device_repository.dart';
 
-class SyncHierarchyUseCase implements UseCase<void, SyncHierarchyParams> {
+class SyncHierarchyUseCase {
   final DeviceRepository deviceRepository;
   final CollectionRepository collectionRepository;
   final FileRepository fileRepository;
@@ -15,8 +13,9 @@ class SyncHierarchyUseCase implements UseCase<void, SyncHierarchyParams> {
     required this.fileRepository,
   });
 
-  @override
-  Future<void> call(SyncHierarchyParams params) {
+  Future<void> call({
+    required String destinationDeviceId,
+  }) {
     // TODO: implement call
     throw UnimplementedError();
   }
