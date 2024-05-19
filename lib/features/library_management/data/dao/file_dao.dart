@@ -2,6 +2,7 @@ import 'package:isar/isar.dart';
 
 import '../../../../core/db/database.dart';
 import '../../../version_control/data/models/file_version_model.dart';
+import '../../business/entities/supplementary_structures/file_location.dart';
 import '../data_source_interfaces/file_data_source.dart';
 import '../models/collection_model.dart';
 import '../models/file_model.dart';
@@ -17,26 +18,29 @@ class FileDao implements FileDataSource {
   Future<void> createFile({
     required String name,
     required DateTime dateCreated,
-    required String currentFileVersionId,
+    required FileLocation location,
+    required String? description,
+    required List<String> tagIds,
+    required bool isFavourite,
   }) async {
     final isar = await db;
 
-    final currentVersion =
-        await isar.fileVersions.get(int.parse(currentFileVersionId));
-
-    if (currentVersion == null) {
-      throw ArgumentError('Requested current version id does not exist!');
-    }
-
-    final newFile = File()
-      ..name = name
-      ..timeCreated = dateCreated
-      ..currentFileVersion.value = currentVersion
-      ..allFileVersions.add(currentVersion);
-
-    isar.writeTxnSync(() {
-      isar.files.putSync(newFile);
-    });
+    // final currentVersion =
+    //     await isar.fileVersions.get(int.parse(currentFileVersionId));
+    //
+    // if (currentVersion == null) {
+    //   throw ArgumentError('Requested current version id does not exist!');
+    // }
+    //
+    // final newFile = File()
+    //   ..name = name
+    //   ..timeCreated = dateCreated
+    //   ..currentFileVersion.value = currentVersion
+    //   ..allFileVersions.add(currentVersion);
+    //
+    // isar.writeTxnSync(() {
+    //   isar.files.putSync(newFile);
+    // });
   }
 
   @override

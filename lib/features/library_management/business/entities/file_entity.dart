@@ -5,6 +5,7 @@ import 'supplementary_structures/file_location.dart';
 class FileEntity {
   final String id;
   final String name;
+  final int sizeInBytes;
   final DateTime timeCreated;
   final FileLocation location;
   final Uint8List content;
@@ -17,6 +18,7 @@ class FileEntity {
   const FileEntity({
     required this.id,
     required this.name,
+    required this.sizeInBytes,
     required this.timeCreated,
     required this.currentFileVersionId,
     required this.allVersionIds,

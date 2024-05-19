@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/di/usecases/library_management_usecases_di.dart';
@@ -10,7 +8,7 @@ import '../../business/entities/file_entity.dart';
 import '../widgets/add_collection_button.dart';
 import '../widgets/add_files_button.dart';
 import '../widgets/collection_tile.dart';
-import '../widgets/file_thumbnail.dart';
+import '../widgets/file_thumbnail_tile.dart';
 
 class CollectionPage extends ConsumerStatefulWidget {
   final List<String> allowedExtensions;
@@ -129,7 +127,7 @@ class _CollectionPageState extends ConsumerState<CollectionPage> {
             crossAxisSpacing: 16.0,
             mainAxisSpacing: 16.0,
             children: [
-              for (final file in childFiles) FileThumbnail(fileEntity: file),
+              for (final file in childFiles) FileThumbnailTile(fileEntity: file),
             ],
           ),
         ],

@@ -1,5 +1,8 @@
+import 'dart:typed_data';
+
 import '../../../version_control/business/repository_interfaces/file_version_repository.dart';
 import '../../business/entities/file_entity.dart';
+import '../../business/entities/supplementary_structures/file_location.dart';
 import '../../business/repository_interfaces/file_repository.dart';
 import '../data_source_interfaces/file_data_source.dart';
 import '../models/file_model.dart';
@@ -18,8 +21,14 @@ class FileRepositoryImpl implements FileRepository {
       (model) => model.id.toString(),
     );
 
+    final currentFileVersion = model.currentFileVersion.value;
+
+    if (currentFileVersion == null) {
+      throw ArgumentError('File version for requested file does not exist!');
+    }
+
     final currentFileVersionEntity = await fileVersionRepository.getFileVersion(
-      model.currentFileVersion.value!.id.toString(),
+      currentFileVersion.id.toString(),
     );
 
     return FileEntity(
@@ -30,7 +39,8 @@ class FileRepositoryImpl implements FileRepository {
       allVersionIds: allVersionIds.toList(),
       location: currentFileVersionEntity.location,
       // TODO organize locations
-      content: currentFileVersionEntity.content, // TODO read from storage
+      content: currentFileVersionEntity.content,
+      sizeInBytes: currentFileVersionEntity.sizeInBytes, // TODO read from storage
     );
   }
 
@@ -38,12 +48,20 @@ class FileRepositoryImpl implements FileRepository {
   Future<void> createFile({
     required String name,
     required DateTime dateCreated,
-    required String currentFileVersionId,
+    required int sizeInBytes,
+    required FileLocation location,
+    required Uint8List content,
+    required String? description,
+    required List<String> tagIds,
+    required bool isFavourite,
   }) async {
     fileDataSource.createFile(
       name: name,
       dateCreated: dateCreated,
-      currentFileVersionId: currentFileVersionId,
+      location: location,
+      description: description,
+      tagIds: tagIds,
+      isFavourite: isFavourite,
     );
   }
 

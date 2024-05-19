@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../business/entities/file_entity.dart';
 
-class FileThumbnail extends ConsumerWidget {
+class FileThumbnailTile extends ConsumerWidget {
   final FileEntity fileEntity;
 
-  const FileThumbnail({
+  const FileThumbnailTile({
     required this.fileEntity,
     super.key,
   });
