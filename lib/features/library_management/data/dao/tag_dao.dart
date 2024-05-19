@@ -1,8 +1,8 @@
 import 'package:isar/isar.dart';
 
 import '../../../../core/db/database.dart';
-import '../../business/entities/tag_entity.dart';
 import '../data_source_interfaces/tag_data_source.dart';
+import '../models/tag_model.dart';
 
 class TagDao implements TagDataSource {
   late Future<Isar> db;
@@ -12,7 +12,7 @@ class TagDao implements TagDataSource {
   }
 
   @override
-  Future<void> createTag(TagEntity newTag) {
+  Future<void> createTag({required String name}) {
     // TODO: implement createTag
     throw UnimplementedError();
   }
@@ -24,19 +24,19 @@ class TagDao implements TagDataSource {
   }
 
   @override
-  Future<TagEntity> getTag(String tagId) {
+  Future<Tag> getTag(String tagId) {
     // TODO: implement getTag
     throw UnimplementedError();
   }
 
   @override
-  Future<List<TagEntity>> getTags() {
+  Future<List<Tag>> getTags() {
     // TODO: implement getTags
     throw UnimplementedError();
   }
 
   @override
-  Future<void> updateTag(TagEntity updatedTag) {
+  Future<void> updateTag({required String id, String? name}) {
     // TODO: implement updateTag
     throw UnimplementedError();
   }

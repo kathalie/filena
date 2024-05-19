@@ -1,4 +1,3 @@
-import '../entities/collection_entity.dart';
 import '../repository_interfaces/collection_repository.dart';
 
 class CreateCollectionUseCase {
@@ -9,10 +8,12 @@ class CreateCollectionUseCase {
   });
 
   Future<void> call({
-    required CollectionEntity newCollectionEntity,
+    required String name,
     required String parentCollectionId,
-  }) {
-    // TODO: implement call
-    throw UnimplementedError();
+  }) async {
+    collectionRepository.createCollection(
+      newCollectionName: name,
+      parentCollectionId: parentCollectionId,
+    );
   }
 }

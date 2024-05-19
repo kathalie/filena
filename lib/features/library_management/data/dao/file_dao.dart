@@ -1,8 +1,10 @@
 import 'package:isar/isar.dart';
 
 import '../../../../core/db/database.dart';
-import '../../business/entities/file_entity.dart';
+import '../../../version_control/data/models/file_version_model.dart';
 import '../data_source_interfaces/file_data_source.dart';
+import '../models/collection_model.dart';
+import '../models/file_model.dart';
 
 class FileDao implements FileDataSource {
   late Future<Isar> db;
@@ -12,9 +14,29 @@ class FileDao implements FileDataSource {
   }
 
   @override
-  Future<void> createFile(FileEntity newFile) {
-    // TODO: implement createFile
-    throw UnimplementedError();
+  Future<void> createFile({
+    required String name,
+    required DateTime dateCreated,
+    required String currentFileVersionId,
+  }) async {
+    final isar = await db;
+
+    final currentVersion =
+        await isar.fileVersions.get(int.parse(currentFileVersionId));
+
+    if (currentVersion == null) {
+      throw ArgumentError('Requested current version id does not exist!');
+    }
+
+    final newFile = File()
+      ..name = name
+      ..timeCreated = dateCreated
+      ..currentFileVersion.value = currentVersion
+      ..allFileVersions.add(currentVersion);
+
+    isar.writeTxnSync(() {
+      isar.files.putSync(newFile);
+    });
   }
 
   @override
@@ -24,21 +46,33 @@ class FileDao implements FileDataSource {
   }
 
   @override
-  Future<FileEntity> getFile(String fileId) {
+  Future<File> getFile(String fileId) {
     // TODO: implement getFile
     throw UnimplementedError();
   }
 
   @override
-  Future<List<FileEntity>> getFilesFromCollection(String collectionId) {
-    // TODO: implement getFilesFromCollection
-    throw UnimplementedError();
+  Future<List<File>> getFilesFromCollection(String collectionId) async {
+    final isar = await db;
+
+    final collection = await isar.fileCollections.get(int.parse(collectionId));
+
+    if (collection == null) {
+      throw ArgumentError('Wrong collection id!');
+    }
+
+    final files = collection.files.toList();
+
+    return files;
   }
 
   @override
-  Future<FileEntity> updateFile(FileEntity updatedFile) {
+  Future<File> updateFile({
+    required String id,
+    String? name,
+    String? currentFileVersion,
+  }) {
     // TODO: implement updateFile
     throw UnimplementedError();
   }
-  
 }

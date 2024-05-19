@@ -49,9 +49,9 @@ const FileSchema = CollectionSchema(
       linkName: r'file',
     ),
     r'parentCollections': LinkSchema(
-      id: 5630507023842752208,
+      id: 7703299804263936541,
       name: r'parentCollections',
-      target: r'FilesCollection',
+      target: r'FileCollection',
       single: false,
       linkName: r'files',
     )
@@ -131,7 +131,7 @@ void _fileAttach(IsarCollection<dynamic> col, Id id, File object) {
   object.allFileVersions
       .attach(col, col.isar.collection<FileVersion>(), r'allFileVersions', id);
   object.parentCollections.attach(
-      col, col.isar.collection<FilesCollection>(), r'parentCollections', id);
+      col, col.isar.collection<FileCollection>(), r'parentCollections', id);
 }
 
 extension FileQueryWhereSort on QueryBuilder<File, File, QWhere> {
@@ -519,7 +519,7 @@ extension FileQueryLinks on QueryBuilder<File, File, QFilterCondition> {
   }
 
   QueryBuilder<File, File, QAfterFilterCondition> parentCollections(
-      FilterQuery<FilesCollection> q) {
+      FilterQuery<FileCollection> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'parentCollections');
     });

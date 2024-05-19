@@ -5,9 +5,14 @@ abstract interface class TagRepository {
 
   Future<TagEntity> getTag(String tagId);
 
-  Future<void> createTag(TagEntity newTag);
+  Future<void> createTag({
+    required String name,
+  });
 
-  Future<void> updateTag(TagEntity updatedTag);
+  Future<void> updateTag({
+    required String id,
+    String? name,
+  });
 
   Future<void> deleteTag(String tagId);
 }

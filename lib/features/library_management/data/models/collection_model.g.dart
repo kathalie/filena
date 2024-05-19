@@ -9,13 +9,13 @@ part of 'collection_model.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetFilesCollectionCollection on Isar {
-  IsarCollection<FilesCollection> get filesCollections => this.collection();
+extension GetFileCollectionCollection on Isar {
+  IsarCollection<FileCollection> get fileCollections => this.collection();
 }
 
-const FilesCollectionSchema = CollectionSchema(
-  name: r'FilesCollection',
-  id: -2094009713461123324,
+const FileCollectionSchema = CollectionSchema(
+  name: r'FileCollection',
+  id: 1118519841098160946,
   properties: {
     r'name': PropertySchema(
       id: 0,
@@ -23,35 +23,35 @@ const FilesCollectionSchema = CollectionSchema(
       type: IsarType.string,
     )
   },
-  estimateSize: _filesCollectionEstimateSize,
-  serialize: _filesCollectionSerialize,
-  deserialize: _filesCollectionDeserialize,
-  deserializeProp: _filesCollectionDeserializeProp,
+  estimateSize: _fileCollectionEstimateSize,
+  serialize: _fileCollectionSerialize,
+  deserialize: _fileCollectionDeserialize,
+  deserializeProp: _fileCollectionDeserializeProp,
   idName: r'id',
   indexes: {},
   links: {
     r'childCollections': LinkSchema(
-      id: -4939138167489396545,
+      id: -7029777194374328870,
       name: r'childCollections',
-      target: r'FilesCollection',
+      target: r'FileCollection',
       single: false,
     ),
     r'files': LinkSchema(
-      id: -2012144287293347268,
+      id: -2106773748840709605,
       name: r'files',
       target: r'File',
       single: false,
     )
   },
   embeddedSchemas: {},
-  getId: _filesCollectionGetId,
-  getLinks: _filesCollectionGetLinks,
-  attach: _filesCollectionAttach,
+  getId: _fileCollectionGetId,
+  getLinks: _fileCollectionGetLinks,
+  attach: _fileCollectionAttach,
   version: '3.1.0+1',
 );
 
-int _filesCollectionEstimateSize(
-  FilesCollection object,
+int _fileCollectionEstimateSize(
+  FileCollection object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -60,8 +60,8 @@ int _filesCollectionEstimateSize(
   return bytesCount;
 }
 
-void _filesCollectionSerialize(
-  FilesCollection object,
+void _fileCollectionSerialize(
+  FileCollection object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -69,19 +69,19 @@ void _filesCollectionSerialize(
   writer.writeString(offsets[0], object.name);
 }
 
-FilesCollection _filesCollectionDeserialize(
+FileCollection _fileCollectionDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = FilesCollection();
+  final object = FileCollection();
   object.id = id;
   object.name = reader.readString(offsets[0]);
   return object;
 }
 
-P _filesCollectionDeserializeProp<P>(
+P _fileCollectionDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -95,34 +95,34 @@ P _filesCollectionDeserializeProp<P>(
   }
 }
 
-Id _filesCollectionGetId(FilesCollection object) {
+Id _fileCollectionGetId(FileCollection object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _filesCollectionGetLinks(FilesCollection object) {
+List<IsarLinkBase<dynamic>> _fileCollectionGetLinks(FileCollection object) {
   return [object.childCollections, object.files];
 }
 
-void _filesCollectionAttach(
-    IsarCollection<dynamic> col, Id id, FilesCollection object) {
+void _fileCollectionAttach(
+    IsarCollection<dynamic> col, Id id, FileCollection object) {
   object.id = id;
   object.childCollections.attach(
-      col, col.isar.collection<FilesCollection>(), r'childCollections', id);
+      col, col.isar.collection<FileCollection>(), r'childCollections', id);
   object.files.attach(col, col.isar.collection<File>(), r'files', id);
 }
 
-extension FilesCollectionQueryWhereSort
-    on QueryBuilder<FilesCollection, FilesCollection, QWhere> {
-  QueryBuilder<FilesCollection, FilesCollection, QAfterWhere> anyId() {
+extension FileCollectionQueryWhereSort
+    on QueryBuilder<FileCollection, FileCollection, QWhere> {
+  QueryBuilder<FileCollection, FileCollection, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension FilesCollectionQueryWhere
-    on QueryBuilder<FilesCollection, FilesCollection, QWhereClause> {
-  QueryBuilder<FilesCollection, FilesCollection, QAfterWhereClause> idEqualTo(
+extension FileCollectionQueryWhere
+    on QueryBuilder<FileCollection, FileCollection, QWhereClause> {
+  QueryBuilder<FileCollection, FileCollection, QAfterWhereClause> idEqualTo(
       Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
@@ -132,8 +132,8 @@ extension FilesCollectionQueryWhere
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterWhereClause>
-      idNotEqualTo(Id id) {
+  QueryBuilder<FileCollection, FileCollection, QAfterWhereClause> idNotEqualTo(
+      Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -155,8 +155,9 @@ extension FilesCollectionQueryWhere
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterWhereClause>
-      idGreaterThan(Id id, {bool include = false}) {
+  QueryBuilder<FileCollection, FileCollection, QAfterWhereClause> idGreaterThan(
+      Id id,
+      {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: id, includeLower: include),
@@ -164,7 +165,7 @@ extension FilesCollectionQueryWhere
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterWhereClause> idLessThan(
+  QueryBuilder<FileCollection, FileCollection, QAfterWhereClause> idLessThan(
       Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
@@ -174,7 +175,7 @@ extension FilesCollectionQueryWhere
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterWhereClause> idBetween(
+  QueryBuilder<FileCollection, FileCollection, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -191,10 +192,10 @@ extension FilesCollectionQueryWhere
   }
 }
 
-extension FilesCollectionQueryFilter
-    on QueryBuilder<FilesCollection, FilesCollection, QFilterCondition> {
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
-      idEqualTo(Id value) {
+extension FileCollectionQueryFilter
+    on QueryBuilder<FileCollection, FileCollection, QFilterCondition> {
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition> idEqualTo(
+      Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -203,7 +204,7 @@ extension FilesCollectionQueryFilter
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       idGreaterThan(
     Id value, {
     bool include = false,
@@ -217,7 +218,7 @@ extension FilesCollectionQueryFilter
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       idLessThan(
     Id value, {
     bool include = false,
@@ -231,8 +232,7 @@ extension FilesCollectionQueryFilter
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
-      idBetween(
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition> idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -249,7 +249,7 @@ extension FilesCollectionQueryFilter
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       nameEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -263,7 +263,7 @@ extension FilesCollectionQueryFilter
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       nameGreaterThan(
     String value, {
     bool include = false,
@@ -279,7 +279,7 @@ extension FilesCollectionQueryFilter
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       nameLessThan(
     String value, {
     bool include = false,
@@ -295,7 +295,7 @@ extension FilesCollectionQueryFilter
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       nameBetween(
     String lower,
     String upper, {
@@ -315,7 +315,7 @@ extension FilesCollectionQueryFilter
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       nameStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -329,7 +329,7 @@ extension FilesCollectionQueryFilter
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       nameEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -343,7 +343,7 @@ extension FilesCollectionQueryFilter
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       nameContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -354,7 +354,7 @@ extension FilesCollectionQueryFilter
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       nameMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -365,7 +365,7 @@ extension FilesCollectionQueryFilter
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       nameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -375,7 +375,7 @@ extension FilesCollectionQueryFilter
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       nameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -386,40 +386,40 @@ extension FilesCollectionQueryFilter
   }
 }
 
-extension FilesCollectionQueryObject
-    on QueryBuilder<FilesCollection, FilesCollection, QFilterCondition> {}
+extension FileCollectionQueryObject
+    on QueryBuilder<FileCollection, FileCollection, QFilterCondition> {}
 
-extension FilesCollectionQueryLinks
-    on QueryBuilder<FilesCollection, FilesCollection, QFilterCondition> {
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
-      childCollections(FilterQuery<FilesCollection> q) {
+extension FileCollectionQueryLinks
+    on QueryBuilder<FileCollection, FileCollection, QFilterCondition> {
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
+      childCollections(FilterQuery<FileCollection> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'childCollections');
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       childCollectionsLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'childCollections', length, true, length, true);
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       childCollectionsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'childCollections', 0, true, 0, true);
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       childCollectionsIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'childCollections', 0, false, 999999, true);
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       childCollectionsLengthLessThan(
     int length, {
     bool include = false,
@@ -429,7 +429,7 @@ extension FilesCollectionQueryLinks
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       childCollectionsLengthGreaterThan(
     int length, {
     bool include = false,
@@ -440,7 +440,7 @@ extension FilesCollectionQueryLinks
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       childCollectionsLengthBetween(
     int lower,
     int upper, {
@@ -453,35 +453,35 @@ extension FilesCollectionQueryLinks
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition> files(
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition> files(
       FilterQuery<File> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'files');
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       filesLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'files', length, true, length, true);
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       filesIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'files', 0, true, 0, true);
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       filesIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'files', 0, false, 999999, true);
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       filesLengthLessThan(
     int length, {
     bool include = false,
@@ -491,7 +491,7 @@ extension FilesCollectionQueryLinks
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       filesLengthGreaterThan(
     int length, {
     bool include = false,
@@ -501,7 +501,7 @@ extension FilesCollectionQueryLinks
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterFilterCondition>
+  QueryBuilder<FileCollection, FileCollection, QAfterFilterCondition>
       filesLengthBetween(
     int lower,
     int upper, {
@@ -515,53 +515,51 @@ extension FilesCollectionQueryLinks
   }
 }
 
-extension FilesCollectionQuerySortBy
-    on QueryBuilder<FilesCollection, FilesCollection, QSortBy> {
-  QueryBuilder<FilesCollection, FilesCollection, QAfterSortBy> sortByName() {
+extension FileCollectionQuerySortBy
+    on QueryBuilder<FileCollection, FileCollection, QSortBy> {
+  QueryBuilder<FileCollection, FileCollection, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterSortBy>
-      sortByNameDesc() {
+  QueryBuilder<FileCollection, FileCollection, QAfterSortBy> sortByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
 }
 
-extension FilesCollectionQuerySortThenBy
-    on QueryBuilder<FilesCollection, FilesCollection, QSortThenBy> {
-  QueryBuilder<FilesCollection, FilesCollection, QAfterSortBy> thenById() {
+extension FileCollectionQuerySortThenBy
+    on QueryBuilder<FileCollection, FileCollection, QSortThenBy> {
+  QueryBuilder<FileCollection, FileCollection, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterSortBy> thenByIdDesc() {
+  QueryBuilder<FileCollection, FileCollection, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterSortBy> thenByName() {
+  QueryBuilder<FileCollection, FileCollection, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
     });
   }
 
-  QueryBuilder<FilesCollection, FilesCollection, QAfterSortBy>
-      thenByNameDesc() {
+  QueryBuilder<FileCollection, FileCollection, QAfterSortBy> thenByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
 }
 
-extension FilesCollectionQueryWhereDistinct
-    on QueryBuilder<FilesCollection, FilesCollection, QDistinct> {
-  QueryBuilder<FilesCollection, FilesCollection, QDistinct> distinctByName(
+extension FileCollectionQueryWhereDistinct
+    on QueryBuilder<FileCollection, FileCollection, QDistinct> {
+  QueryBuilder<FileCollection, FileCollection, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
@@ -569,15 +567,15 @@ extension FilesCollectionQueryWhereDistinct
   }
 }
 
-extension FilesCollectionQueryProperty
-    on QueryBuilder<FilesCollection, FilesCollection, QQueryProperty> {
-  QueryBuilder<FilesCollection, int, QQueryOperations> idProperty() {
+extension FileCollectionQueryProperty
+    on QueryBuilder<FileCollection, FileCollection, QQueryProperty> {
+  QueryBuilder<FileCollection, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<FilesCollection, String, QQueryOperations> nameProperty() {
+  QueryBuilder<FileCollection, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
     });

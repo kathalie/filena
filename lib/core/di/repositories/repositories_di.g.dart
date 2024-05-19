@@ -40,7 +40,7 @@ final collectionRepositoryProvider =
 );
 
 typedef CollectionRepositoryRef = AutoDisposeProviderRef<CollectionRepository>;
-String _$fileRepositoryHash() => r'2223f5b0d33cfeba136701852bab131df9021b95';
+String _$fileRepositoryHash() => r'da6fa869434b6a2f0be2ae18015e123162f6cf6b';
 
 /// See also [fileRepository].
 @ProviderFor(fileRepository)

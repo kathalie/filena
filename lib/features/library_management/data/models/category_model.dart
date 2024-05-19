@@ -11,5 +11,5 @@ class Category {
 
   late List<String> extensions;
 
-  final rootCollection = IsarLink<FilesCollection>();
+  final rootCollection = IsarLink<FileCollection>();
 }

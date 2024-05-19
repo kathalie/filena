@@ -24,7 +24,7 @@ Future<Isar> isarDbConnection() async {
     [
       UserSchema,
       CategorySchema,
-      FilesCollectionSchema,
+      FileCollectionSchema,
       FileSchema,
       TagSchema,
       DeviceSchema,
@@ -37,24 +37,32 @@ Future<Isar> isarDbConnection() async {
 
   for (final defaultCategory in DefaultCategories.values) {
     if ((await isar.categorys
-            .filter()
-            .nameEqualTo(defaultCategory.title)
-            .findAll())
-        .isNotEmpty) {
+                .filter()
+                .nameEqualTo(defaultCategory.title)
+                .findAll())
+            .isNotEmpty &&
+        (await isar.fileCollections
+                .filter()
+                .nameEqualTo(defaultCategory.title)
+                .findAll())
+            .isNotEmpty) {
       continue;
     }
 
-    final rootCollection = FilesCollection()..name = defaultCategory.title;
+
+    final rootCollection = FileCollection()..name = defaultCategory.title;
 
     final category = Category()
       ..name = defaultCategory.title
       ..extensions = defaultCategory.extensions
       ..rootCollection.value = rootCollection;
 
-    await isar.writeTxn(() async {
-      await isar.categorys.put(category);
-      await isar.filesCollections.put(rootCollection);
-      await category.rootCollection.save();
+    isar.writeTxnSync(() {
+      isar.fileCollections.putSync(rootCollection);
+      isar.categorys.putSync(category);
+      // await isar.categorys.put(category);
+      // await isar.fileCollections.put(rootCollection);
+      // await category.rootCollection.save();
     });
   }
 

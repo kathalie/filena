@@ -8,6 +8,7 @@ import '../../../features/library_management/business/usecases/delete_file.dart'
 import '../../../features/library_management/business/usecases/delete_tag.dart';
 import '../../../features/library_management/business/usecases/find_files.dart';
 import '../../../features/library_management/business/usecases/get_categories.dart';
+import '../../../features/library_management/business/usecases/get_collection.dart';
 import '../../../features/library_management/business/usecases/get_collections_within_collection.dart';
 import '../../../features/library_management/business/usecases/get_files_within_collection.dart';
 import '../../../features/library_management/business/usecases/move_file.dart';
@@ -77,6 +78,13 @@ FindFilesUseCase findFilesUsecase(
   return FindFilesUseCase(
     fileRepository: ref.watch(fileRepositoryProvider),
     fileVersionRepository: ref.watch(fileVersionRepositoryProvider),
+  );
+}
+
+@riverpod
+GetCollectionUseCase gettCollectionUseCase(GettCollectionUseCaseRef ref) {
+  return GetCollectionUseCase(
+    collectionRepository: ref.watch(collectionRepositoryProvider),
   );
 }
 

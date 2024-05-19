@@ -36,6 +36,7 @@ CollectionRepository collectionRepository(CollectionRepositoryRef ref) {
 FileRepository fileRepository(FileRepositoryRef ref) {
   return FileRepositoryImpl(
     fileDataSource: ref.watch(fileDaoProvider),
+    fileVersionRepository: ref.watch(fileVersionRepositoryProvider),
   );
 }
 

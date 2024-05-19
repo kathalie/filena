@@ -1,7 +1,6 @@
 import 'package:isar/isar.dart';
 
 import '../../../../core/db/database.dart';
-import '../../business/entities/collection_entity.dart';
 import '../data_source_interfaces/collection_data_source.dart';
 import '../models/collection_model.dart';
 
@@ -13,13 +12,27 @@ class CollectionDao implements CollectionDataSource {
   }
 
   @override
-  Future<void> createCollection(CollectionEntity newCollection) async {
+  Future<void> createCollection({
+    required String newCollectionName,
+    required String parentCollectionId,
+  }) async {
     final isar = await db;
 
-    final newCollectionModel = FilesCollection()
-      ..name = newCollection.name;
+    final parentCollection =
+        await isar.fileCollections.get(int.parse(parentCollectionId));
 
-    isar.writeTxnSync(() => isar.filesCollections.putSync(newCollectionModel));
+    if (parentCollection == null) {
+      throw ArgumentError('Wrong parent collection id!');
+    }
+
+    final newCollection = FileCollection()..name = newCollectionName;
+
+    parentCollection.childCollections.add(newCollection);
+
+    await isar.writeTxn(() async {
+      await isar.fileCollections.put(newCollection);
+      await parentCollection.childCollections.save();
+    });
   }
 
   @override
@@ -29,25 +42,41 @@ class CollectionDao implements CollectionDataSource {
   }
 
   @override
-  Future<List<CollectionEntity>> getChildrenCollections(String collectionId) {
-    // TODO: implement getChildrenCollections
-    throw UnimplementedError();
+  Future<List<FileCollection>> getChildrenCollections(
+    String collectionId,
+  ) async {
+    final isar = await db;
+
+    final childCollections =
+        (await isar.fileCollections.get(int.parse(collectionId)))
+            ?.childCollections
+            .toList();
+
+    if (childCollections == null) {
+      throw ArgumentError('Wrong collection id!');
+    }
+
+    return childCollections;
   }
 
   @override
-  Future<CollectionEntity> getCollection(String collectionId) {
-    // TODO: implement getCollection
-    throw UnimplementedError();
+  Future<FileCollection> getCollection(String collectionId) async {
+    final isar = await db;
+
+    final collection = await isar.fileCollections.get(int.parse(collectionId));
+
+    if (collection == null) {
+      throw ArgumentError('Wrong collection id!');
+    }
+
+    return collection;
   }
 
   @override
-  Future<CollectionEntity> getParentCollection(String categoryId) {
-    // TODO: implement getParentCollection
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> updateCollection(CollectionEntity updatedCollection) {
+  Future<void> updateCollection({
+    required String collectionId,
+    required String newName,
+  }) {
     // TODO: implement updateCollection
     throw UnimplementedError();
   }

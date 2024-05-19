@@ -2,9 +2,11 @@ sealed class FileLocation {}
 
 class FilePath implements FileLocation {
   final String link;
+  final String fileName;
 
   const FilePath({
     required this.link,
+    required this.fileName,
   });
 }
 

@@ -27,8 +27,18 @@ const FileVersionSchema = CollectionSchema(
       name: r'description',
       type: IsarType.string,
     ),
-    r'isFavourite': PropertySchema(
+    r'fileLocation': PropertySchema(
       id: 2,
+      name: r'fileLocation',
+      type: IsarType.string,
+    ),
+    r'fileName': PropertySchema(
+      id: 3,
+      name: r'fileName',
+      type: IsarType.string,
+    ),
+    r'isFavourite': PropertySchema(
+      id: 4,
       name: r'isFavourite',
       type: IsarType.bool,
     )
@@ -79,6 +89,8 @@ int _fileVersionEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.fileLocation.length * 3;
+  bytesCount += 3 + object.fileName.length * 3;
   return bytesCount;
 }
 
@@ -90,7 +102,9 @@ void _fileVersionSerialize(
 ) {
   writer.writeDateTime(offsets[0], object.dateEdited);
   writer.writeString(offsets[1], object.description);
-  writer.writeBool(offsets[2], object.isFavourite);
+  writer.writeString(offsets[2], object.fileLocation);
+  writer.writeString(offsets[3], object.fileName);
+  writer.writeBool(offsets[4], object.isFavourite);
 }
 
 FileVersion _fileVersionDeserialize(
@@ -102,8 +116,10 @@ FileVersion _fileVersionDeserialize(
   final object = FileVersion();
   object.dateEdited = reader.readDateTime(offsets[0]);
   object.description = reader.readStringOrNull(offsets[1]);
+  object.fileLocation = reader.readString(offsets[2]);
+  object.fileName = reader.readString(offsets[3]);
   object.id = id;
-  object.isFavourite = reader.readBool(offsets[2]);
+  object.isFavourite = reader.readBool(offsets[4]);
   return object;
 }
 
@@ -119,6 +135,10 @@ P _fileVersionDeserializeProp<P>(
     case 1:
       return (reader.readStringOrNull(offset)) as P;
     case 2:
+      return (reader.readString(offset)) as P;
+    case 3:
+      return (reader.readString(offset)) as P;
+    case 4:
       return (reader.readBool(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -432,6 +452,277 @@ extension FileVersionQueryFilter
     });
   }
 
+  QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition>
+      fileLocationEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'fileLocation',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition>
+      fileLocationGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'fileLocation',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition>
+      fileLocationLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'fileLocation',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition>
+      fileLocationBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'fileLocation',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition>
+      fileLocationStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'fileLocation',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition>
+      fileLocationEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'fileLocation',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition>
+      fileLocationContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'fileLocation',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition>
+      fileLocationMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'fileLocation',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition>
+      fileLocationIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'fileLocation',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition>
+      fileLocationIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'fileLocation',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition> fileNameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'fileName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition>
+      fileNameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'fileName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition>
+      fileNameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'fileName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition> fileNameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'fileName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition>
+      fileNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'fileName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition>
+      fileNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'fileName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition>
+      fileNameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'fileName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition> fileNameMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'fileName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition>
+      fileNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'fileName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition>
+      fileNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'fileName',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<FileVersion, FileVersion, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -663,6 +954,31 @@ extension FileVersionQuerySortBy
     });
   }
 
+  QueryBuilder<FileVersion, FileVersion, QAfterSortBy> sortByFileLocation() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fileLocation', Sort.asc);
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterSortBy>
+      sortByFileLocationDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fileLocation', Sort.desc);
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterSortBy> sortByFileName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fileName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterSortBy> sortByFileNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fileName', Sort.desc);
+    });
+  }
+
   QueryBuilder<FileVersion, FileVersion, QAfterSortBy> sortByIsFavourite() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isFavourite', Sort.asc);
@@ -699,6 +1015,31 @@ extension FileVersionQuerySortThenBy
   QueryBuilder<FileVersion, FileVersion, QAfterSortBy> thenByDescriptionDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'description', Sort.desc);
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterSortBy> thenByFileLocation() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fileLocation', Sort.asc);
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterSortBy>
+      thenByFileLocationDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fileLocation', Sort.desc);
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterSortBy> thenByFileName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fileName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QAfterSortBy> thenByFileNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fileName', Sort.desc);
     });
   }
 
@@ -742,6 +1083,20 @@ extension FileVersionQueryWhereDistinct
     });
   }
 
+  QueryBuilder<FileVersion, FileVersion, QDistinct> distinctByFileLocation(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'fileLocation', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<FileVersion, FileVersion, QDistinct> distinctByFileName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'fileName', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<FileVersion, FileVersion, QDistinct> distinctByIsFavourite() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isFavourite');
@@ -766,6 +1121,18 @@ extension FileVersionQueryProperty
   QueryBuilder<FileVersion, String?, QQueryOperations> descriptionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'description');
+    });
+  }
+
+  QueryBuilder<FileVersion, String, QQueryOperations> fileLocationProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'fileLocation');
+    });
+  }
+
+  QueryBuilder<FileVersion, String, QQueryOperations> fileNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'fileName');
     });
   }
 

@@ -5,9 +5,17 @@ abstract interface class FileRepository {
 
   Future<List<FileEntity>> getFilesFromCollection(String collectionId);
 
-  Future<void> createFile(FileEntity newFile);
+  Future<void> createFile({
+    required String name,
+    required DateTime dateCreated,
+    required String currentFileVersionId,
+  });
 
-  Future<FileEntity> updateFile(FileEntity updatedFile);
+  Future<void> updateFile({
+    required String id,
+    String? name,
+    String? currentFileVersion,
+  });
 
   Future<void> deleteFile(String fileId);
 }

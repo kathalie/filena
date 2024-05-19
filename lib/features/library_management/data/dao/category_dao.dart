@@ -13,25 +13,11 @@ class CategoryDao implements CategoryDataSource {
   }
 
   @override
-  Future<List<CategoryEntity>> getCategories() async {
+  Future<List<Category>> getCategories() async {
     final isar = await db;
 
     final allCategories = await isar.categorys.where().findAll();
 
-    return allCategories.map((categoryModel) {
-      return CategoryEntity(
-        id: categoryModel.id.toString(),
-        name: categoryModel.name,
-        extensions: categoryModel.extensions,
-        rootCollectionId:
-            categoryModel.rootCollection.value?.id.toString() ?? '',
-      );
-    }).toList();
-  }
-
-  @override
-  Future<CategoryEntity> getCategory(String categoryId) {
-    // TODO: implement getCategory
-    throw UnimplementedError();
+    return allCategories;
   }
 }

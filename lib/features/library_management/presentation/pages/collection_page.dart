@@ -1,20 +1,24 @@
-import 'dart:typed_data';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/constants/constants.dart';
-import '../../../../core/di/storage_managers/storage_managers_di.dart';
-import '../../business/entities/category_entity.dart';
-import '../../business/entities/supplementary_structures/file_location.dart';
+import '../../../../core/di/usecases/library_management_usecases_di.dart';
+import '../../../../core/presentation/widgets/progress_indicator.dart';
+import '../../business/entities/collection_entity.dart';
+import '../../business/entities/file_entity.dart';
+import '../widgets/add_collection_button.dart';
+import '../widgets/add_files_button.dart';
+import '../widgets/collection_tile.dart';
+import '../widgets/file_thumbnail.dart';
 
 class CollectionPage extends ConsumerStatefulWidget {
-  final CategoryEntity category;
+  final List<String> allowedExtensions;
+  final String currentCollectionId;
 
   const CollectionPage({
-    required this.category,
+    required this.allowedExtensions,
+    required this.currentCollectionId,
     super.key,
   });
 
@@ -23,80 +27,111 @@ class CollectionPage extends ConsumerStatefulWidget {
 }
 
 class _CollectionPageState extends ConsumerState<CollectionPage> {
-  List<({String bucket, String name})> fileVersions = [];
-
-  List<Uint8List> fileBytes = [];
-
-  void _onAddFilesPressed() {
-    FilePicker.platform
-        .pickFiles()
-        .then((result) async {
-      if (result == null) return;
-
-      final objectStorageManager =
-          await ref.watch(objectStorageManagerProvider.future);
-
-      for (final file in result.files) {
-        final bytes = file.bytes;
-        final bucket = DefaultCategories.images.name;
-        final fileName = file.name;
-
-        print(bytes);
-
-        if (bytes == null) continue;
-
-        fileVersions.add((bucket: bucket, name: fileName));
-
-        objectStorageManager.write(
-          bytes,
-          ObjectLocation(
-            bucket: bucket,
-            objectName: fileName,
-          ),
-        );
-      }
-
-      setState(() async {
-        for (final fileInfo in fileVersions) {
-          fileBytes.add(
-            await objectStorageManager.read(
-              ObjectLocation(
-                bucket: fileInfo.bucket,
-                objectName: fileInfo.name,
-              ),
-            ),
-          );
-        }
-      });
-    });
-  }
+  CollectionEntity? _currentCollection;
+  List<CollectionEntity>? _childCollections;
+  List<FileEntity>? _childFiles;
 
   @override
   Widget build(BuildContext context) {
+    ref
+        .watch(gettCollectionUseCaseProvider)
+        (collectionId: widget.currentCollectionId)
+        .then((value) {
+      setState(() {
+        _currentCollection = value;
+      });
+    });
+
+    ref
+        .watch(getCollectionsWithinCollectionUsecaseProvider)(
+      parentCollectionId: widget.currentCollectionId,
+    )
+        .then((value) {
+      setState(() {
+        _childCollections = value;
+      });
+    });
+
+    ref
+        .watch(getFilesWithinCollectionUsecaseProvider)(
+      parentCollectionId: widget.currentCollectionId,
+    )
+        .then((value) {
+      setState(() {
+        _childFiles = value;
+      });
+    });
+
+    final currentCollection = _currentCollection;
+    final childCollections = _childCollections;
+    final childFiles = _childFiles;
+
+    if (currentCollection == null ||
+        childCollections == null ||
+        childFiles == null) {
+      return const LoadingIndicator();
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.category.name),
+        title: Text(currentCollection.name),
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
       ),
-      body: Column(
-        children: [
-          IconButton(
-            onPressed: _onAddFilesPressed,
-            icon: const Icon(
-              Icons.file_upload,
+      body: CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            sliver: SliverAppBar(
+              pinned: true,
+              automaticallyImplyLeading: false,
+              flexibleSpace: Row(
+                children: [
+                  AddCollectionButton(parentCollectionId: currentCollection.id),
+                  AddFilesButton(parentCollectionId: currentCollection.id),
+                ],
+              ),
             ),
           ),
-          Expanded(
-            child: ListView(
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            sliver: SliverGrid.extent(
+              maxCrossAxisExtent: 300,
+              crossAxisSpacing: 16.0,
+              mainAxisSpacing: 16.0,
               children: [
-                for (final file in fileBytes)
-                  ListTile(
-                    title: Text(file.toString()),
+                for (final collection in childCollections)
+                  CollectionTile(
+                    allowedExtensions: widget.allowedExtensions,
+                    collection: collection,
                   ),
               ],
             ),
-          )
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate([
+              const Padding(
+                padding: EdgeInsets.all(24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Інше'),
+                    Divider(
+                      height: 1,
+                    ),
+                  ],
+                ),
+              ),
+            ]),
+          ),
+          SliverGrid.extent(
+            maxCrossAxisExtent: 300,
+            crossAxisSpacing: 16.0,
+            mainAxisSpacing: 16.0,
+            children: [
+              for (final file in childFiles) FileThumbnail(fileEntity: file),
+            ],
+          ),
         ],
       ),
     );

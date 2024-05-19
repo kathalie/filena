@@ -1,8 +1,10 @@
 import 'package:isar/isar.dart';
 
+import '../../../library_management/business/entities/supplementary_structures/file_location.dart';
 import '../../../library_management/data/models/file_model.dart';
 import '../../../library_management/data/models/tag_model.dart';
 import '../../../synchronization/data/models/device_model.dart';
+import '../../business/entities/file_version_entity.dart';
 
 part 'file_version_model.g.dart';
 
@@ -12,7 +14,9 @@ class FileVersion {
 
   late DateTime dateEdited;
 
-  // file location???
+  late String fileLocation;
+
+  late String fileName;
 
   String? description;
 

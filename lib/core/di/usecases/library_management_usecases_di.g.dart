@@ -118,6 +118,23 @@ final findFilesUsecaseProvider = AutoDisposeProvider<FindFilesUseCase>.internal(
 );
 
 typedef FindFilesUsecaseRef = AutoDisposeProviderRef<FindFilesUseCase>;
+String _$gettCollectionUseCaseHash() =>
+    r'89b41daeb5f583342ed37398697131eb3c5cfcd1';
+
+/// See also [gettCollectionUseCase].
+@ProviderFor(gettCollectionUseCase)
+final gettCollectionUseCaseProvider =
+    AutoDisposeProvider<GetCollectionUseCase>.internal(
+  gettCollectionUseCase,
+  name: r'gettCollectionUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$gettCollectionUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GettCollectionUseCaseRef = AutoDisposeProviderRef<GetCollectionUseCase>;
 String _$getCategoriesUseCaseHash() =>
     r'2941ca5b6e4a1c5d6dce11ee65e900e29fa10d96';
 
@@ -136,7 +153,7 @@ final getCategoriesUseCaseProvider =
 
 typedef GetCategoriesUseCaseRef = AutoDisposeProviderRef<GetCategoriesUseCase>;
 String _$getFilesWithinCollectionUsecaseHash() =>
-    r'fb5306c568f394ff1b9aa06ae6ccfbae4b245b38';
+    r'46090eef645de44d08c5a4e30f7022670b9a489d';
 
 /// See also [getFilesWithinCollectionUsecase].
 @ProviderFor(getFilesWithinCollectionUsecase)

@@ -19,5 +19,5 @@ class File {
   final allFileVersions = IsarLinks<FileVersion>();
 
   @Backlink(to: 'files')
-  final parentCollections = IsarLinks<FilesCollection>();
+  final parentCollections = IsarLinks<FileCollection>();
 }

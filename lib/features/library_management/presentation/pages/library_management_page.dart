@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/di/usecases/library_management_usecases_di.dart';
+import '../../../../core/presentation/widgets/progress_indicator.dart';
 import '../../business/entities/category_entity.dart';
+import '../widgets/category_tile.dart';
 import 'collection_page.dart';
 
 class LibraryManagementPage extends ConsumerStatefulWidget {
@@ -15,50 +17,32 @@ class LibraryManagementPage extends ConsumerStatefulWidget {
 class _LibraryManagementPageState extends ConsumerState<LibraryManagementPage> {
   List<CategoryEntity>? _categories;
 
+  void _loadCategories() {
+    ref.watch(getCategoriesUseCaseProvider)().then((value) {
+      setState(() {
+        _categories = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    ref.watch(getCategoriesUseCaseProvider)().then(
-          (value) => {
-            setState(() {
-              _categories = value;
-            }),
-          },
-        );
+    _loadCategories();
 
     final categories = _categories;
 
-    return GridView.count(
-      mainAxisSpacing: 36.0,
-      crossAxisSpacing: 36.0,
-      padding: const EdgeInsets.all(64.0),
-      crossAxisCount: 2,
+    return GridView.extent(
+      maxCrossAxisExtent: 500.0,
+      mainAxisSpacing: 16.0,
+      crossAxisSpacing: 16.0,
+      padding: const EdgeInsets.all(24.0),
       children: [
         if (categories == null)
-          const CircularProgressIndicator()
+          const LoadingIndicator()
         else
           for (final category in categories)
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CollectionPage(
-                      category: category,
-                    ),
-                  ),
-                );
-              },
-              child: Container(
-                padding: const EdgeInsets.all(16.0),
-                child: Center(
-                  child: Text(
-                    category.name,
-                    style: const TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-              ),
+            CategoryTile(
+              category: category,
             ),
       ],
     );

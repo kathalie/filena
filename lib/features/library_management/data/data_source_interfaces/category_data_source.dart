@@ -1,7 +1,5 @@
-import '../../business/entities/category_entity.dart';
+import '../models/category_model.dart';
 
 abstract interface class CategoryDataSource {
-  Future<List<CategoryEntity>> getCategories();
-
-  Future<CategoryEntity> getCategory(String categoryId);
+  Future<List<Category>> getCategories();
 }

@@ -1,19 +1,21 @@
 import 'package:isar/isar.dart';
 
+import '../../business/entities/collection_entity.dart';
 import 'file_model.dart';
 
 part 'collection_model.g.dart';
 
 @collection
-class FilesCollection {
+class FileCollection {
   Id id = Isar.autoIncrement;
 
   late String name;
 
-  final childCollections = IsarLinks<FilesCollection>();
-
-  // @Backlink(to: 'childCollections')
-  // final parentCollection = IsarLink<Collection?>();
+  final childCollections = IsarLinks<FileCollection>();
 
   final files = IsarLinks<File>();
+
+  CollectionEntity toEntity() {
+    return CollectionEntity(id: id.toString(), name: name);
+  }
 }

@@ -1,6 +1,7 @@
 import '../../business/entities/collection_entity.dart';
 import '../../business/repository_interfaces/collection_repository.dart';
 import '../data_source_interfaces/collection_data_source.dart';
+import '../models/collection_model.dart';
 
 class CollectionRepositoryImpl implements CollectionRepository {
   final CollectionDataSource collectionDataSource;
@@ -9,9 +10,32 @@ class CollectionRepositoryImpl implements CollectionRepository {
     required this.collectionDataSource,
   });
 
+  CollectionEntity _toEntity(FileCollection collectionModel) {
+    final childCollectionIds = collectionModel.childCollections.map(
+      (model) => model.id.toString(),
+    );
+
+    final childFilesIds = collectionModel.files.map(
+      (model) => model.id.toString(),
+    );
+
+    return CollectionEntity(
+      id: collectionModel.id.toString(),
+      name: collectionModel.name,
+      childCollectionIds: childCollectionIds.toList(),
+      fileIds: childFilesIds.toList(),
+    );
+  }
+
   @override
-  Future<void> createCollection(CollectionEntity newCollection) {
-    return collectionDataSource.createCollection(newCollection);
+  Future<void> createCollection({
+    required String newCollectionName,
+    required String parentCollectionId,
+  }) {
+    return collectionDataSource.createCollection(
+      newCollectionName: newCollectionName,
+      parentCollectionId: parentCollectionId,
+    );
   }
 
   @override
@@ -20,24 +44,30 @@ class CollectionRepositoryImpl implements CollectionRepository {
   }
 
   @override
-  Future<CollectionEntity> getCollection(String collectionId) {
-    return collectionDataSource.getCollection(collectionId);
+  Future<CollectionEntity> getCollection(String collectionId) async {
+    final collectionModel =
+        await collectionDataSource.getCollection(collectionId);
+
+    return _toEntity(collectionModel);
   }
 
   @override
-  Future<CollectionEntity> getParentCollection(String categoryId) {
-    return collectionDataSource.getParentCollection(categoryId);
+  Future<List<CollectionEntity>> getChildrenCollections(
+    String collectionId,
+  ) async {
+    final collectionModels =
+        await collectionDataSource.getChildrenCollections(collectionId);
+    return collectionModels.map((model) => _toEntity(model)).toList();
   }
 
   @override
-  Future<List<CollectionEntity>> getChildrenCollections(String collectionId) {
-    return collectionDataSource.getChildrenCollections(collectionId);
-  }
-
-  @override
-  Future<void> updateCollection(
-    CollectionEntity updatedCollection,
-  ) {
-    return collectionDataSource.updateCollection(updatedCollection);
+  Future<void> updateCollection({
+    required String collectionId,
+    required String newName,
+  }) async {
+    collectionDataSource.updateCollection(
+      collectionId: collectionId,
+      newName: newName,
+    );
   }
 }

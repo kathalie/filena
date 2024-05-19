@@ -38,7 +38,7 @@ const CategorySchema = CollectionSchema(
     r'rootCollection': LinkSchema(
       id: 3517744178452005933,
       name: r'rootCollection',
-      target: r'FilesCollection',
+      target: r'FileCollection',
       single: true,
     )
   },
@@ -116,7 +116,7 @@ List<IsarLinkBase<dynamic>> _categoryGetLinks(Category object) {
 void _categoryAttach(IsarCollection<dynamic> col, Id id, Category object) {
   object.id = id;
   object.rootCollection.attach(
-      col, col.isar.collection<FilesCollection>(), r'rootCollection', id);
+      col, col.isar.collection<FileCollection>(), r'rootCollection', id);
 }
 
 extension CategoryQueryWhereSort on QueryBuilder<Category, Category, QWhere> {
@@ -609,7 +609,7 @@ extension CategoryQueryObject
 extension CategoryQueryLinks
     on QueryBuilder<Category, Category, QFilterCondition> {
   QueryBuilder<Category, Category, QAfterFilterCondition> rootCollection(
-      FilterQuery<FilesCollection> q) {
+      FilterQuery<FileCollection> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'rootCollection');
     });
