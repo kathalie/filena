@@ -27,9 +27,8 @@ class CollectionDao implements CollectionDataSource {
 
     final newCollection = FileCollection()..name = newCollectionName;
 
-    parentCollection.childCollections.add(newCollection);
-
     await isar.writeTxn(() async {
+      parentCollection.childCollections.add(newCollection);
       await isar.fileCollections.put(newCollection);
       await parentCollection.childCollections.save();
     });

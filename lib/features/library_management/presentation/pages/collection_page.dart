@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/presentation/widgets/progress_indicator.dart';
+import '../../business/entities/category_entity.dart';
 import '../state_management/collection_page_states.dart';
 import '../widgets/add_collection_button.dart';
 import '../widgets/add_files_button.dart';
@@ -9,11 +10,11 @@ import '../widgets/collections_sliver_grid.dart';
 import '../widgets/files_sliver_grid.dart';
 
 class CollectionPage extends ConsumerWidget {
-  final List<String> allowedExtensions;
+  final CategoryEntity currentCategory;
   final String currentCollectionId;
 
   const CollectionPage({
-    required this.allowedExtensions,
+    required this.currentCategory,
     required this.currentCollectionId,
     super.key,
   });
@@ -50,10 +51,10 @@ class CollectionPage extends ConsumerWidget {
               ),
             ),
             CollectionsSliverGrid(
-              currentCollectionId: currentCollectionId,
-              allowedExtensions: allowedExtensions,
+              currentCollectionId: collection.id,
+              currentCategory: currentCategory,
             ),
-            FilesSliverGrid(currentCollectionId: currentCollectionId),
+            FilesSliverGrid(currentCollectionId: collection.id),
           ],
         ),
       ),

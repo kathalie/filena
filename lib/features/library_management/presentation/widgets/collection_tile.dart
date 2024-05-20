@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../business/entities/category_entity.dart';
 import '../../business/entities/collection_entity.dart';
 import '../pages/collection_page.dart';
 
-class CollectionTile extends ConsumerWidget {
-  final List<String> allowedExtensions;
+class CollectionTile extends StatelessWidget {
+  final CategoryEntity currentCategory;
   final CollectionEntity collection;
 
   const CollectionTile({
-    required this.allowedExtensions,
+    required this.currentCategory,
     required this.collection,
     super.key,
   });
@@ -20,14 +20,14 @@ class CollectionTile extends ConsumerWidget {
       MaterialPageRoute(
         builder: (context) => CollectionPage(
           currentCollectionId: collection.id,
-          allowedExtensions: allowedExtensions,
+          currentCategory: currentCategory,
         ),
       ),
     );
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () => _goToCollection(context, collection),
       style: ElevatedButton.styleFrom(

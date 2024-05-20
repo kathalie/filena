@@ -1,6 +1,5 @@
 import 'package:isar/isar.dart';
 
-import '../../business/entities/collection_entity.dart';
 import 'file_model.dart';
 
 part 'collection_model.g.dart';
@@ -14,8 +13,4 @@ class FileCollection {
   final childCollections = IsarLinks<FileCollection>();
 
   final files = IsarLinks<File>();
-
-  CollectionEntity toEntity() {
-    return CollectionEntity(id: id.toString(), name: name);
-  }
 }

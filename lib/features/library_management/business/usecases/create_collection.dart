@@ -11,7 +11,7 @@ class CreateCollectionUseCase {
     required String name,
     required String parentCollectionId,
   }) async {
-    collectionRepository.createCollection(
+    await collectionRepository.createCollection(
       newCollectionName: name,
       parentCollectionId: parentCollectionId,
     );

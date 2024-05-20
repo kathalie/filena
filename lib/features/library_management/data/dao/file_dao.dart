@@ -1,7 +1,7 @@
 import 'package:isar/isar.dart';
 
 import '../../../../core/db/database.dart';
-import '../../../version_control/data/models/file_version_model.dart';
+import '../../../version_control/data/interfaces/file_version_data_source.dart';
 import '../../business/entities/supplementary_structures/file_location.dart';
 import '../data_source_interfaces/file_data_source.dart';
 import '../models/collection_model.dart';
@@ -9,38 +9,63 @@ import '../models/file_model.dart';
 
 class FileDao implements FileDataSource {
   late Future<Isar> db;
+  final FileVersionDataSource fileVersionDataSource;
 
-  FileDao() {
+  FileDao({
+    required this.fileVersionDataSource,
+  }) {
     db = isarDbConnection();
   }
 
   @override
   Future<void> createFile({
+    required String parentCollectionId,
     required String name,
     required DateTime dateCreated,
-    required FileLocation location,
     required String? description,
     required List<String> tagIds,
     required bool isFavourite,
   }) async {
     final isar = await db;
 
-    // final currentVersion =
-    //     await isar.fileVersions.get(int.parse(currentFileVersionId));
-    //
-    // if (currentVersion == null) {
-    //   throw ArgumentError('Requested current version id does not exist!');
-    // }
-    //
-    // final newFile = File()
-    //   ..name = name
-    //   ..timeCreated = dateCreated
-    //   ..currentFileVersion.value = currentVersion
-    //   ..allFileVersions.add(currentVersion);
-    //
-    // isar.writeTxnSync(() {
-    //   isar.files.putSync(newFile);
-    // });
+    // TODO location depending on user choice
+    final location = ObjectLocation(bucket: 'test_bucket', objectName: name);
+    
+    //Create file
+
+    final newFile = File()
+      ..name = name
+      ..timeCreated = dateCreated;
+
+    late final int fileId;
+
+    isar.writeTxnSync(() {
+      fileId = isar.files.putSync(newFile);
+    });
+
+    //Create fileVersion
+
+    final currentFileVersionId = await fileVersionDataSource
+        .createFileVersion(
+      fileId: fileId.toString(),
+      dateEdited: newFile.timeCreated,
+      location: location,
+      description: description,
+      tagIds: tagIds,
+      isFavourite: isFavourite,
+    );
+
+    final newFileVersion = await fileVersionDataSource.getFileVersion(
+      currentFileVersionId.toString(),
+    );
+
+    isar.writeTxnSync(() {
+      newFile.currentFileVersion.value = newFileVersion;
+      newFile.currentFileVersion.saveSync();
+
+      newFile.allFileVersions.add(newFileVersion);
+      newFile.allFileVersions.saveSync();
+    });
   }
 
   @override
@@ -50,9 +75,16 @@ class FileDao implements FileDataSource {
   }
 
   @override
-  Future<File> getFile(String fileId) {
-    // TODO: implement getFile
-    throw UnimplementedError();
+  Future<File> getFile(String fileId) async {
+    final isar = await db;
+
+    final file = await isar.files.get(int.parse(fileId));
+
+    if (file == null) {
+      throw ArgumentError('Wrong file id!');
+    }
+
+    return file;
   }
 
   @override

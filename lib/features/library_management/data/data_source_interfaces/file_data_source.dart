@@ -1,4 +1,3 @@
-import '../../business/entities/supplementary_structures/file_location.dart';
 import '../models/file_model.dart';
 
 abstract interface class FileDataSource {
@@ -7,9 +6,9 @@ abstract interface class FileDataSource {
   Future<File> getFile(String fileId);
 
   Future<void> createFile({
+    required String parentCollectionId,
     required String name,
     required DateTime dateCreated,
-    required FileLocation location,
     required String? description,
     required List<String> tagIds,
     required bool isFavourite,

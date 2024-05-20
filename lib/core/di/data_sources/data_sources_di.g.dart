@@ -64,7 +64,7 @@ final collectionDaoProvider =
 );
 
 typedef CollectionDaoRef = AutoDisposeProviderRef<CollectionDataSource>;
-String _$fileDaoHash() => r'c3987e7e8dfef28db4314ffe79d94e2cdf3a271a';
+String _$fileDaoHash() => r'3747e07039535ea8a9e25ac98ba5d8ba7a72a1a0';
 
 /// See also [fileDao].
 @ProviderFor(fileDao)

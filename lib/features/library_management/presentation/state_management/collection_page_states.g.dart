@@ -6,7 +6,7 @@ part of 'collection_page_states.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$childCollectionsHash() => r'bbbf5d3ae9cf5c08d11302d5e2c0a4f636cf1648';
+String _$currentCollectionHash() => r'bd3e0eeb9a49c3a5f2989acffda23ae60c2ceb60';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -28,272 +28,6 @@ class _SystemHash {
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 }
-
-/// See also [childCollections].
-@ProviderFor(childCollections)
-const childCollectionsProvider = ChildCollectionsFamily();
-
-/// See also [childCollections].
-class ChildCollectionsFamily
-    extends Family<AsyncValue<List<CollectionEntity>>> {
-  /// See also [childCollections].
-  const ChildCollectionsFamily();
-
-  /// See also [childCollections].
-  ChildCollectionsProvider call(
-    String parentCollectionId,
-  ) {
-    return ChildCollectionsProvider(
-      parentCollectionId,
-    );
-  }
-
-  @override
-  ChildCollectionsProvider getProviderOverride(
-    covariant ChildCollectionsProvider provider,
-  ) {
-    return call(
-      provider.parentCollectionId,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'childCollectionsProvider';
-}
-
-/// See also [childCollections].
-class ChildCollectionsProvider
-    extends AutoDisposeFutureProvider<List<CollectionEntity>> {
-  /// See also [childCollections].
-  ChildCollectionsProvider(
-    String parentCollectionId,
-  ) : this._internal(
-          (ref) => childCollections(
-            ref as ChildCollectionsRef,
-            parentCollectionId,
-          ),
-          from: childCollectionsProvider,
-          name: r'childCollectionsProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$childCollectionsHash,
-          dependencies: ChildCollectionsFamily._dependencies,
-          allTransitiveDependencies:
-              ChildCollectionsFamily._allTransitiveDependencies,
-          parentCollectionId: parentCollectionId,
-        );
-
-  ChildCollectionsProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.parentCollectionId,
-  }) : super.internal();
-
-  final String parentCollectionId;
-
-  @override
-  Override overrideWith(
-    FutureOr<List<CollectionEntity>> Function(ChildCollectionsRef provider)
-        create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: ChildCollectionsProvider._internal(
-        (ref) => create(ref as ChildCollectionsRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        parentCollectionId: parentCollectionId,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeFutureProviderElement<List<CollectionEntity>> createElement() {
-    return _ChildCollectionsProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is ChildCollectionsProvider &&
-        other.parentCollectionId == parentCollectionId;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, parentCollectionId.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-mixin ChildCollectionsRef
-    on AutoDisposeFutureProviderRef<List<CollectionEntity>> {
-  /// The parameter `parentCollectionId` of this provider.
-  String get parentCollectionId;
-}
-
-class _ChildCollectionsProviderElement
-    extends AutoDisposeFutureProviderElement<List<CollectionEntity>>
-    with ChildCollectionsRef {
-  _ChildCollectionsProviderElement(super.provider);
-
-  @override
-  String get parentCollectionId =>
-      (origin as ChildCollectionsProvider).parentCollectionId;
-}
-
-String _$childFilesHash() => r'b46deab9ed07b788df1c29c40a51d3e32213ec0d';
-
-/// See also [childFiles].
-@ProviderFor(childFiles)
-const childFilesProvider = ChildFilesFamily();
-
-/// See also [childFiles].
-class ChildFilesFamily extends Family<AsyncValue<List<FileEntity>>> {
-  /// See also [childFiles].
-  const ChildFilesFamily();
-
-  /// See also [childFiles].
-  ChildFilesProvider call(
-    String parentCollectionId,
-  ) {
-    return ChildFilesProvider(
-      parentCollectionId,
-    );
-  }
-
-  @override
-  ChildFilesProvider getProviderOverride(
-    covariant ChildFilesProvider provider,
-  ) {
-    return call(
-      provider.parentCollectionId,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'childFilesProvider';
-}
-
-/// See also [childFiles].
-class ChildFilesProvider extends AutoDisposeFutureProvider<List<FileEntity>> {
-  /// See also [childFiles].
-  ChildFilesProvider(
-    String parentCollectionId,
-  ) : this._internal(
-          (ref) => childFiles(
-            ref as ChildFilesRef,
-            parentCollectionId,
-          ),
-          from: childFilesProvider,
-          name: r'childFilesProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$childFilesHash,
-          dependencies: ChildFilesFamily._dependencies,
-          allTransitiveDependencies:
-              ChildFilesFamily._allTransitiveDependencies,
-          parentCollectionId: parentCollectionId,
-        );
-
-  ChildFilesProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.parentCollectionId,
-  }) : super.internal();
-
-  final String parentCollectionId;
-
-  @override
-  Override overrideWith(
-    FutureOr<List<FileEntity>> Function(ChildFilesRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: ChildFilesProvider._internal(
-        (ref) => create(ref as ChildFilesRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        parentCollectionId: parentCollectionId,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeFutureProviderElement<List<FileEntity>> createElement() {
-    return _ChildFilesProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is ChildFilesProvider &&
-        other.parentCollectionId == parentCollectionId;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, parentCollectionId.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-mixin ChildFilesRef on AutoDisposeFutureProviderRef<List<FileEntity>> {
-  /// The parameter `parentCollectionId` of this provider.
-  String get parentCollectionId;
-}
-
-class _ChildFilesProviderElement
-    extends AutoDisposeFutureProviderElement<List<FileEntity>>
-    with ChildFilesRef {
-  _ChildFilesProviderElement(super.provider);
-
-  @override
-  String get parentCollectionId =>
-      (origin as ChildFilesProvider).parentCollectionId;
-}
-
-String _$currentCollectionHash() => r'bd3e0eeb9a49c3a5f2989acffda23ae60c2ceb60';
 
 /// See also [currentCollection].
 @ProviderFor(currentCollection)
@@ -422,6 +156,300 @@ class _CurrentCollectionProviderElement
 
   @override
   String get collectionId => (origin as CurrentCollectionProvider).collectionId;
+}
+
+String _$childCollectionsHash() => r'3ce2d7aeefe20fd15ae5f2114afc169a526bf517';
+
+abstract class _$ChildCollections
+    extends BuildlessAutoDisposeAsyncNotifier<List<CollectionEntity>> {
+  late final String parentCollectionId;
+
+  FutureOr<List<CollectionEntity>> build(
+    String parentCollectionId,
+  );
+}
+
+/// See also [ChildCollections].
+@ProviderFor(ChildCollections)
+const childCollectionsProvider = ChildCollectionsFamily();
+
+/// See also [ChildCollections].
+class ChildCollectionsFamily
+    extends Family<AsyncValue<List<CollectionEntity>>> {
+  /// See also [ChildCollections].
+  const ChildCollectionsFamily();
+
+  /// See also [ChildCollections].
+  ChildCollectionsProvider call(
+    String parentCollectionId,
+  ) {
+    return ChildCollectionsProvider(
+      parentCollectionId,
+    );
+  }
+
+  @override
+  ChildCollectionsProvider getProviderOverride(
+    covariant ChildCollectionsProvider provider,
+  ) {
+    return call(
+      provider.parentCollectionId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'childCollectionsProvider';
+}
+
+/// See also [ChildCollections].
+class ChildCollectionsProvider extends AutoDisposeAsyncNotifierProviderImpl<
+    ChildCollections, List<CollectionEntity>> {
+  /// See also [ChildCollections].
+  ChildCollectionsProvider(
+    String parentCollectionId,
+  ) : this._internal(
+          () => ChildCollections()..parentCollectionId = parentCollectionId,
+          from: childCollectionsProvider,
+          name: r'childCollectionsProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$childCollectionsHash,
+          dependencies: ChildCollectionsFamily._dependencies,
+          allTransitiveDependencies:
+              ChildCollectionsFamily._allTransitiveDependencies,
+          parentCollectionId: parentCollectionId,
+        );
+
+  ChildCollectionsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.parentCollectionId,
+  }) : super.internal();
+
+  final String parentCollectionId;
+
+  @override
+  FutureOr<List<CollectionEntity>> runNotifierBuild(
+    covariant ChildCollections notifier,
+  ) {
+    return notifier.build(
+      parentCollectionId,
+    );
+  }
+
+  @override
+  Override overrideWith(ChildCollections Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: ChildCollectionsProvider._internal(
+        () => create()..parentCollectionId = parentCollectionId,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        parentCollectionId: parentCollectionId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeAsyncNotifierProviderElement<ChildCollections,
+      List<CollectionEntity>> createElement() {
+    return _ChildCollectionsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ChildCollectionsProvider &&
+        other.parentCollectionId == parentCollectionId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, parentCollectionId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin ChildCollectionsRef
+    on AutoDisposeAsyncNotifierProviderRef<List<CollectionEntity>> {
+  /// The parameter `parentCollectionId` of this provider.
+  String get parentCollectionId;
+}
+
+class _ChildCollectionsProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<ChildCollections,
+        List<CollectionEntity>> with ChildCollectionsRef {
+  _ChildCollectionsProviderElement(super.provider);
+
+  @override
+  String get parentCollectionId =>
+      (origin as ChildCollectionsProvider).parentCollectionId;
+}
+
+String _$childFilesHash() => r'dcddc69da812f520f1400ded925b14cd5217273e';
+
+abstract class _$ChildFiles
+    extends BuildlessAutoDisposeAsyncNotifier<List<FileEntity>> {
+  late final String parentCollectionId;
+
+  FutureOr<List<FileEntity>> build(
+    String parentCollectionId,
+  );
+}
+
+/// See also [ChildFiles].
+@ProviderFor(ChildFiles)
+const childFilesProvider = ChildFilesFamily();
+
+/// See also [ChildFiles].
+class ChildFilesFamily extends Family<AsyncValue<List<FileEntity>>> {
+  /// See also [ChildFiles].
+  const ChildFilesFamily();
+
+  /// See also [ChildFiles].
+  ChildFilesProvider call(
+    String parentCollectionId,
+  ) {
+    return ChildFilesProvider(
+      parentCollectionId,
+    );
+  }
+
+  @override
+  ChildFilesProvider getProviderOverride(
+    covariant ChildFilesProvider provider,
+  ) {
+    return call(
+      provider.parentCollectionId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'childFilesProvider';
+}
+
+/// See also [ChildFiles].
+class ChildFilesProvider
+    extends AutoDisposeAsyncNotifierProviderImpl<ChildFiles, List<FileEntity>> {
+  /// See also [ChildFiles].
+  ChildFilesProvider(
+    String parentCollectionId,
+  ) : this._internal(
+          () => ChildFiles()..parentCollectionId = parentCollectionId,
+          from: childFilesProvider,
+          name: r'childFilesProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$childFilesHash,
+          dependencies: ChildFilesFamily._dependencies,
+          allTransitiveDependencies:
+              ChildFilesFamily._allTransitiveDependencies,
+          parentCollectionId: parentCollectionId,
+        );
+
+  ChildFilesProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.parentCollectionId,
+  }) : super.internal();
+
+  final String parentCollectionId;
+
+  @override
+  FutureOr<List<FileEntity>> runNotifierBuild(
+    covariant ChildFiles notifier,
+  ) {
+    return notifier.build(
+      parentCollectionId,
+    );
+  }
+
+  @override
+  Override overrideWith(ChildFiles Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: ChildFilesProvider._internal(
+        () => create()..parentCollectionId = parentCollectionId,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        parentCollectionId: parentCollectionId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeAsyncNotifierProviderElement<ChildFiles, List<FileEntity>>
+      createElement() {
+    return _ChildFilesProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ChildFilesProvider &&
+        other.parentCollectionId == parentCollectionId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, parentCollectionId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin ChildFilesRef on AutoDisposeAsyncNotifierProviderRef<List<FileEntity>> {
+  /// The parameter `parentCollectionId` of this provider.
+  String get parentCollectionId;
+}
+
+class _ChildFilesProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<ChildFiles,
+        List<FileEntity>> with ChildFilesRef {
+  _ChildFilesProviderElement(super.provider);
+
+  @override
+  String get parentCollectionId =>
+      (origin as ChildFilesProvider).parentCollectionId;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

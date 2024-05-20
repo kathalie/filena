@@ -1,4 +1,5 @@
-import '../entities/file_entity.dart';
+import 'dart:typed_data';
+
 import '../repository_interfaces/file_repository.dart';
 
 class AddFileUseCase {
@@ -9,10 +10,24 @@ class AddFileUseCase {
   });
 
   Future<void> call({
-    required FileEntity fileEntity,
-    required String destinationAlbumId,
-  }) {
-    // TODO: implement call
-    throw UnimplementedError();
+    required String parentCollectionId,
+    required String name,
+    required DateTime dateCreated,
+    required int sizeInBytes,
+    required Uint8List content,
+    required String? description,
+    required List<String> tagIds,
+    required bool isFavourite,
+  }) async {
+    await fileRepository.createFile(
+      parentCollectionId: parentCollectionId,
+      name: name,
+      dateCreated: dateCreated,
+      sizeInBytes: sizeInBytes,
+      content: content,
+      description: description,
+      tagIds: tagIds,
+      isFavourite: isFavourite,
+    );
   }
 }

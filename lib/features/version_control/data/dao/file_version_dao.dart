@@ -15,7 +15,7 @@ class FileVersionDao implements FileVersionDataSource {
   }
 
   @override
-  Future<void> createFileVersion({
+  Future<int> createFileVersion({
     required String fileId,
     required DateTime dateEdited,
     required FileLocation location,
@@ -66,9 +66,13 @@ class FileVersionDao implements FileVersionDataSource {
       ..file.value = file
       ..tags.addAll(tagModels);
 
+    late final int newFileId;
+
     isar.writeTxnSync(() {
-      isar.fileVersions.putSync(fileVersion);
+      newFileId = isar.fileVersions.putSync(fileVersion);
     });
+
+    return newFileId;
   }
 
   @override

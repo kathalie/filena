@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import '../../../version_control/business/repository_interfaces/file_version_repository.dart';
 import '../../business/entities/file_entity.dart';
-import '../../business/entities/supplementary_structures/file_location.dart';
 import '../../business/repository_interfaces/file_repository.dart';
 import '../data_source_interfaces/file_data_source.dart';
 import '../models/file_model.dart';
@@ -46,19 +45,19 @@ class FileRepositoryImpl implements FileRepository {
 
   @override
   Future<void> createFile({
+    required String parentCollectionId,
     required String name,
     required DateTime dateCreated,
     required int sizeInBytes,
-    required FileLocation location,
     required Uint8List content,
     required String? description,
     required List<String> tagIds,
     required bool isFavourite,
   }) async {
     fileDataSource.createFile(
+      parentCollectionId: parentCollectionId,
       name: name,
       dateCreated: dateCreated,
-      location: location,
       description: description,
       tagIds: tagIds,
       isFavourite: isFavourite,

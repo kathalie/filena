@@ -31,8 +31,8 @@ class CollectionRepositoryImpl implements CollectionRepository {
   Future<void> createCollection({
     required String newCollectionName,
     required String parentCollectionId,
-  }) {
-    return collectionDataSource.createCollection(
+  }) async {
+    return await collectionDataSource.createCollection(
       newCollectionName: newCollectionName,
       parentCollectionId: parentCollectionId,
     );
@@ -65,7 +65,7 @@ class CollectionRepositoryImpl implements CollectionRepository {
     required String collectionId,
     required String newName,
   }) async {
-    collectionDataSource.updateCollection(
+    await collectionDataSource.updateCollection(
       collectionId: collectionId,
       newName: newName,
     );

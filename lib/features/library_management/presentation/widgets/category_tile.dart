@@ -12,15 +12,14 @@ class CategoryTile extends StatelessWidget {
   });
 
   void _goToCollectionsPage(
-      BuildContext context,
-      CategoryEntity currentCategory,
-      ) {
+    BuildContext context,
+  ) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => CollectionPage(
-          currentCollectionId: currentCategory.rootCollectionId,
-          allowedExtensions: currentCategory.extensions,
+          currentCollectionId: category.rootCollectionId,
+          currentCategory: category,
         ),
       ),
     );
@@ -30,7 +29,7 @@ class CategoryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        _goToCollectionsPage(context, category);
+        _goToCollectionsPage(context);
       },
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(

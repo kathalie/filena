@@ -39,7 +39,9 @@ CollectionDataSource collectionDao(CollectionDaoRef ref) {
 
 @riverpod
 FileDataSource fileDao(FileDaoRef ref) {
-  return FileDao();
+  return FileDao(
+    fileVersionDataSource: ref.watch(fileVersionDaoProvider),
+  );
 }
 
 @riverpod

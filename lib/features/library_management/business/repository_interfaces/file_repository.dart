@@ -9,10 +9,10 @@ abstract interface class FileRepository {
   Future<List<FileEntity>> getFilesFromCollection(String collectionId);
 
   Future<void> createFile({
+    required String parentCollectionId,
     required String name,
     required DateTime dateCreated,
     required int sizeInBytes,
-    required FileLocation location,
     required Uint8List content,
     required String? description,
     required List<String> tagIds,

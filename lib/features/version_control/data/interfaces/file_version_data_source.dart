@@ -6,7 +6,7 @@ abstract interface class FileVersionDataSource {
 
   Future<List<FileVersion>> getVersionsOfFile(String fileId);
 
-  Future<void> createFileVersion({
+  Future<int> createFileVersion({
     required String fileId,
     required DateTime dateEdited,
     required FileLocation location,

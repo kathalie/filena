@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/presentation/widgets/progress_indicator.dart';
+import '../../business/entities/category_entity.dart';
 import '../state_management/collection_page_states.dart';
 import 'collection_tile.dart';
 
 class CollectionsSliverGrid extends ConsumerWidget {
   final String currentCollectionId;
-  final List<String> allowedExtensions;
+  final CategoryEntity currentCategory;
 
   const CollectionsSliverGrid({
     required this.currentCollectionId,
-    required this.allowedExtensions,
+    required this.currentCategory,
     super.key,
   });
 
@@ -29,7 +30,7 @@ class CollectionsSliverGrid extends ConsumerWidget {
         children: [
           for (final collection in collections)
             CollectionTile(
-              allowedExtensions: allowedExtensions,
+              currentCategory: currentCategory,
               collection: collection,
             ),
         ],
