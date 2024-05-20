@@ -30,12 +30,22 @@ class FileDao implements FileDataSource {
 
     // TODO location depending on user choice
     final location = ObjectLocation(bucket: 'test_bucket', objectName: name);
-    
+
+    // Get parent collection
+
+    final parentCollection =
+        await isar.fileCollections.get(int.parse(parentCollectionId));
+
+    if (parentCollection == null) {
+      throw ArgumentError('Collection with required id does not exist!');
+    }
+
     //Create file
 
     final newFile = File()
       ..name = name
-      ..timeCreated = dateCreated;
+      ..timeCreated = dateCreated
+      ..parentCollections.add(parentCollection);
 
     late final int fileId;
 
@@ -45,8 +55,7 @@ class FileDao implements FileDataSource {
 
     //Create fileVersion
 
-    final currentFileVersionId = await fileVersionDataSource
-        .createFileVersion(
+    final currentFileVersionId = await fileVersionDataSource.createFileVersion(
       fileId: fileId.toString(),
       dateEdited: newFile.timeCreated,
       location: location,

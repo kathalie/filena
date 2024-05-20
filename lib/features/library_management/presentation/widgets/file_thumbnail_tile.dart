@@ -13,6 +13,7 @@ class FileThumbnailTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Image.memory(fileEntity.content);
+    return Text(fileEntity.name);
+    // return Image.memory(fileEntity.content);
   }
 }

@@ -1,12 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
 
+import '../../business/entities/category_entity.dart';
+import '../state_management/collection_page_states.dart';
+
 class AddFilesButton extends ConsumerWidget {
   final String parentCollectionId;
+  final CategoryEntity currentCategory;
 
   const AddFilesButton({
     required this.parentCollectionId,
+    required this.currentCategory,
     super.key,
   });
 
@@ -21,48 +28,24 @@ class AddFilesButton extends ConsumerWidget {
     //       tagIds: [],
     //       isFavourite: false,
     //     );
-    FilePicker.platform.pickFiles(
-        allowMultiple: true,
+    FilePicker.platform
+        .pickFiles(
+      withData: true,
+      allowMultiple: true,
       type: FileType.custom,
-      // allowedExtensions: ,
-    ).then((result) async {
+      allowedExtensions: currentCategory.extensions,
+    )
+        .then((result) async {
       if (result == null) return;
 
-      // final objectStorageManager =
-      // await ref.watch(objectStorageManagerProvider.future);
+      final childFiles = ref.read(childFilesProvider(parentCollectionId).notifier);
 
       for (final file in result.files) {
-        // final bytes = file.readStream.;
-        // final bucket = DefaultCategories.images.name;
-        final fileName = file.name;
-
-        // print(bytes.);
-
-        // if (bytes == null) continue;
-
-        // fileVersions.add((bucket: bucket, name: fileName));
-        //
-        // objectStorageManager.write(
-        //   bytes,
-        //   ObjectLocation(
-        //     bucket: bucket,
-        //     objectName: fileName,
-        //   ),
-        // );
+        await childFiles.addFile(
+          parentCollectionId: parentCollectionId,
+          platformFile: file,
+        );
       }
-
-      // setState(() async {
-      //   for (final fileInfo in fileVersions) {
-      //     fileBytes.add(
-      //       await objectStorageManager.read(
-      //         ObjectLocation(
-      //           bucket: fileInfo.bucket,
-      //           objectName: fileInfo.name,
-      //         ),
-      //       ),
-      //     );
-      //   }
-      // });
     });
   }
 

@@ -19,7 +19,7 @@ class TagRepositoryImpl implements TagRepository {
 
   @override
   Future<void> createTag({required String name}) async {
-    tagDataSource.createTag(name: name);
+    await tagDataSource.createTag(name: name);
   }
 
   @override
@@ -43,7 +43,7 @@ class TagRepositoryImpl implements TagRepository {
 
   @override
   Future<void> updateTag({required String id, String? name}) async {
-    tagDataSource.updateTag(
+    await tagDataSource.updateTag(
       id: id,
       name: name,
     );

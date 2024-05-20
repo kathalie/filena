@@ -1,5 +1,4 @@
-import 'dart:typed_data';
-
+import 'package:file_picker/file_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/di/usecases/library_management_usecases_di.dart';
@@ -41,23 +40,25 @@ class ChildFiles extends _$ChildFiles {
 
   Future<void> addFile({
     required String parentCollectionId,
-    required String name,
-    required DateTime dateCreated,
-    required int sizeInBytes,
-    required Uint8List content,
-    required List<String> tagIds,
-    required bool isFavourite,
-    String? description,
+    required PlatformFile platformFile,
   }) async {
+    final bytes = platformFile.bytes;
+
+    if (bytes == null) {
+      throw ArgumentError('Null file content!');
+    }
+
+    final lastModified = await platformFile.xFile.lastModified();
+
     await ref.watch(addFileUsecaseProvider)(
       parentCollectionId: parentCollectionId,
-      name: name,
-      dateCreated: dateCreated,
-      sizeInBytes: sizeInBytes,
-      content: content,
-      description: description,
-      tagIds: tagIds,
-      isFavourite: isFavourite,
+      name: platformFile.name,
+      dateCreated: lastModified,
+      sizeInBytes: platformFile.size,
+      content: bytes,
+      description: null,
+      tagIds: [],
+      isFavourite: false,
     );
 
     ref.invalidateSelf();

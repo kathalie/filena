@@ -45,7 +45,10 @@ class CollectionPage extends ConsumerWidget {
                 child: Row(
                   children: [
                     AddCollectionButton(parentCollectionId: collection.id),
-                    AddFilesButton(parentCollectionId: collection.id),
+                    AddFilesButton(
+                      parentCollectionId: collection.id,
+                      currentCategory: currentCategory,
+                    ),
                   ],
                 ),
               ),

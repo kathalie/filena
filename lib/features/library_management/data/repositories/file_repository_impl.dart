@@ -54,7 +54,7 @@ class FileRepositoryImpl implements FileRepository {
     required List<String> tagIds,
     required bool isFavourite,
   }) async {
-    fileDataSource.createFile(
+    await fileDataSource.createFile(
       parentCollectionId: parentCollectionId,
       name: name,
       dateCreated: dateCreated,
