@@ -71,7 +71,7 @@ final tagRepositoryProvider = AutoDisposeProvider<TagRepository>.internal(
 
 typedef TagRepositoryRef = AutoDisposeProviderRef<TagRepository>;
 String _$fileVersionRepositoryHash() =>
-    r'3149e65b7b56f1c9f96da4163783561da8036427';
+    r'56f833627686c2e8a62eb25095884ef4b3b4d344';
 
 /// See also [fileVersionRepository].
 @ProviderFor(fileVersionRepository)

@@ -158,7 +158,7 @@ class _CurrentCollectionProviderElement
   String get collectionId => (origin as CurrentCollectionProvider).collectionId;
 }
 
-String _$childCollectionsHash() => r'3ce2d7aeefe20fd15ae5f2114afc169a526bf517';
+String _$childCollectionsHash() => r'bdcf1944b5e2af35dc7d014b16a95b9b89b79331';
 
 abstract class _$ChildCollections
     extends BuildlessAutoDisposeAsyncNotifier<List<CollectionEntity>> {
@@ -306,7 +306,7 @@ class _ChildCollectionsProviderElement
       (origin as ChildCollectionsProvider).parentCollectionId;
 }
 
-String _$childFilesHash() => r'dcddc69da812f520f1400ded925b14cd5217273e';
+String _$childFilesHash() => r'870b163b17112c1fe107a48b84c305c662dbfb30';
 
 abstract class _$ChildFiles
     extends BuildlessAutoDisposeAsyncNotifier<List<FileEntity>> {

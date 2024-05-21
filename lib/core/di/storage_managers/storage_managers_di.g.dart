@@ -7,12 +7,12 @@ part of 'storage_managers_di.dart';
 // **************************************************************************
 
 String _$objectStorageManagerHash() =>
-    r'da80dca695de494399b324c086210496d7b7fea5';
+    r'1bd7f79ca6d3d1eae2b1eed1915fe56d1f568c33';
 
 /// See also [objectStorageManager].
 @ProviderFor(objectStorageManager)
 final objectStorageManagerProvider =
-    AutoDisposeFutureProvider<StorageManager<FileLocation>>.internal(
+    AutoDisposeFutureProvider<StorageManager<ObjectLocation>>.internal(
   objectStorageManager,
   name: r'objectStorageManagerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -23,6 +23,6 @@ final objectStorageManagerProvider =
 );
 
 typedef ObjectStorageManagerRef
-    = AutoDisposeFutureProviderRef<StorageManager<FileLocation>>;
+    = AutoDisposeFutureProviderRef<StorageManager<ObjectLocation>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

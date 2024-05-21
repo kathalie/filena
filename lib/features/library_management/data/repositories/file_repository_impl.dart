@@ -37,15 +37,16 @@ class FileRepositoryImpl implements FileRepository {
       currentFileVersionId: model.currentFileVersion.value!.id.toString(),
       allVersionIds: allVersionIds.toList(),
       location: currentFileVersionEntity.location,
-      // TODO organize locations
       content: currentFileVersionEntity.content,
-      sizeInBytes: currentFileVersionEntity.sizeInBytes, // TODO read from storage
+      sizeInBytes:
+          currentFileVersionEntity.sizeInBytes,
     );
   }
 
   @override
   Future<void> createFile({
     required String parentCollectionId,
+    required String categoryName,
     required String name,
     required DateTime dateCreated,
     required int sizeInBytes,
@@ -56,6 +57,7 @@ class FileRepositoryImpl implements FileRepository {
   }) async {
     await fileDataSource.createFile(
       parentCollectionId: parentCollectionId,
+      categoryName: categoryName,
       name: name,
       dateCreated: dateCreated,
       description: description,

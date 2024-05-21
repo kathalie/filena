@@ -4,16 +4,26 @@ import '../../../library_management/business/entities/supplementary_structures/f
 import '../../business/entities/file_version_entity.dart';
 import '../../business/repository_interfaces/file_version_repository.dart';
 import '../interfaces/file_version_data_source.dart';
+import '../interfaces/storage_manager.dart';
 import '../models/file_version_model.dart';
 
 class FileVersionRepositoryImpl implements FileVersionRepository {
   final FileVersionDataSource fileVersionDataSource;
+  final StorageManager<ObjectLocation> storageManager;
 
   const FileVersionRepositoryImpl({
     required this.fileVersionDataSource,
+    required this.storageManager,
   });
 
-  FileVersionEntity _toEntity(FileVersion model) {
+  Future<FileVersionEntity> _toEntity(FileVersion model) async {
+    final location = ObjectLocation(
+      bucket: model.fileLocation,
+      objectName: model.fileName,
+    );
+
+    // final content = await storageManager.read(location);
+
     return FileVersionEntity(
       id: model.id.toString(),
       fileId: model.file.value!.id.toString(),
@@ -24,8 +34,8 @@ class FileVersionRepositoryImpl implements FileVersionRepository {
         bucket: model.fileLocation,
         objectName: model.fileName,
       ),
-      // TODO organize locations
-      content: Uint8List.fromList([0]), // TODO read from storage
+      //TODO read from object storage
+      content: Uint8List.fromList([0]),
     );
   }
 
@@ -40,7 +50,7 @@ class FileVersionRepositoryImpl implements FileVersionRepository {
     List<String> tagIds = const [],
     bool isFavourite = false,
   }) async {
-    fileVersionDataSource.createFileVersion(
+    await fileVersionDataSource.createFileVersion(
       fileId: fileId,
       dateEdited: dateEdited,
       location: location,
@@ -59,7 +69,9 @@ class FileVersionRepositoryImpl implements FileVersionRepository {
   Future<List<FileVersionEntity>> getVersionsOfFile(String fileId) async {
     final fileVersions = await fileVersionDataSource.getVersionsOfFile(fileId);
 
-    return fileVersions.map((model) => _toEntity(model)).toList();
+    return await Future.wait(
+      fileVersions.map((model) async => await _toEntity(model)).toList(),
+    );
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../features/library_management/business/entities/supplementary_structures/file_location.dart';
 import '../../../features/library_management/business/repository_interfaces/category_repository.dart';
 import '../../../features/library_management/business/repository_interfaces/collection_repository.dart';
 import '../../../features/library_management/business/repository_interfaces/file_repository.dart';
@@ -15,6 +16,7 @@ import '../../../features/user/data/repositories/user_repository_impl.dart';
 import '../../../features/version_control/business/repository_interfaces/file_version_repository.dart';
 import '../../../features/version_control/data/repositories/file_version_repository_impl.dart';
 import '../data_sources/data_sources_di.dart';
+import '../storage_managers/storage_managers_di.dart';
 
 part 'repositories_di.g.dart';
 
@@ -49,8 +51,15 @@ TagRepository tagRepository(TagRepositoryRef ref) {
 
 @riverpod
 FileVersionRepository fileVersionRepository(FileVersionRepositoryRef ref) {
+  final objectStorageManager = ref.watch(objectStorageManagerProvider).value;
+
+  if (objectStorageManager == null) {
+    throw ArgumentError('Object storage manager failed to initialize!');
+  }
+
   return FileVersionRepositoryImpl(
     fileVersionDataSource: ref.watch(fileVersionDaoProvider),
+    storageManager: objectStorageManager,
   );
 }
 

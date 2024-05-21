@@ -11,6 +11,7 @@ class AddFileUseCase {
 
   Future<void> call({
     required String parentCollectionId,
+    required String categoryName,
     required String name,
     required DateTime dateCreated,
     required int sizeInBytes,
@@ -21,6 +22,7 @@ class AddFileUseCase {
   }) async {
     await fileRepository.createFile(
       parentCollectionId: parentCollectionId,
+      categoryName: categoryName,
       name: name,
       dateCreated: dateCreated,
       sizeInBytes: sizeInBytes,

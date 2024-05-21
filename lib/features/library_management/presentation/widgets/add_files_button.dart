@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
@@ -18,16 +16,6 @@ class AddFilesButton extends ConsumerWidget {
   });
 
   void _onAddFilesPressed(WidgetRef ref) {
-    // ref.read(childFilesProvider(parentCollectionId).notifier).addFile(
-    //       parentCollectionId: parentCollectionId,
-    //       name: 'meow.png',
-    //       dateCreated: DateTime.now(),
-    //       sizeInBytes: 0,
-    //       content: Uint8List(5),
-    //       description: null,
-    //       tagIds: [],
-    //       isFavourite: false,
-    //     );
     FilePicker.platform
         .pickFiles(
       withData: true,
@@ -38,10 +26,12 @@ class AddFilesButton extends ConsumerWidget {
         .then((result) async {
       if (result == null) return;
 
-      final childFiles = ref.read(childFilesProvider(parentCollectionId).notifier);
+      final childFilesNotifier =
+          ref.read(childFilesProvider(parentCollectionId).notifier);
 
       for (final file in result.files) {
-        await childFiles.addFile(
+        await childFilesNotifier.addFile(
+          categoryName: currentCategory.name,
           parentCollectionId: parentCollectionId,
           platformFile: file,
         );

@@ -7,7 +7,7 @@ import '../../../features/version_control/data/storage_managers/object_storage_m
 part 'storage_managers_di.g.dart';
 
 @riverpod
-Future<StorageManager<FileLocation>> objectStorageManager(
+Future<StorageManager<ObjectLocation>> objectStorageManager(
   ObjectStorageManagerRef ref,
 ) async {
   return await ObjectStorageManager.create();

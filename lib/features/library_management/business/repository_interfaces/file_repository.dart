@@ -10,6 +10,7 @@ abstract interface class FileRepository {
 
   Future<void> createFile({
     required String parentCollectionId,
+    required String categoryName,
     required String name,
     required DateTime dateCreated,
     required int sizeInBytes,

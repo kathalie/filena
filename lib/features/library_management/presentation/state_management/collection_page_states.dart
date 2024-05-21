@@ -40,6 +40,7 @@ class ChildFiles extends _$ChildFiles {
 
   Future<void> addFile({
     required String parentCollectionId,
+    required String categoryName,
     required PlatformFile platformFile,
   }) async {
     final bytes = platformFile.bytes;
@@ -52,6 +53,7 @@ class ChildFiles extends _$ChildFiles {
 
     await ref.watch(addFileUsecaseProvider)(
       parentCollectionId: parentCollectionId,
+      categoryName: categoryName,
       name: platformFile.name,
       dateCreated: lastModified,
       sizeInBytes: platformFile.size,

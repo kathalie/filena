@@ -20,6 +20,7 @@ class FileDao implements FileDataSource {
   @override
   Future<void> createFile({
     required String parentCollectionId,
+    required String categoryName,
     required String name,
     required DateTime dateCreated,
     required String? description,
@@ -29,7 +30,7 @@ class FileDao implements FileDataSource {
     final isar = await db;
 
     // TODO location depending on user choice
-    final location = ObjectLocation(bucket: 'test_bucket', objectName: name);
+    final location = ObjectLocation(bucket: categoryName, objectName: name);
 
     // Get parent collection
 

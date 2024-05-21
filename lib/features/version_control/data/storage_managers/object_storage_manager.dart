@@ -1,7 +1,6 @@
 import 'package:chunked_stream/chunked_stream.dart';
 import 'package:minio_new/minio.dart';
 
-import '../../../../core/constants/constants.dart';
 import '../../../library_management/business/entities/supplementary_structures/file_location.dart';
 import 'dart:typed_data';
 
@@ -12,9 +11,11 @@ class ObjectStorageManager implements StorageManager<ObjectLocation> {
 
   ObjectStorageManager._create()
       : minio = Minio(
-          endPoint: 'play.min.io',
-          accessKey: 'Q3AM3UQ867SPQQA43P2F',
-          secretKey: 'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG',
+          endPoint: '192.0.0.1',
+          port: 9000,
+          useSSL: false,
+          accessKey: 'minioadmin',
+          secretKey: 'minioadmin',
         );
 
   static Future<ObjectStorageManager> create() async {
@@ -26,15 +27,15 @@ class ObjectStorageManager implements StorageManager<ObjectLocation> {
   }
 
   Future<void> _initializeBuckets() async {
-    const defaultBuckets = DefaultCategories.values;
-
-    for (final defaultBucket in defaultBuckets) {
-      final bucketExists = await minio.bucketExists(defaultBucket.name);
-
-      if (!bucketExists) {
-        await minio.makeBucket(defaultBucket.name);
-      }
-    }
+    // const defaultBuckets = DefaultCategories.values;
+    //
+    // for (final defaultBucket in defaultBuckets) {
+    //   final bucketExists = await minio.bucketExists(defaultBucket.name);
+    //
+    //   if (!bucketExists) {
+    //     await minio.makeBucket(defaultBucket.name);
+    //   }
+    // }
   }
 
   @override
