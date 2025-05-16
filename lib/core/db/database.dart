@@ -11,7 +11,7 @@ import '../../features/user/data/models/user_model.dart';
 import '../constants/constants.dart';
 
 Future<Isar> isarDbConnection() async {
-  const isarInstanceName = 'multiversa';
+  const isarInstanceName = 'filena';
   final dir = await getApplicationDocumentsDirectory();
 
   final instance = Isar.getInstance(isarInstanceName);

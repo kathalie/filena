@@ -5,6 +5,6 @@ import 'core/presentation/app.dart';
 
 void main() {
   runApp(
-    const ProviderScope(child: MultiversaApp()),
+    const ProviderScope(child: FilenaApp()),
   );
 }

@@ -7,12 +7,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:multiversa/core/presentation/app.dart';
+import 'package:filena/core/presentation/app.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MultiversaApp());
+    await tester.pumpWidget(const FilenaApp());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

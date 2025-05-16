@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'pages/home_page.dart';
 
-class MultiversaApp extends StatelessWidget {
-  const MultiversaApp({super.key});
+class FilenaApp extends StatelessWidget {
+  const FilenaApp({super.key});
 
   // This widget is the root of your application.
   @override
