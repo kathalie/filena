@@ -22,7 +22,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(1, 2933503222850296189),
       name: 'File',
-      lastPropertyId: const obx_int.IdUid(9, 2198361206089323603),
+      lastPropertyId: const obx_int.IdUid(15, 2745319765034613164),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -31,44 +31,35 @@ final _entities = <obx_int.ModelEntity>[
             type: 6,
             flags: 1),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(2, 6558802783405580143),
+            id: const obx_int.IdUid(10, 8683618238728532890),
             name: 'name',
             type: 9,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(3, 9106844457950300752),
+            id: const obx_int.IdUid(11, 2713778461944599971),
             name: 'hash',
             type: 9,
-            flags: 0),
+            flags: 2080,
+            indexId: const obx_int.IdUid(1, 6699308637826693896)),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(4, 5307462514647557182),
+            id: const obx_int.IdUid(12, 8180727755434864447),
             name: 'mimeType',
             type: 9,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(5, 2704966603259477581),
+            id: const obx_int.IdUid(13, 2911965324716622281),
             name: 'sizeInBytes',
             type: 6,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(6, 2498238307875495402),
+            id: const obx_int.IdUid(14, 97400929135809652),
             name: 'timeCreated',
             type: 10,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(7, 3157540112820488283),
+            id: const obx_int.IdUid(15, 2745319765034613164),
             name: 'timeLastModified',
             type: 10,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(8, 5480118627372021280),
-            name: 'dbTimeCreated',
-            type: 6,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(9, 2198361206089323603),
-            name: 'dbTimeLastModified',
-            type: 6,
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
@@ -111,12 +102,21 @@ obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
       lastEntityId: const obx_int.IdUid(1, 2933503222850296189),
-      lastIndexId: const obx_int.IdUid(0, 0),
+      lastIndexId: const obx_int.IdUid(1, 6699308637826693896),
       lastRelationId: const obx_int.IdUid(0, 0),
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [],
+      retiredPropertyUids: const [
+        6558802783405580143,
+        9106844457950300752,
+        5307462514647557182,
+        2704966603259477581,
+        2498238307875495402,
+        3157540112820488283,
+        5480118627372021280,
+        2198361206089323603
+      ],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -135,41 +135,35 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final nameOffset = fbb.writeString(object.name);
           final hashOffset = fbb.writeString(object.hash);
           final mimeTypeOffset = fbb.writeString(object.mimeType);
-          fbb.startTable(10);
+          fbb.startTable(16);
           fbb.addInt64(0, object.id);
-          fbb.addOffset(1, nameOffset);
-          fbb.addOffset(2, hashOffset);
-          fbb.addOffset(3, mimeTypeOffset);
-          fbb.addInt64(4, object.sizeInBytes);
-          fbb.addInt64(5, object.timeCreated.millisecondsSinceEpoch);
-          fbb.addInt64(6, object.timeLastModified.millisecondsSinceEpoch);
-          fbb.addInt64(7, object.dbTimeCreated);
-          fbb.addInt64(8, object.dbTimeLastModified);
+          fbb.addOffset(9, nameOffset);
+          fbb.addOffset(10, hashOffset);
+          fbb.addOffset(11, mimeTypeOffset);
+          fbb.addInt64(12, object.sizeInBytes);
+          fbb.addInt64(13, object.timeCreated.millisecondsSinceEpoch);
+          fbb.addInt64(14, object.timeLastModified.millisecondsSinceEpoch);
           fbb.finish(fbb.endTable());
           return object.id;
         },
         objectFromFB: (obx.Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
-
-          final object = File()
-            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
-            ..name = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 6, '')
-            ..hash = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 8, '')
-            ..mimeType = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 10, '')
-            ..sizeInBytes =
-                const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0)
-            ..timeCreated = DateTime.fromMillisecondsSinceEpoch(
-                const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0))
-            ..timeLastModified = DateTime.fromMillisecondsSinceEpoch(
-                const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0))
-            ..dbTimeCreated =
-                const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0)
-            ..dbTimeLastModified =
-                const fb.Int64Reader().vTableGet(buffer, rootOffset, 20, 0);
+          final nameParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 22, '');
+          final hashParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 24, '');
+          final mimeTypeParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 26, '');
+          final sizeInBytesParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 28, 0);
+          final timeCreatedParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 30, 0));
+          final timeLastModifiedParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 32, 0));
+          final object = File(nameParam, hashParam, mimeTypeParam,
+              sizeInBytesParam, timeCreatedParam, timeLastModifiedParam)
+            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
 
           return object;
         })
@@ -204,12 +198,4 @@ class File_ {
   /// See [File.timeLastModified].
   static final timeLastModified =
       obx.QueryDateProperty<File>(_entities[0].properties[6]);
-
-  /// See [File.dbTimeCreated].
-  static final dbTimeCreated =
-      obx.QueryIntegerProperty<File>(_entities[0].properties[7]);
-
-  /// See [File.dbTimeLastModified].
-  static final dbTimeLastModified =
-      obx.QueryIntegerProperty<File>(_entities[0].properties[8]);
 }

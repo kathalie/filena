@@ -11,7 +11,7 @@ class FileDatasourceImpl implements FileDataSource {
 
   @override
   Future<int> createFile(CreateFileDao createFileDao) async {
-    final fileModel = File(createFileDao);
+    final fileModel = File.fromDao(createFileDao);
 
     fileBox.put(fileModel);
 

@@ -35,7 +35,16 @@ class File {
   //   timeLastModified = DateTime.fromMillisecondsSinceEpoch(value, isUtc: true);
   // }
 
-  File(CreateFileDao createFileDao)
+  File(
+    this.name,
+    this.hash,
+    this.mimeType,
+    this.sizeInBytes,
+    this.timeCreated,
+    this.timeLastModified,
+  );
+
+  File.fromDao(CreateFileDao createFileDao)
       : name = createFileDao.name,
         hash = createFileDao.hash,
         mimeType = createFileDao.mimeType,

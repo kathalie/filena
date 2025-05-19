@@ -44,6 +44,8 @@ dependencies:
   get_it: ^8.0.3
   crypto: ^3.0.6
   convert: ^3.1.2
+  flutter_platform_widgets: ^8.0.0
+  icons_plus: ^5.0.0
 
 dev_dependencies:
   flutter_test:

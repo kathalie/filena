@@ -1,21 +1,41 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
+import 'const/theme_const.dart';
 import 'widgets/home_page.dart';
 
-class FilenaApp extends StatelessWidget {
+class FilenaApp extends StatefulWidget {
   const FilenaApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<FilenaApp> createState() => _FilenaAppState();
+}
+
+class _FilenaAppState extends State<FilenaApp> {
+  ThemeMode? themeMode = ThemeMode.light;
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return PlatformProvider(
+      settings: PlatformSettingsData(
+        iosUsesMaterialWidgets: true,
+        iosUseZeroPaddingForAppbarPlatformIcon: true,
       ),
-      home: const HomePage(),
-      debugShowCheckedModeBanner: false,
+      builder: (context) => PlatformTheme(
+        themeMode: themeMode,
+        materialLightTheme: ThemeConsts.materialLightTheme,
+        cupertinoLightTheme: ThemeConsts.cupertinoLightTheme,
+        onThemeModeChanged: (themeMode) {
+          this.themeMode = themeMode; // TODO Save to storage
+        },
+        builder: (context) => const PlatformApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Filena - Your smart file manager',
+          home: HomePage(),
+        ),
+      ),
+      // ),
     );
   }
 }
