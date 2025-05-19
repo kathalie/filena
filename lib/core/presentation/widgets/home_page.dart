@@ -4,6 +4,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../const/theme_const.dart';
 import 'components/builders/filena_app_bar_builder.dart';
+import 'components/folder_structure_side_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,11 +23,7 @@ class _HomePageState extends State<HomePage> {
           Container(
             width: 220,
             color: ThemeConsts.primaryBgColor,
-            child: Column(
-              children: [
-                Placeholder(), // TODO Sidebar
-              ],
-            ),
+            child: const FolderStructureSideBar(),
           ),
           Expanded(
             child: Container(

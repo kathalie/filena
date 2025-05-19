@@ -23,7 +23,7 @@ class FilenaLogo extends StatelessWidget {
             style: TextStyle(
               color: ThemeConsts.primaryColor,
               fontSize: 24,
-              fontWeight: FontWeight.w600
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],

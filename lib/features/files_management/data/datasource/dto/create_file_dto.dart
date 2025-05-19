@@ -1,11 +1,11 @@
 import '../../../domain/entities/new_file_entity.dart';
 
-class CreateFileDao {
+class CreateFileDto {
   final String name, hash, mimeType;
   final int sizeInBytes;
   final DateTime timeCreated, timeLastModified;
 
-  const CreateFileDao({
+  const CreateFileDto({
     required this.name,
     required this.hash,
     required this.mimeType,
@@ -14,7 +14,7 @@ class CreateFileDao {
     required this.timeLastModified,
   });
 
-  CreateFileDao.fromEntity(NewFileEntity newFileEntity, this.hash)
+  CreateFileDto.fromEntity(NewFileEntity newFileEntity, this.hash)
       : name = newFileEntity.name,
         mimeType = newFileEntity.mimeType,
         sizeInBytes = newFileEntity.sizeInBytes,

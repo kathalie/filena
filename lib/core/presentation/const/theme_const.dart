@@ -23,7 +23,6 @@ class ThemeConsts {
     primaryContrastingColor: Colors.white,
     textTheme: CupertinoTextThemeData(
       primaryColor: primaryColor,
-      textStyle: TextStyle(color: primaryColor),
     ),
   );
 

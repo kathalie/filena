@@ -1,12 +1,12 @@
-import 'dao/create_file_dao.dart';
-import 'dao/file_dao.dart';
+import 'dto/create_file_dto.dart';
+import 'dto/file_dto.dart';
 
 abstract interface class FileDataSource {
   // Future<List<File>> getFilesFromCollection(String collectionId);
 
-  Future<FileDao> getFile(int fileId);
+  Future<FileDto> getFile(int fileId);
 
-  Future<int> createFile(CreateFileDao createFileDao);
+  Future<int> createFile(CreateFileDto createFileDao);
 
   // Future<File> updateFile({
   //   required String id,

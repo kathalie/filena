@@ -2,7 +2,7 @@ import '../../business/repository_interfaces/file_repository.dart';
 import '../../domain/entities/file_entity.dart';
 import '../../domain/entities/new_file_entity.dart';
 import '../../domain/entities/update_file_entity.dart';
-import '../datasource/dao/create_file_dao.dart';
+import '../datasource/dto/create_file_dto.dart';
 import '../datasource/file_datasource.dart';
 import '../storage/storage_manager.dart';
 
@@ -39,7 +39,7 @@ class FileRepositoryImpl implements FileRepository {
 
   @override
   Future<void> addFile(NewFileEntity newFileEntity, String hash) async {
-    final createFileDao = CreateFileDao.fromEntity(newFileEntity, hash);
+    final createFileDao = CreateFileDto.fromEntity(newFileEntity, hash);
     final fileId = await fileDataSource.createFile(createFileDao);
 
     await storageManager.addFile(

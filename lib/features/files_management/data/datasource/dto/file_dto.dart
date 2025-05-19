@@ -1,11 +1,10 @@
-import '../../../domain/entities/file_entity.dart';
 
-class FileDao {
+class FileDto {
   final String id, name, hash, mimeType;
   final int sizeInBytes;
   final DateTime timeCreated, timeLastModified;
 
-  const FileDao({
+  const FileDto({
     required this.id,
     required this.name,
     required this.hash,

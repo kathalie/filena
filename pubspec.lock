@@ -701,6 +701,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.0"
+  riverpod:
+    dependency: "direct main"
+    description:
+      name: riverpod
+      sha256: "59062512288d3056b2321804332a13ffdd1bf16df70dcc8e506e411280a72959"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.6.1"
   rxdart:
     dependency: "direct main"
     description:
@@ -762,6 +770,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.12.1"
+  state_notifier:
+    dependency: transitive
+    description:
+      name: state_notifier
+      sha256: b8677376aa54f2d7c58280d5a007f9e8774f1968d1fb1c096adcb4792fba29bb
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   stream_channel:
     dependency: transitive
     description:
@@ -807,6 +823,14 @@ packages:
     description:
       name: timing
       sha256: "62ee18aca144e4a9f29d212f5a4c6a053be252b895ab14b5821996cff4ed90fe"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
+  tree_view_flutter:
+    dependency: "direct main"
+    description:
+      name: tree_view_flutter
+      sha256: "3365e29b7d1b1e6c5098a2a0e77a208a12a9345dfa73865cb4c87657cf387801"
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
