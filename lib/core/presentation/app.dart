@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'pages/home_page.dart';
+import 'widgets/home_page.dart';
 
 class FilenaApp extends StatelessWidget {
   const FilenaApp({super.key});

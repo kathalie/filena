@@ -2,7 +2,7 @@
 //
 // import '../../business/domain/category_entity.dart';
 // import '../../business/domain/collection_entity.dart';
-// import '../pages/collection_page.dart';
+// import '../views/collection_page.dart';
 //
 // class CollectionTile extends StatelessWidget {
 //   final CategoryEntity currentCategory;

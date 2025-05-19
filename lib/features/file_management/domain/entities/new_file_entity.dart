@@ -4,7 +4,7 @@ class NewFileEntity {
   final String name, mimeType;
   final int sizeInBytes;
   final DateTime timeCreated, timeLastModified;
-  final Uint8List content;
+  final Stream<Uint8List> content;
 
   const NewFileEntity({
     required this.name,

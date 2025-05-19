@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/presentation/widgets/progress_indicator.dart';
+import '../../../../core/presentation/components/progress_indicator.dart';
 import '../widgets/add_collection_button.dart';
 import '../widgets/add_files_button.dart';
 import '../widgets/collections_sliver_grid.dart';

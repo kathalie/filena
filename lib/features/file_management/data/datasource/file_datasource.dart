@@ -6,7 +6,7 @@ abstract interface class FileDataSource {
 
   Future<FileDao> getFile(int fileId);
 
-  Future<void> createFile(CreateFileDao createFileDao);
+  Future<int> createFile(CreateFileDao createFileDao);
 
   // Future<File> updateFile({
   //   required String id,

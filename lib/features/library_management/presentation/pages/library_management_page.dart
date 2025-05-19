@@ -1,9 +1,8 @@
 import 'dart:io';
 
-import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/presentation/widgets/progress_indicator.dart';
+import '../../../../core/presentation/components/progress_indicator.dart';
 
 // class LibraryManagementPage extends ConsumerWidget {
 //   const LibraryManagementPage({super.key});
