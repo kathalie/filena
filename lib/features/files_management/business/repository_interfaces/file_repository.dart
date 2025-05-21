@@ -1,14 +1,15 @@
 import '../../domain/entities/file_entity.dart';
-import '../../domain/entities/new_file_entity.dart';
-import '../../domain/entities/update_file_entity.dart';
 
 abstract interface class FileRepository {
-  Future<FileEntity> getFile(int fileId);
-  // Future<List<FileEntity>> getFilesFromCollection(String collectionId);
+  Future<FileEntity> getFileDetails(int fileId);
 
-  Future<void> addFile(NewFileEntity newFileEntity, String hash);
+  Future<void> createFile(String filePath);
 
-  Future<void> updateFile(UpdateFileEntity updateFileEntity);
+  Future<void> updateFile(String filePath);
 
-  Future<void> deleteFile(String fileId);
+  Future<void> deleteFile(int fileId);
+
+  Future<void> removeFileFromFolder(int fileId, int folderId);
+
+  Future<List<FileEntity>> getFilesInFolder(int folderId);
 }

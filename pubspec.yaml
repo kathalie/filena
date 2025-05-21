@@ -34,7 +34,7 @@ dependencies:
   path_provider: ^2.1.3
   dcdg: ^4.1.0
   chunked_stream: ^1.4.2
-  file_picker: ^8.0.3
+  file_picker: ^10.1.9
   minio: ^3.5.7
   rxdart: ^0.28.0
   objectbox: ^4.2.0
@@ -48,6 +48,10 @@ dependencies:
   icons_plus: ^5.0.0
   tree_view_flutter: ^1.0.2
   riverpod: ^2.6.1
+  mime: ^2.0.0
+  http: ^1.4.0
+  flutter_breadcrumb: ^1.0.1
+  collection: ^1.19.1
 
 dev_dependencies:
   flutter_test:

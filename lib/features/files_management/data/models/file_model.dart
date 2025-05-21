@@ -1,8 +1,7 @@
 import 'package:objectbox/objectbox.dart';
 
-import '../../../folders_management/data/models/file_in_folder.dart';
 import '../../../folders_suggestion/data/models/folder_suggestion_model.dart';
-import '../datasource/dto/create_file_dto.dart';
+import 'folder_model.dart';
 
 // @Index() for searched columns
 @Entity()
@@ -17,34 +16,19 @@ class File {
 
   final String mimeType;
 
-  final int sizeInBytes;
+  final bool isFavourite;
 
-  @Property(type: PropertyType.date)
-  final DateTime timeCreated;
+  @HnswIndex(dimensions: 10, distanceType: VectorDistanceType.cosine)
+  @Property(type: PropertyType.floatVector)
+  List<double>? embeddings;
 
-  @Property(type: PropertyType.date)
-  final DateTime timeLastModified;
+  @Backlink('assignedFiles')
+  final parentFolders = ToMany<Folder>();
 
-  @Backlink('file')
-  final assignmentsToFolders = ToMany<FileInFolder>();
-
-  @Backlink('file')
-  final suggestedToAssignToFolders = ToMany<FolderSuggestion>();
-
-  File(
-    this.name,
-    this.hash,
-    this.mimeType,
-    this.sizeInBytes,
-    this.timeCreated,
-    this.timeLastModified,
-  );
-
-  File.fromDao(CreateFileDto createFileDao)
-      : name = createFileDao.name,
-        hash = createFileDao.hash,
-        mimeType = createFileDao.mimeType,
-        sizeInBytes = createFileDao.sizeInBytes,
-        timeCreated = createFileDao.timeCreated,
-        timeLastModified = createFileDao.timeLastModified;
+  File({
+    required this.name,
+    required this.hash,
+    required this.mimeType,
+    required this.isFavourite,
+  });
 }

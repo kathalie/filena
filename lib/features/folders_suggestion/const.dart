@@ -1,0 +1,1 @@
+const ollamaUrl = 'http://localhost:11434';

@@ -1,21 +1,35 @@
-import 'dart:typed_data';
+import '../enums/file_category.dart';
+import 'file_details_entity.dart';
 
 class FileEntity {
-  final String id, name, hash, mimeType;
-  final int sizeInBytes;
-  final DateTime timeCreated, timeLastModified;
-  // final Uint8List content;
-  final String fileLocalPath;
+  final int id;
+  final bool isFavourite;
+  final FileDetailsEntity fileDetails;
 
   const FileEntity({
     required this.id,
-    required this.name,
-    required this.hash,
-    required this.mimeType,
-    required this.sizeInBytes,
-    required this.timeCreated,
-    required this.timeLastModified,
-    // required this.content,
-    required this.fileLocalPath,
+    required this.isFavourite,
+    required this.fileDetails,
   });
+}
+
+extension on FileEntity {
+  FileCategory get category {
+    if (fileDetails.mimeType.isEmpty) {
+      return FileCategory.other;
+    }
+
+    for (final category in FileCategory.values) {
+      if (category == FileCategory.other) continue;
+
+      final isSuitableCategory = category.prefixes
+          .any((prefix) => fileDetails.mimeType.startsWith(prefix));
+
+      if (isSuitableCategory) {
+        return category;
+      }
+    }
+
+    return FileCategory.other;
+  }
 }

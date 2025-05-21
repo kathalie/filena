@@ -1,16 +1,21 @@
+import '../../models/file_model.dart';
 
 class FileDto {
-  final String id, name, hash, mimeType;
-  final int sizeInBytes;
-  final DateTime timeCreated, timeLastModified;
+  final int id;
+  final String name;
+  final String mimeType;
+  final bool isFavourite;
 
   const FileDto({
     required this.id,
     required this.name,
-    required this.hash,
     required this.mimeType,
-    required this.sizeInBytes,
-    required this.timeCreated,
-    required this.timeLastModified,
+    required this.isFavourite,
   });
+
+  FileDto.fromModel(File model)
+      : id = model.id,
+        name = model.name,
+        mimeType = model.mimeType,
+        isFavourite = model.isFavourite;
 }

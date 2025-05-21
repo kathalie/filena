@@ -17,6 +17,7 @@ class IconsConst {
   static const plus = FontAwesome.plus_solid;
   static const delete = FontAwesome.trash_can;
   static const deleteWithContent = FontAwesome.trash_can_solid;
+  static const edit = FontAwesome.pencil_solid;
 
   static const chevronRight = FontAwesome.chevron_right_solid;
   static const chevronDown = FontAwesome.chevron_down_solid;

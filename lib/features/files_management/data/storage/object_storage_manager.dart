@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:minio/io.dart';
 import 'package:minio/minio.dart';
 
+import 'exceptions/minio_exception.dart';
 import 'storage_manager.dart';
 
 class ObjectStorageManager implements StorageManager {
@@ -19,19 +20,24 @@ class ObjectStorageManager implements StorageManager {
 
   static Future<ObjectStorageManager> create() async {
     final manager = ObjectStorageManager._();
-    await manager._initializeBucket();
+    await manager.ensureBucketExists();
 
     return manager;
   }
 
-  Future<void> _initializeBucket() async {
-    final bucketExists = await _minio.bucketExists(_mainBucketName);
-    if (!bucketExists) {
-      await _minio.makeBucket(_mainBucketName);
+  Future<void> ensureBucketExists() async {
+    try {
+      final bucketExists = await _minio.bucketExists(_mainBucketName);
+      if (!bucketExists) {
+        await _minio.makeBucket(_mainBucketName);
 
-      print('Bucket $_mainBucketName created');
-    } else {
-      print('Bucket $_mainBucketName already exists');
+        print('Bucket $_mainBucketName created');
+      } else {
+        print('Bucket $_mainBucketName already exists');
+      }
+    } catch (e) {
+      print('Filed to ensure bucket exists: $e');
+      throw MinioException('Filed to ensure bucket exists.');
     }
   }
 

@@ -1,8 +1,6 @@
+import '../../../../core/errors/file_exception.dart';
 import '../../business/repository_interfaces/file_repository.dart';
 import '../../domain/entities/file_entity.dart';
-import '../../domain/entities/new_file_entity.dart';
-import '../../domain/entities/update_file_entity.dart';
-import '../datasource/dto/create_file_dto.dart';
 import '../datasource/file_datasource.dart';
 import '../storage/storage_manager.dart';
 
@@ -16,75 +14,73 @@ class FileRepositoryImpl implements FileRepository {
   });
 
   @override
-  Future<FileEntity> getFile(int fileId) async {
+  Future<FileEntity> getFileDetails(int fileId) async {
+
+    // TODO: implement updateFile
+    throw UnimplementedError();
+
     const fileLocalPath = '/tmp';
 
-    final fileDao = await fileDataSource.getFile(fileId);
+    final fileDto = await fileDataSource.getFile(fileId);
+
+    if (fileDto == null) {
+      throw FileException.fileDoesNotExist(
+        title: 'Failed to find a requested file.',
+      );
+    }
+
     await storageManager.retrieveFile(
       fileStoragePath: fileId.toString(),
       fileLocalPath: fileLocalPath,
     );
 
-    return FileEntity(
-      id: fileDao.id,
-      name: fileDao.name,
-      hash: fileDao.hash,
-      mimeType: fileDao.mimeType,
-      sizeInBytes: fileDao.sizeInBytes,
-      timeCreated: fileDao.timeCreated,
-      timeLastModified: fileDao.timeLastModified,
-      fileLocalPath: fileLocalPath,
-    );
+    // return FileEntity(
+    //   id: fileDto.id,
+    //   fileDetails: FileDetailsEntity(
+    //     name: fileDto.name,
+    //     sizeInBytes: fileDto.sizeInBytes,
+    //     timeCreated: fileDto.timeCreated,
+    //     timeLastModified: fileDto.timeLastModified,
+    //     mimeType: fileDto.mimeType,
+    //   ),
+    //   isFavourite: fileDto.isFavourite,
+    // );
   }
 
   @override
-  Future<void> addFile(NewFileEntity newFileEntity, String hash) async {
-    final createFileDao = CreateFileDto.fromEntity(newFileEntity, hash);
-    final fileId = await fileDataSource.createFile(createFileDao);
-
-    await storageManager.addFile(
-      data: newFileEntity.content,
-      uniqueFileName: fileId.toString(),
-    );
+  Future<void> createFile(String filePath) async {
+    // TODO: implement updateFile
+    throw UnimplementedError();
+    // final createFileDao = FileCreateDto.fromEntity(newFileEntity, hash);
+    // final fileId = await fileDataSource.createFile(createFileDao);
+    //
+    // await storageManager.addFile(
+    //   data: newFileEntity.content,
+    //   uniqueFileName: fileId.toString(),
+    // );
   }
 
   @override
-  Future<void> updateFile(UpdateFileEntity updateFileEntity) async {
+  Future<void> updateFile(updateFileEntity) {
     // TODO: implement updateFile
     throw UnimplementedError();
   }
 
   @override
-  Future<void> deleteFile(String fileId) async {
+  Future<void> deleteFile(int fileId) async {
     // TODO: implement deleteFile
     throw UnimplementedError();
   }
 
-// Future<FileEntity> _toEntity(File model) async {
-//   final allVersionIds = model.allFileVersions.map(
-//     (model) => model.id.toString(),
-//   );
-//
-//   final currentFileVersion = model.currentFileVersion.value;
-//
-//   if (currentFileVersion == null) {
-//     throw ArgumentError('File version for requested file does not exist!');
-//   }
-//
-//   final currentFileVersionEntity = await fileVersionRepository.getFileVersion(
-//     currentFileVersion.id.toString(),
-//   );
-//
-//   return FileEntity(
-//     id: model.id.toString(),
-//     name: model.name,
-//     timeCreated: model.timeCreated,
-//     currentFileVersionId: model.currentFileVersion.value!.id.toString(),
-//     allVersionIds: allVersionIds.toList(),
-//     location: currentFileVersionEntity.location,
-//     content: currentFileVersionEntity.content,
-//     sizeInBytes:
-//         currentFileVersionEntity.sizeInBytes,
-//   );
-// }
+  @override
+  Future<void> removeFileFromFolder(int fileId, int folderId) {
+    // TODO: implement removeFileFromFolder
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<FileEntity>> getFilesInFolder(int folderId) {
+    // TODO: implement getFilesInFolder
+    throw UnimplementedError();
+  }
 }
