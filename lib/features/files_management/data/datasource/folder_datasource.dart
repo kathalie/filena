@@ -3,7 +3,7 @@ import 'dto/folder_dto.dart';
 import 'dto/folder_update_dto.dart';
 
 abstract interface class FolderDataSource {
-  Stream<List<FolderDto>> get foldersStream;
+  Stream<List<FolderDto>> get folders;
 
   Future<FolderDto?> getFolder(int id);
 

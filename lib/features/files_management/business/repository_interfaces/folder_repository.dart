@@ -1,7 +1,7 @@
 import '../../domain/structures/folder_tree.dart';
 
 abstract interface class FolderRepository {
-  Stream<FolderTreeStructure> get folderStructureStream;
+  Stream<FolderTreeStructure> get folderStructure;
 
   Future<void> createFolder(int? parentFolderId, String name);
 

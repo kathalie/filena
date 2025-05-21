@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'folder_structure_side_bar_vm.dart';
-import 'folder_structure_views/classified_files/folders_tree_view.dart';
+import 'folder_structure_views/classified_files/folders_tree_widget.dart';
 
 class FolderStructureSideBar extends StatelessWidget {
   final _vm = FolderStructureSideBarViewModel();

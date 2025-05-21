@@ -2,6 +2,7 @@ import '../../business/repository_interfaces/folder_repository.dart';
 import '../../domain/entities/folder_entity.dart';
 import '../../domain/structures/folder_tree.dart';
 import '../datasource/dto/folder_create_dto.dart';
+import '../datasource/dto/folder_dto.dart';
 import '../datasource/dto/folder_update_dto.dart';
 import '../datasource/folder_datasource.dart';
 
@@ -11,18 +12,21 @@ class FolderRepositoryImpl implements FolderRepository {
   FolderRepositoryImpl(this.folderDataSource);
 
   @override
-  Stream<FolderTreeStructure> get folderStructureStream =>
-      folderDataSource.foldersStream
-          .map(
-            (folderDtos) => folderDtos.map((folderDto) {
-              return FolderEntity(
-                id: folderDto.id,
-                name: folderDto.name,
-                parentId: folderDto.parentId,
-              );
-            }).toList(),
-          )
-          .map((folderEntities) => FolderTree.fromList(folderEntities));
+  Stream<FolderTreeStructure> get folderStructure =>
+      folderDataSource.folders
+          .map((folderDtos) => _folderTreeStructureFrom(folderDtos));
+
+  FolderTreeStructure _folderTreeStructureFrom(List<FolderDto> folderDtos) {
+    final folderEntities = folderDtos.map((folderDto) {
+      return FolderEntity(
+        id: folderDto.id,
+        name: folderDto.name,
+        parentId: folderDto.parentId,
+      );
+    }).toList();
+
+    return FolderTree.fromList(folderEntities);
+  }
 
   @override
   Future<void> createFolder(int? parentFolderId, String name) async {

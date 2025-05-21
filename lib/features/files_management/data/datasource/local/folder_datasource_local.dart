@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../../../core/db/objectbox.dart';
 import '../../../../../core/errors/folder_exception.dart';
@@ -15,11 +16,35 @@ class FolderDatasourceLocal implements FolderDataSource {
   final _store = GetIt.I<ObjectBox>().store;
   final _folderBox = GetIt.I<ObjectBox>().store.box<Folder>();
 
+  final _folders = BehaviorSubject<List<FolderDto>>.seeded([]);
+
   @override
-  Stream<List<FolderDto>> get foldersStream => _folderBox.query().watch().map((query) => query.find()).map(
-        (folders) =>
-        folders.map((folder) => FolderDto.fromModel(folder)).toList(),
-  );
+  Stream<List<FolderDto>> get folders => _folders.stream;
+
+  late final StreamSubscription<List<FolderDto>> _foldersChangesSubscription;
+
+  FolderDatasourceLocal() {
+    final initialFolders = _folderBox
+        .getAll()
+        .map((folder) => FolderDto.fromModel(folder))
+        .toList();
+
+    _folders.add(initialFolders);
+
+    _initSubscription();
+  }
+
+  void _initSubscription() {
+    _foldersChangesSubscription = _folderBox
+        .query()
+        .watch()
+        .map((query) => query.find())
+        .map(
+          (folders) =>
+              folders.map((folder) => FolderDto.fromModel(folder)).toList(),
+        )
+        .listen((folders) => _folders.add(folders));
+  }
 
   @override
   Future<int> createFolder(FolderCreateDto createFolderDto) async {
@@ -71,5 +96,10 @@ class FolderDatasourceLocal implements FolderDataSource {
   @override
   Future<void> deleteFolder(int id) async {
     await _folderBox.removeAsync(id);
+  }
+
+  void dispose() {
+    _folders.close();
+    _foldersChangesSubscription.cancel();
   }
 }

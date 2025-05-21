@@ -20,8 +20,8 @@ class UploadFileButton extends StatelessWidget {
         return PlatformElevatedButton(
           onPressed: isLoading ? null : _vm.pickAndUploadFile,
           child: isLoading
-              ? _buildButtonCaption()
-              : const CircularProgressIndicator(),
+              ? const CircularProgressIndicator()
+              : _buildButtonCaption(),
         );
       },
     );

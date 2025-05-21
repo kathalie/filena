@@ -6,5 +6,6 @@ import '../../../../../domain/structures/folder_tree.dart';
 class FoldersTreeViewModel {
   final _folderRepository = GetIt.I.get<FolderRepository>();
 
-  Stream<FolderTreeStructure> get folderStructure => _folderRepository.folderStructureStream;
+  Stream<FolderTreeStructure> get folderStructure =>
+      _folderRepository.folderStructure;
 }
