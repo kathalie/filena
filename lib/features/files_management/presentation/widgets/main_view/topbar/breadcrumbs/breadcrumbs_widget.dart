@@ -3,9 +3,9 @@ import 'package:flutter_breadcrumb/flutter_breadcrumb.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../../../core/presentation/const/icons_const.dart';
-import '../../../../domain/entities/folder_entity.dart';
-import '../../../../domain/structures/folder_tree.dart';
+import '../../../../../../../core/presentation/const/icons_const.dart';
+import '../../../../../domain/entities/folder_entity.dart';
+import '../../../../../domain/structures/folder_tree.dart';
 import 'breadcrumbs_vm.dart';
 
 class BreadcrumbsView extends StatelessWidget {

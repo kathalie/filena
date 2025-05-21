@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -11,16 +9,23 @@ import '../buttons/prompts_history_button.dart';
 
 PlatformAppBar buildFilenaAppBar() {
   return PlatformAppBar(
-    title: const Row(
-      children: [
-        FilenaLogo(),
-        Spacer(),
-      ],
+    title: const Padding(
+      padding: EdgeInsets.only(left: 8.0),
+      child: Row(
+        children: [
+          FilenaLogo(),
+          Spacer(),
+        ],
+      ),
     ),
     trailingActions: [
+      const SizedBox(width: 8),
       UploadFileButton(),
+      const SizedBox(width: 12),
       PromptsHistoryButton(),
+      const SizedBox(width: 12),
       NotificationsButton(),
+      const SizedBox(width: 8),
     ],
   );
 }

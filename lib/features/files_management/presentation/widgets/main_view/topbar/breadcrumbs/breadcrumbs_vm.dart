@@ -1,7 +1,8 @@
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../domain/entities/folder_entity.dart';
-import '../../../../domain/structures/folder_tree.dart';
+import '../../../../../domain/entities/folder_entity.dart';
+import '../../../../../domain/structures/folder_tree.dart';
+
 
 class BreadcrumbsViewModel {
   // Input

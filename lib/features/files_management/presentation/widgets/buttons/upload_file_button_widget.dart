@@ -17,22 +17,13 @@ class UploadFileButton extends StatelessWidget {
       builder: (context, snapshot) {
         final isLoading = snapshot.data ?? false;
 
-        return PlatformElevatedButton(
+        return PlatformIconButton(
           onPressed: isLoading ? null : _vm.pickAndUploadFile,
-          child: isLoading
+          icon: isLoading
               ? const CircularProgressIndicator()
-              : _buildButtonCaption(),
+              : const Icon(IconsConst.upload),
         );
       },
-    );
-  }
-
-  Widget _buildButtonCaption() {
-    return const Row(
-      children: [
-        Icon(IconsConst.upload),
-        Text('Pick & Upload File'),
-      ],
     );
   }
 }

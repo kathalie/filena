@@ -29,28 +29,28 @@ class FoldersTreeView extends StatelessWidget {
 
         return TreeView(
           startExpanded: false,
-          children: _getFoldersTree(folderTree),
+          children: _buildFoldersTree(folderTree),
         );
       },
     );
   }
 
-  List<Widget> _getFoldersTree(FolderTreeStructure childFolders) {
+  List<Widget> _buildFoldersTree(FolderTreeStructure childFolders) {
     return [
       TreeViewChild(
         parent: _buildRootDirectoryWidget(childFolders.isNotEmpty),
-        children: _getChildList(childFolders),
+        children: _buildChildList(childFolders),
       ),
     ];
   }
 
-  List<Widget> _getChildList(FolderTreeStructure childFolders) {
+  List<Widget> _buildChildList(FolderTreeStructure childFolders) {
     return childFolders.map((folderTree) {
       return Container(
         margin: const EdgeInsets.only(left: 8),
         child: TreeViewChild(
           parent: _buildDirectoryWidget(folderTree),
-          children: _getChildList(folderTree.children),
+          children: _buildChildList(folderTree.children),
         ),
       );
     }).toList();

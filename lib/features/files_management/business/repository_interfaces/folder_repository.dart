@@ -1,3 +1,4 @@
+import '../../domain/enums/folder_structure_mode.dart';
 import '../../domain/structures/folder_tree.dart';
 
 abstract interface class FolderRepository {

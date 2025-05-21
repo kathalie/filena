@@ -1,22 +1,11 @@
-import 'package:rxdart/rxdart.dart';
+import 'package:get_it/get_it.dart';
 
-enum FolderStructureType {
-  classified('Classified'),
-  unclassified('Unclassified');
-
-  final String caption;
-
-  const FolderStructureType(this.caption);
-}
+import '../../../business/repository_interfaces/user_choice_repository.dart';
+import '../../../domain/enums/folder_structure_mode.dart';
 
 class FolderStructureSideBarViewModel {
-  final _folderStructureType = BehaviorSubject<FolderStructureType>.seeded(
-    FolderStructureType.classified,
-  );
-  Stream<FolderStructureType> get folderStructureType =>
-      _folderStructureType.stream;
+  final _userChoiceRepository = GetIt.I.get<UserChoiceRepository>();
 
-  onValueChanged(int newValue) {
-    //TODO change folder structure
-  }
+  Stream<FolderStructureMode> get currentFolderStructure =>
+      _userChoiceRepository.currentFolderStructureMode;
 }

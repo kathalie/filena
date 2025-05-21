@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../../../core/presentation/const/icons_const.dart';
-import '../../../../domain/entities/folder_entity.dart';
+import '../../../../../../../core/presentation/const/icons_const.dart';
+import '../../../../../domain/entities/folder_entity.dart';
 import 'folder_control_vm.dart';
 
 typedef FolderControlOption = ({

@@ -1,6 +1,6 @@
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../domain/entities/folder_entity.dart';
+import '../../../../../domain/entities/folder_entity.dart';
 
 class FolderControlViewModel {
   // Input
