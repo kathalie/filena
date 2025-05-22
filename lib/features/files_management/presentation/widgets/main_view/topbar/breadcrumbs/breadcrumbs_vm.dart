@@ -1,29 +1,15 @@
-import 'package:rxdart/rxdart.dart';
+import 'package:get_it/get_it.dart';
 
+import '../../../../../business/repository_interfaces/folder_repository.dart';
 import '../../../../../domain/entities/folder_entity.dart';
-import '../../../../../domain/structures/folder_tree.dart';
-
 
 class BreadcrumbsViewModel {
-  // Input
-  final BehaviorSubject<FolderEntity> currentFolder;
-  final BehaviorSubject<FolderTree> folderTree;
+  final _folderRepository = GetIt.I.get<FolderRepository>();
 
-  // Output
-  final _folderPath = BehaviorSubject<List<FolderEntity>>.seeded([]);
-  Stream<List<FolderEntity>> get folderPath => _folderPath.stream;
+  Stream<List<FolderEntity>> get folderPath =>
+      _folderRepository.pathToSelectedFolder;
 
-  BreadcrumbsViewModel(this.currentFolder, this.folderTree) {
-    currentFolder.listen((newCurrentFolder) {
-      _folderPath.add(folderTree.value.folderPathTo(newCurrentFolder.id));
-    });
-  }
-
-  void navigateToFolder(FolderEntity folder) {
-    currentFolder.add(folder);
-  }
-
-  void dispose() {
-    _folderPath.close();
+  void navigateToFolder(FolderEntity? folder) {
+    _folderRepository.selectFolder(folder);
   }
 }

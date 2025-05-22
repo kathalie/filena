@@ -18,9 +18,6 @@ class FolderDatasourceLocal implements FolderDataSource {
 
   final _folders = BehaviorSubject<List<FolderDto>>.seeded([]);
 
-  @override
-  Stream<List<FolderDto>> get folders => _folders.stream;
-
   late final StreamSubscription<List<FolderDto>> _foldersChangesSubscription;
 
   FolderDatasourceLocal() {
@@ -28,6 +25,8 @@ class FolderDatasourceLocal implements FolderDataSource {
         .getAll()
         .map((folder) => FolderDto.fromModel(folder))
         .toList();
+
+
 
     _folders.add(initialFolders);
 
@@ -44,6 +43,35 @@ class FolderDatasourceLocal implements FolderDataSource {
               folders.map((folder) => FolderDto.fromModel(folder)).toList(),
         )
         .listen((folders) => _folders.add(folders));
+  }
+
+  @override
+  Stream<List<FolderDto>> get folders => _folders.stream;
+
+  @override
+  Future<List<FolderDto>> getPathTo(int folderId) async {
+    List<Folder> getPath(Store store, int objectId) {
+      final List<Folder> path = [];
+      Folder? current = _folderBox.get(folderId);
+
+      while (current != null) {
+        path.add(current);
+
+        if (current.parent.targetId == 0) { break; }
+
+        current = current.parent.target;
+      }
+
+      return path.reversed.toList();
+    }
+
+    final path = await _store.runInTransactionAsync<List<Folder>, int>(
+      TxMode.read,
+      getPath,
+      folderId,
+    );
+
+    return path.map((folder) => FolderDto.fromModel(folder)).toList();
   }
 
   @override

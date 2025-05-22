@@ -6,6 +6,7 @@ import '../../business/repository_interfaces/user_choice_repository.dart';
 import '../../domain/enums/folder_structure_mode.dart';
 
 class UserChoiceRepositoryImpl implements UserChoiceRepository {
+  //MARK: Folder structure mode
   final _currentFolderStructureMode =
       BehaviorSubject<FolderStructureMode>.seeded(
     FolderStructureMode.classified,
@@ -20,6 +21,7 @@ class UserChoiceRepositoryImpl implements UserChoiceRepository {
     _currentFolderStructureMode.add(newMode);
   }
 
+  //MARK: disposal
   void dispose() {
     _currentFolderStructureMode.close();
   }

@@ -1,25 +1,23 @@
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../domain/structures/folder_tree.dart';
+typedef DirectoryCharacteristics = ({
+  String name,
+  bool hasNestedFolders,
+  bool isRoot,
+});
 
 class DirectoryViewModel {
   final BehaviorSubject<bool> isExpanded;
 
-  final String _directoryName;
+  final DirectoryCharacteristics _directoryCharacteristics;
 
-  String get directoryName => _directoryName;
-
-  final bool _hasNestedFolders;
-
-  bool get hasNestedFolders => _hasNestedFolders;
+  DirectoryCharacteristics get characteristics => _directoryCharacteristics;
 
   DirectoryViewModel({
-    required String name,
-    required bool hasNestedFolders,
     required bool initialIsExpanded,
+    required DirectoryCharacteristics characteristics,
   })  : isExpanded = BehaviorSubject<bool>.seeded(initialIsExpanded),
-        _directoryName = name,
-        _hasNestedFolders = hasNestedFolders;
+        _directoryCharacteristics = characteristics;
 
   void toggleIsExpanded() {
     isExpanded.add(!isExpanded.value);

@@ -1,6 +1,5 @@
 import 'package:objectbox/objectbox.dart';
 
-import '../../../folders_suggestion/data/models/folder_suggestion_model.dart';
 import 'folder_model.dart';
 
 // @Index() for searched columns

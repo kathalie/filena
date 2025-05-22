@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../domain/enums/folder_structure_mode.dart';
 import 'folder_structure_side_bar_vm.dart';
-import 'folder_structure_views/classified_files/folders_tree_widget.dart';
+import 'folder_structure_views/classified_files/folders_tree/folders_tree_widget.dart';
 import 'structure_mode_toggle/folder_structure_control_widget.dart';
 
 class FolderStructureSideBar extends StatelessWidget {
@@ -27,20 +27,26 @@ class FolderStructureSideBar extends StatelessWidget {
                 child: FolderStructureControl(),
               ),
             ),
-            Expanded(
-              child: _buildTreeView(mode),
-            ),
+            _buildSideBarContent(mode),
           ],
         );
       },
     );
   }
 
-  Widget _buildTreeView(FolderStructureMode mode) {
+  Widget _buildSideBarContent(FolderStructureMode mode) {
     return switch (mode) {
-      FolderStructureMode.classified => FoldersTreeView(),
-      //TODO unclassified view
-      FolderStructureMode.unclassified => const Placeholder(),
+      FolderStructureMode.classified => _buildClassifiedView(),
+      FolderStructureMode.unclassified => _buildUnclassifiedView(),
     };
+  }
+
+  Widget _buildClassifiedView() {
+    return Expanded(child: FoldersTreeView());
+  }
+
+  //TODO unclassified view
+  Widget _buildUnclassifiedView() {
+    return const Placeholder();
   }
 }

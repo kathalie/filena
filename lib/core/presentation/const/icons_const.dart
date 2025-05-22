@@ -23,7 +23,7 @@ class IconsConst {
   static const chevronDown = FontAwesome.chevron_down_solid;
   static const moreInfo = FontAwesome.ellipsis_vertical_solid;
 
-  static const rootFolder = FontAwesome.floppy_disk;
+  static const rootFolder = FontAwesome.floppy_disk_solid;
   static const anyFolder = FontAwesome.folder_solid;
   static const anyFolderSuggestion = FontAwesome.folder;
   static const openFolder = FontAwesome.folder_open;

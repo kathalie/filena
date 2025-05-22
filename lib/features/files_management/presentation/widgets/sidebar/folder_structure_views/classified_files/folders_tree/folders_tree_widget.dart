@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:tree_view_flutter/tree_view_flutter.dart';
 
-import '../../../../../domain/structures/folder_tree.dart';
-import '../../directory_widget/directory_widget.dart';
+import '../../../../../../../../core/presentation/const/const.dart';
+import '../../../../../../domain/structures/folder_tree.dart';
+import '../../../directory_widget/directory_widget.dart';
 import 'folders_tree_vm.dart';
 
 class FoldersTreeView extends StatelessWidget {
-  static const rootFolderName = 'Filena';
   final _vm = FoldersTreeViewModel();
 
   FoldersTreeView({super.key});
@@ -18,18 +18,11 @@ class FoldersTreeView extends StatelessWidget {
       builder: (context, snapshot) {
         final folderTree = snapshot.data;
 
-        if (folderTree == null) {
-          return TreeView(
-            startExpanded: false,
-            children: [
-              _buildRootDirectoryWidget(false),
-            ],
-          );
-        }
-
         return TreeView(
-          startExpanded: false,
-          children: _buildFoldersTree(folderTree),
+          startExpanded: true,
+          children: folderTree == null
+              ? [_buildRootDirectoryWidget(false)]
+              : _buildFoldersTree(folderTree),
         );
       },
     );
@@ -58,15 +51,21 @@ class FoldersTreeView extends StatelessWidget {
 
   Widget _buildDirectoryWidget(FolderTree folderTree) {
     return DirectoryWidget(
-      name: folderTree.folder.name,
-      hasNestedFolders: folderTree.children.isNotEmpty,
+      characteristics: (
+        name: folderTree.folder.name,
+        hasNestedFolders: folderTree.children.isNotEmpty,
+        isRoot: folderTree.folder.parentId == null
+      ),
     );
   }
 
   Widget _buildRootDirectoryWidget(bool hasNestedFolders) {
     return DirectoryWidget(
-      name: rootFolderName,
-      hasNestedFolders: hasNestedFolders,
+      characteristics: (
+        name: Const.rootFolderName,
+        hasNestedFolders: hasNestedFolders,
+        isRoot: true
+      ),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
@@ -26,11 +27,19 @@ class _FilenaAppState extends State<FilenaApp> {
         materialLightTheme: ThemeConsts.materialLightTheme,
         cupertinoLightTheme: ThemeConsts.cupertinoLightTheme,
         onThemeModeChanged: (themeMode) {
-          this.themeMode = themeMode; // TODO Save to storage
+          this.themeMode = themeMode; // TODO Save to user preferences
         },
         builder: (context) => const PlatformApp(
           debugShowCheckedModeBanner: false,
           title: 'Filena - Your smart file manager',
+          localizationsDelegates: <LocalizationsDelegate<dynamic>>[
+            DefaultMaterialLocalizations.delegate,
+            DefaultWidgetsLocalizations.delegate,
+            DefaultCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en', 'US'),
+          ],
           home: HomePage(),
         ),
       ),

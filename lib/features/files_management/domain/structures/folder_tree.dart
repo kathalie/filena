@@ -20,7 +20,7 @@ class FolderTree {
     );
 
     final List<FolderEntity> rootFolders = folders
-        .where((folder) => folder.parentId == null)
+        .where((folder) => folder.parentId == 0)
         .toList();
 
     return rootFolders.map((rootFolder) {
@@ -45,21 +45,5 @@ class FolderTree {
       folder: folder,
       children: children,
     );
-  }
-
-  List<FolderEntity> folderPathTo(int? folderId) {
-    if (folder.id == folderId) {
-      return [folder];
-    }
-
-    for (var child in children) {
-      final path = child.folderPathTo(folderId);
-
-      if (path.isNotEmpty) {
-        return [folder, ...path];
-      }
-    }
-
-    return [];
   }
 }

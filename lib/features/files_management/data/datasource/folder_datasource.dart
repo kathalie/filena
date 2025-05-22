@@ -5,6 +5,8 @@ import 'dto/folder_update_dto.dart';
 abstract interface class FolderDataSource {
   Stream<List<FolderDto>> get folders;
 
+  Future<List<FolderDto>> getPathTo(int folderId);
+
   Future<FolderDto?> getFolder(int id);
 
   Future<int> createFolder(FolderCreateDto createFolderDto);
