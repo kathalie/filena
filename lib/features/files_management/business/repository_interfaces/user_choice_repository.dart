@@ -5,4 +5,13 @@ abstract interface class UserChoiceRepository {
   Stream<FolderStructureMode> get currentFolderStructureMode;
 
   void updateCurrentFolderStructureMode(FolderStructureMode newMode);
+
+  //MARK: File filters
+  Stream<bool> get showSubfolderFiles;
+
+  void toggleShowSubfolderFiles();
+
+  Stream<bool> get showOnlyFavourites;
+
+  void toggleShowOnlyFavourites();
 }
