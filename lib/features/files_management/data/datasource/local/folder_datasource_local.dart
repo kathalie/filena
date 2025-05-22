@@ -26,8 +26,6 @@ class FolderDatasourceLocal implements FolderDataSource {
         .map((folder) => FolderDto.fromModel(folder))
         .toList();
 
-
-
     _folders.add(initialFolders);
 
     _initSubscription();
@@ -50,28 +48,25 @@ class FolderDatasourceLocal implements FolderDataSource {
 
   @override
   Future<List<FolderDto>> getPathTo(int folderId) async {
-    List<Folder> getPath(Store store, int objectId) {
-      final List<Folder> path = [];
-      Folder? current = _folderBox.get(folderId);
-
-      while (current != null) {
-        path.add(current);
-
-        if (current.parent.targetId == 0) { break; }
-
-        current = current.parent.target;
-      }
-
-      return path.reversed.toList();
-    }
-
-    final path = await _store.runInTransactionAsync<List<Folder>, int>(
+    return _store.runInTransaction(
       TxMode.read,
-      getPath,
-      folderId,
-    );
+          () {
+        final List<Folder> path = [];
+        Folder? current = _folderBox.get(folderId);
 
-    return path.map((folder) => FolderDto.fromModel(folder)).toList();
+        while (current != null) {
+          path.add(current);
+
+          if (current.parent.targetId == 0) { break; }
+
+          current = current.parent.target;
+        }
+
+        final result = path.reversed.toList();
+
+        return result.map((folder) => FolderDto.fromModel(folder)).toList();
+      },
+    );
   }
 
   @override

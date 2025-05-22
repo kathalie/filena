@@ -17,6 +17,7 @@ class BreadcrumbsView extends StatelessWidget {
       stream: _vm.folderPath,
       builder: (context, snapshot) {
         final folderPath = snapshot.data ?? [];
+
         final breadcrumbsPath = [null, ...folderPath];
 
         return BreadCrumb.builder(

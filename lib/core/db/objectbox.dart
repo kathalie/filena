@@ -23,7 +23,7 @@ class ObjectBox {
     }
 
     final store = await openStore(directory: p.join(appDir.path, 'objectbox-db'));
-    print('Folder created');
+
     return ObjectBox._create(store);
   }
 }

@@ -25,7 +25,7 @@ class FolderControl extends StatelessWidget {
         return IconButton(
           onPressed: () =>
               controller.isOpen ? controller.close() : controller.open(),
-          icon: const Icon(IconsConst.chevronDown, size: 16.0),
+          icon: const Icon(IconsConst.moreInfo, size: 24.0),
           tooltip: 'Show folder actions',
         );
       },
@@ -85,8 +85,6 @@ class FolderControl extends StatelessWidget {
     if (newFolderName == null) return;
 
     await _vm.createNewFolder(newFolderName);
-
-    print('Folder created!');
   }
 
   void _renameFolder(BuildContext context) {} //TODO _renameFolder

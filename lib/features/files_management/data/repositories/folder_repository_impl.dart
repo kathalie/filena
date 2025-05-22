@@ -40,7 +40,8 @@ class FolderRepositoryImpl implements FolderRepository {
         selectedFolder,
         folderDataSource.folders,
         (folder, _) => folder,
-      ).switchMap(
+      )
+      .switchMap(
         (folder) => folder == null
             ? Stream.value([])
             : Stream.fromFuture(folderDataSource.getPathTo(folder.id))
