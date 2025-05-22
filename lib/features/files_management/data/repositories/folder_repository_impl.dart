@@ -32,7 +32,7 @@ class FolderRepositoryImpl implements FolderRepository {
   }
 
   @override
-  Stream<FolderEntity?> get selectedFolder => _selectedFolder.stream;
+  Stream<FolderEntity?> get selectedFolder => _selectedFolder.stream.distinct();
 
   @override
   Stream<List<FolderEntity>> get pathToSelectedFolder =>

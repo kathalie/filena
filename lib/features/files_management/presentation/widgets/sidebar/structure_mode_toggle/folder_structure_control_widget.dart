@@ -66,9 +66,7 @@ class FolderStructureControl extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Text(
         mode.caption,
-        style: const TextStyle(
-          fontSize: 16.0,
-        ),
+        style: const TextStyle(fontSize: 16.0),
       ),
     );
   }

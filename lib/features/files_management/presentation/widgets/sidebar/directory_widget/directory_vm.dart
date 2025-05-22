@@ -1,4 +1,8 @@
-import 'package:rxdart/rxdart.dart';
+import 'package:get_it/get_it.dart';
+
+import '../../../../../../core/presentation/const/const.dart';
+import '../../../../business/repository_interfaces/folder_repository.dart';
+import '../../../../domain/entities/folder_entity.dart';
 
 typedef DirectoryCharacteristics = ({
   String name,
@@ -7,23 +11,23 @@ typedef DirectoryCharacteristics = ({
 });
 
 class DirectoryViewModel {
-  final BehaviorSubject<bool> isExpanded;
+  final FolderEntity? folderEntity;
+  final bool hasNestedFolders;
+  final bool isRoot;
+  final String name;
 
-  final DirectoryCharacteristics _directoryCharacteristics;
+  final _folderRepository = GetIt.I.get<FolderRepository>();
 
-  DirectoryCharacteristics get characteristics => _directoryCharacteristics;
+  Stream<FolderEntity?> get selectedFolder =>
+      _folderRepository.selectedFolder;
 
   DirectoryViewModel({
-    required bool initialIsExpanded,
-    required DirectoryCharacteristics characteristics,
-  })  : isExpanded = BehaviorSubject<bool>.seeded(initialIsExpanded),
-        _directoryCharacteristics = characteristics;
+    required this.folderEntity,
+    required this.hasNestedFolders,
+  })  : isRoot = folderEntity == null,
+        name = folderEntity == null ? Const.rootFolderName : folderEntity.name;
 
-  void toggleIsExpanded() {
-    isExpanded.add(!isExpanded.value);
-  }
-
-  void dispose() {
-    isExpanded.close();
+  void selectFolder(FolderEntity? folder) {
+    _folderRepository.selectFolder(folder);
   }
 }

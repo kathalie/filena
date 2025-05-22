@@ -3,30 +3,35 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../../../../../../core/presentation/const/const.dart';
 import '../../../../../../core/presentation/const/icons_const.dart';
+import '../../../../../../core/presentation/const/theme_const.dart';
+import '../../../../domain/entities/folder_entity.dart';
 import 'directory_vm.dart';
 
 class DirectoryWidget extends StatelessWidget {
   final DirectoryViewModel _vm;
-  final VoidCallback? onPressed;
 
   DirectoryWidget({
-    required DirectoryCharacteristics characteristics,
-    this.onPressed,
+    required FolderEntity? folderEntity,
+    required bool hasNestedFolders,
     super.key,
   }) : _vm = DirectoryViewModel(
-    characteristics: characteristics,
-    initialIsExpanded: false,
-  );
+          folderEntity: folderEntity,
+          hasNestedFolders: hasNestedFolders,
+        );
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<bool>(
-      stream: _vm.isExpanded,
+    return StreamBuilder<FolderEntity?>(
+      stream: _vm.selectedFolder,
       builder: (context, snapshot) {
-        final isExpanded = snapshot.data ?? false;
+        final selectedFolder = snapshot.data;
+        final isSelected = selectedFolder == _vm.folderEntity;
 
         return Card(
           elevation: 1,
+          color: isSelected
+              ? ThemeConsts.primaryLightColor
+              : ThemeConsts.primaryBgColor,
           margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -35,8 +40,8 @@ class DirectoryWidget extends StatelessWidget {
           child: PlatformListTile(
             leading: _buildFolderIcon(context),
             title: _buildTitle(context),
-            trailing: _buildExpandButton(context, isExpanded),
-            onTap: onPressed, // Make the entire tile tappable
+            trailing: _buildExpandButton(context),
+            onTap: () => _vm.selectFolder(_vm.folderEntity),
           ),
         );
       },
@@ -44,7 +49,7 @@ class DirectoryWidget extends StatelessWidget {
   }
 
   Widget _buildFolderIcon(BuildContext context) {
-    return _vm.characteristics.isRoot
+    return _vm.isRoot
         ? const Icon(IconsConst.rootFolder)
         : const Icon(IconsConst.anyFolder);
   }
@@ -52,26 +57,21 @@ class DirectoryWidget extends StatelessWidget {
   Widget _buildTitle(BuildContext context) {
     final textStyle = TextStyle(
       fontSize: 16,
-      fontWeight: _vm.characteristics.isRoot ? FontWeight.w600 : FontWeight.w500,
+      fontWeight: _vm.isRoot ? FontWeight.w600 : FontWeight.w500,
       color: Colors.black54,
     );
 
-    return _vm.characteristics.isRoot
+    return _vm.isRoot
         ? Text(Const.rootFolderName, style: textStyle)
-        : Text(_vm.characteristics.name, style: textStyle);
+        : Text(_vm.name, style: textStyle);
   }
 
-  Widget? _buildExpandButton(BuildContext context, bool isExpanded) {
-    if (!_vm.characteristics.hasNestedFolders) return null;
-
-    final iconWidget = isExpanded
-        ? Icon(IconsConst.chevronDown, color: Theme.of(context).primaryColor)
-        : Icon(IconsConst.chevronRight, color: Theme.of(context).primaryColor);
+  Widget? _buildExpandButton(BuildContext context) {
+    if (!_vm.hasNestedFolders) return null;
 
     return PlatformIconButton(
-      icon: iconWidget,
-      onPressed: onPressed,
-      padding: EdgeInsets.zero, // More compact
+      icon: const Icon(IconsConst.chevronRight, color: ThemeConsts.primaryColor),
+      padding: EdgeInsets.zero,
     );
   }
 }

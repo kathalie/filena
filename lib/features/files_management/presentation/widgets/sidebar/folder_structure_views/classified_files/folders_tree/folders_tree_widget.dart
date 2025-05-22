@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tree_view_flutter/tree_view_flutter.dart';
 
-import '../../../../../../../../core/presentation/const/const.dart';
 import '../../../../../../domain/structures/folder_tree.dart';
 import '../../../directory_widget/directory_widget.dart';
 import 'folders_tree_vm.dart';
@@ -16,56 +15,38 @@ class FoldersTreeView extends StatelessWidget {
     return StreamBuilder<FolderTreeStructure>(
       stream: _vm.folderStructure,
       builder: (context, snapshot) {
-        final folderTree = snapshot.data;
+        final folderTree = snapshot.data ?? [];
 
         return TreeView(
           startExpanded: true,
-          children: folderTree == null
-              ? [_buildRootDirectoryWidget(false)]
-              : _buildFoldersTree(folderTree),
+          children: [
+            TreeViewChild(
+              parent: DirectoryWidget(
+                folderEntity: null,
+                hasNestedFolders: folderTree.isNotEmpty,
+              ),
+              children: _buildNestedFolders(folderTree),
+            ),
+          ],
         );
       },
     );
   }
 
-  List<Widget> _buildFoldersTree(FolderTreeStructure childFolders) {
-    return [
-      TreeViewChild(
-        parent: _buildRootDirectoryWidget(childFolders.isNotEmpty),
-        children: _buildChildList(childFolders),
-      ),
-    ];
-  }
-
-  List<Widget> _buildChildList(FolderTreeStructure childFolders) {
-    return childFolders.map((folderTree) {
+  List<Widget> _buildNestedFolders(FolderTreeStructure folders) {
+    return folders.map((folderTree) {
       return Container(
-        margin: const EdgeInsets.only(left: 8),
+        margin: const EdgeInsets.only(left: 16.0),
         child: TreeViewChild(
-          parent: _buildDirectoryWidget(folderTree),
-          children: _buildChildList(folderTree.children),
+          parent: DirectoryWidget(
+            folderEntity: folderTree.folder,
+            hasNestedFolders: folderTree.children.isNotEmpty,
+          ),
+          children: folderTree.children.isNotEmpty
+              ? _buildNestedFolders(folderTree.children)
+              : [],
         ),
       );
     }).toList();
-  }
-
-  Widget _buildDirectoryWidget(FolderTree folderTree) {
-    return DirectoryWidget(
-      characteristics: (
-        name: folderTree.folder.name,
-        hasNestedFolders: folderTree.children.isNotEmpty,
-        isRoot: folderTree.folder.parentId == null
-      ),
-    );
-  }
-
-  Widget _buildRootDirectoryWidget(bool hasNestedFolders) {
-    return DirectoryWidget(
-      characteristics: (
-        name: Const.rootFolderName,
-        hasNestedFolders: hasNestedFolders,
-        isRoot: true
-      ),
-    );
   }
 }
