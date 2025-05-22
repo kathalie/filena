@@ -33,16 +33,25 @@ class FileManagementView extends StatelessWidget {
     return Expanded(
       child: Container(
         color: ThemeConsts.primaryBgColor,
-        // child: FilesMainView(),
         child: _buildBreadcrumbsRow(),
       ),
     );
   }
-  
+
   Widget _buildBreadcrumbsRow() {
-    return Row(children: [
-      BreadcrumbsView(),
-      FolderControl(),
-    ],);
+    return Row(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: BreadcrumbsView(),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: FolderControl(),
+        ),
+      ],
+    );
   }
 }
