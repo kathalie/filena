@@ -4,6 +4,7 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../domain/entities/file_entity.dart';
 import '../../domain/entities/folder_entity.dart';
+import '../../domain/enums/folder_structure_mode.dart';
 import '../../domain/structures/folder_tree.dart';
 import '../repository_interfaces/file_repository.dart';
 import '../repository_interfaces/folder_repository.dart';
@@ -18,6 +19,10 @@ class StateProvider {
   final _selectedFolder = BehaviorSubject<FolderEntity?>.seeded(null);
   final _folderPath = BehaviorSubject<List<FolderEntity>>.seeded([]);
   final _folderStructure = BehaviorSubject<FolderTreeStructure>.seeded([]);
+  final _currentFolderStructureMode =
+      BehaviorSubject<FolderStructureMode>.seeded(
+    FolderStructureMode.classified,
+  );
 
   late final StreamSubscription _filterChangeSubscription;
   late final StreamSubscription _folderPathChangeSubscription;
@@ -41,7 +46,7 @@ class StateProvider {
       _selectedFolder.distinct(),
       _showOnlyFavorites.distinct(),
       _showSubfolderFiles.distinct(),
-          (_, selectedFolder, onlyFavorites, includeSubfolders) {
+      (_, selectedFolder, onlyFavorites, includeSubfolders) {
         return _fileRepository.getFilteredFiles(
           selectedFolder?.id,
           onlyFavorites,
@@ -60,18 +65,26 @@ class StateProvider {
     _folderPathChangeSubscription = Rx.combineLatest2(
       _folderRepository.folderChanges.startWith(null),
       _selectedFolder.distinct(),
-          (_, newSelectedFolder) => newSelectedFolder,
+      (_, newSelectedFolder) => newSelectedFolder,
     )
         .asyncMap((folder) => _folderRepository.getPathToFolder(folder?.id))
         .listen((newPath) => _folderPath.add(newPath));
   }
 
   Stream<List<FileEntity>> get filteredFiles => _filteredFiles.stream;
+
   Stream<bool> get showOnlyFavorites => _showOnlyFavorites.stream;
+
   Stream<bool> get showSubfolderFiles => _showSubfolderFiles.stream;
+
   Stream<FolderEntity?> get selectedFolder => _selectedFolder.stream;
+
   Stream<List<FolderEntity>> get folderPath => _folderPath.stream;
+
   Stream<FolderTreeStructure> get folderStructure => _folderStructure.stream;
+
+  Stream<FolderStructureMode> get currentFolderStructureMode =>
+      _currentFolderStructureMode.stream;
 
   void toggleShowOnlyFavourites() {
     _showOnlyFavorites.add(!_showOnlyFavorites.value);
@@ -83,6 +96,10 @@ class StateProvider {
 
   void selectFolder(FolderEntity? newFolder) {
     _selectedFolder.add(newFolder);
+  }
+
+  void updateCurrentFolderStructureMode(FolderStructureMode newMode) {
+    _currentFolderStructureMode.add(newMode);
   }
 
   void dispose() {
