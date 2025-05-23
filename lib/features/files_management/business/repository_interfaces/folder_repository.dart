@@ -2,13 +2,11 @@ import '../../domain/entities/folder_entity.dart';
 import '../../domain/structures/folder_tree.dart';
 
 abstract interface class FolderRepository {
-  Stream<FolderTreeStructure> get folderStructure;
+  Stream get folderChanges;
 
-  Stream<FolderEntity?> get selectedFolder;
+  Future<FolderTreeStructure> get folderStructure;
 
-  void selectFolder(FolderEntity? newFolder);
-
-  Stream<List<FolderEntity>> get pathToSelectedFolder;
+  Future<List<FolderEntity>> getPathToFolder(int? folderId);
 
   Future<void> createFolder(int? parentFolderId, String name);
 

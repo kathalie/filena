@@ -25,21 +25,7 @@ class UserChoiceRepositoryImpl implements UserChoiceRepository {
   final _showOnlyFavourites = BehaviorSubject<bool>.seeded(false);
   final _showSubfolderFiles = BehaviorSubject<bool>.seeded(false);
 
-  @override
-  Stream<bool> get showOnlyFavourites => _showOnlyFavourites.stream;
 
-  @override
-  Stream<bool> get showSubfolderFiles => _showSubfolderFiles.stream;
-
-  @override
-  void toggleShowOnlyFavourites() {
-    _showOnlyFavourites.add(!_showOnlyFavourites.value);
-  }
-
-  @override
-  void toggleShowSubfolderFiles() {
-    _showSubfolderFiles.add(!_showSubfolderFiles.value);
-  }
 
   //MARK: disposal
   void dispose() {

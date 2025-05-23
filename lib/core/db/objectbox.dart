@@ -8,7 +8,6 @@ import '../../objectbox.g.dart';
 import '../common/const.dart';
 
 class ObjectBox {
-  /// The Store of this app.
   late final Store store;
 
   ObjectBox._create(this.store) {
@@ -35,7 +34,6 @@ class ObjectBox {
     print("Root folder already exists with ID:");
   }
 
-  /// Create an instance of ObjectBox to use throughout the app.
   static Future<ObjectBox> create() async {
     final appDir = await getApplicationDocumentsDirectory();
     print(appDir);

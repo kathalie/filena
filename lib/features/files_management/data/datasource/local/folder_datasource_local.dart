@@ -17,50 +17,44 @@ import '../folder_datasource.dart';
 class FolderDatasourceLocal implements FolderDataSource {
   final _store = GetIt.I<ObjectBox>().store;
   final _folderBox = GetIt.I<ObjectBox>().store.box<Folder>();
+
+  //TODO come up with proper communication between features
   final _embeddingsRepository = GetIt.I.get<EmbeddingsRepository>();
 
-  final _folders = BehaviorSubject<List<FolderDto>>.seeded([]);
-
-  late final StreamSubscription<List<FolderDto>> _foldersChangesSubscription;
+  final _folderChanges = BehaviorSubject<Query<Folder>>();
+  late final StreamSubscription<Query<Folder>> _foldersChangesSubscription;
 
   FolderDatasourceLocal() {
-    final initialFolders = _folderBox
-        .query(Folder_.id.notEquals(rootFolderId))
-        .build()
-        .find()
-        .map((folder) => folder.toDto())
-        .toList();
-
-    _folders.add(initialFolders);
-
     _initSubscription();
   }
 
   void _initSubscription() {
-    final dbFolderChanges =
-        _folderBox.query().watch().map((query) => query.find());
+    final dbFolderChanges = _folderBox.query().watch();
 
-    _foldersChangesSubscription = dbFolderChanges
-        .map(
-          (folders) => folders.map((folder) => folder.toDto()).toList(),
-        )
-        .listen(
-          (folders) => _folders.add(
-            folders.where((folder) => folder.parentId != rootFolderId).toList(),
-          ),
-        );
+    _foldersChangesSubscription =
+        dbFolderChanges.listen((query) => _folderChanges.add(query));
   }
 
   @override
-  Stream<List<FolderDto>> get folders => _folders.stream;
+  Stream get folderChanges =>_folderChanges.stream;
 
   @override
-  Future<List<FolderDto>> getPathTo(int folderId) async {
+  Future<List<FolderDto>> get allFolders async {
+    final folderDtos = await _folderBox
+        .query(Folder_.id.notEquals(rootFolderId))
+        .build()
+        .findAsync();
+
+    return folderDtos.map((folder) => folder.toDto()).toList();
+  }
+
+  @override
+  Future<List<FolderDto>> getPathTo(int? folderId) async {
     return _store.runInTransaction(
       TxMode.read,
-      () {
+          () {
         final List<Folder> path = [];
-        Folder? current = _folderBox.get(folderId);
+        Folder? current = _folderBox.get(folderId ?? rootFolderId);
 
         while (current != null) {
           path.add(current);
@@ -80,7 +74,7 @@ class FolderDatasourceLocal implements FolderDataSource {
   @override
   Future<int> createFolder(FolderCreateDto createFolderDto) async {
     final nameEmbeddings =
-        await _embeddingsRepository.getEmbeddingsForText(createFolderDto.name);
+    await _embeddingsRepository.getEmbeddingsForText(createFolderDto.name);
 
     final folderModel = Folder(
       name: createFolderDto.name,
@@ -108,7 +102,7 @@ class FolderDatasourceLocal implements FolderDataSource {
   Future<void> updateFolder(FolderUpdateDto folderUpdateDto) async {
     return _store.runInTransaction(
       TxMode.write,
-      () {
+          () {
         var folder = _store.box<Folder>().get(folderUpdateDto.id);
 
         if (folder == null) {
@@ -130,7 +124,7 @@ class FolderDatasourceLocal implements FolderDataSource {
   }
 
   void dispose() {
-    _folders.close();
+    _folderChanges.close();
     _foldersChangesSubscription.cancel();
   }
 }

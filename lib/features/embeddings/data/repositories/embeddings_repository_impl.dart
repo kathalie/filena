@@ -21,8 +21,6 @@ class EmbeddingsRepositoryImpl implements EmbeddingsRepository {
     final embeddingsDto =
         await _embeddingsDatasource.getEmbeddingsForText(text);
 
-    print(embeddingsDto);
-
     return embeddingsDto.toEntity();
   }
 }

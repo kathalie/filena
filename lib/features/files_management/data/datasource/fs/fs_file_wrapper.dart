@@ -23,8 +23,7 @@ class FsFileWrapper {
   late final Future<String?> mimeType;
   late final Future<FileCategory> category;
 
-  FsFileWrapper(String filePath) :
-        file = File(filePath){
+  FsFileWrapper(String filePath) : file = File(filePath) {
     name = _name;
     extension = _extension;
     metadata = _metadata;
@@ -34,6 +33,7 @@ class FsFileWrapper {
   }
 
   Future<String> get contentAsString async {
+    print('Reading file');
     final content = await file.readAsString();
 
     print(content);
@@ -56,10 +56,10 @@ class FsFileWrapper {
 
     final List<double> embeddings = switch (fileCategory) {
       FileCategory.image => (await _embeddingsRepository
-          .getEmbeddingsForImage(await contentAsBase64))
+              .getEmbeddingsForImage(await contentAsBase64))
           .embeddings,
-      FileCategory.video =>
-      (await _embeddingsRepository.getEmbeddingsForText(await contentAsString))
+      FileCategory.video => (await _embeddingsRepository
+              .getEmbeddingsForText(await contentAsString))
           .embeddings,
       FileCategory.audio => <double>[],
       FileCategory.document => <double>[],

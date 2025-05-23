@@ -19,88 +19,46 @@ class FileDatasourceLocal implements FileDataSource {
   final _folderBox = GetIt.I<ObjectBox>().store.box<Folder>();
   final _fileBox = GetIt.I<ObjectBox>().store.box<File>();
 
-  final _filteredFiles = BehaviorSubject<List<FileDto>>.seeded([]);
-  final _parentIdFilter = BehaviorSubject<int?>.seeded(null);
-  final _onlyFavouritesFilter = BehaviorSubject<bool>.seeded(false);
-  final _includeSubfolderFilesFilter = BehaviorSubject<bool>.seeded(false);
-
-  late final StreamSubscription<List<FileDto>> _changesSubscription;
+  final _fileChanges = BehaviorSubject<Query<File>>();
+  late final StreamSubscription<Query<File>> _filesChangesSubscription;
 
   FileDatasourceLocal() {
-    final initialFiles = _applyFilters(
-      _parentIdFilter.value,
-      _onlyFavouritesFilter.value,
-      _includeSubfolderFilesFilter.value,
-    ).map((file) => file.toDto()).toList();
-
-    _fileBox.getAll().map((file) => file.toDto()).toList();
-
-    _filteredFiles.add(initialFiles);
-
     _initSubscription();
   }
 
   void _initSubscription() {
-    final dbFileChanges = _fileBox.query().watch().map((query) => query.find());
+    final dbFilesChanges = _fileBox.query().watch();
 
-    Rx.combineLatest4(
-      dbFileChanges,
-      _parentIdFilter,
-      _onlyFavouritesFilter,
-      _includeSubfolderFilesFilter,
-      (_, parentId, onlyFavorites, includeSubfolders) => _applyFilters(
-        parentId,
-        onlyFavorites,
-        includeSubfolders,
-      ),
-    )
-        .map(
-          (file) => file.map((file) => file.toDto()).toList(),
-        )
-        .listen((filteredFiles) => _filteredFiles.add(filteredFiles));
+    _filesChangesSubscription =
+        dbFilesChanges.listen((query) => _fileChanges.add(query));
   }
 
-  List<File> _applyFilters(
-    int? parentId,
-    bool onlyFavorites,
-    bool includeSubfolders,
-  ) {
-    final parentFolderId = parentId ?? 0;
+  @override
+  Stream get fileChanges => _fileChanges.stream;
 
-    final acceptableFolders =
-        _acceptableParentFolders(parentFolderId, includeSubfolders);
-
-    final Set<File> filteredFiles = acceptableFolders
-        .expand((folder) => folder.assignedFiles)
-        .where((file) => onlyFavorites ? file.isFavourite : true)
-        .toSet();
-
-    return filteredFiles.toList();
-  }
-
-  List<Folder> _acceptableParentFolders(
-    int parentId,
-    bool includeSubfolders,
-  ) {
-    final List<int> folderIds = [
-      parentId,
-      ...(includeSubfolders ? _nestedFolderIds(parentId) : []),
-    ];
-
-    final isInFoldersQuery =
-        _folderBox.query(Folder_.id.oneOf(folderIds)).build();
-
-    final acceptableFolders =
-        folderIds.isEmpty ? _folderBox.getAll() : isInFoldersQuery.find();
-
-    return acceptableFolders;
-  }
-
-  Set<int> _nestedFolderIds(int parentFolderId) {
-    final Folder? parentFolder = _folderBox.get(parentFolderId);
+  @override
+  Future<Set<FileDto>> getFilteredFiles(
+    int? parentFolderId,
+    bool onlyFavourites,
+    bool includeFromSubfolders,
+  ) async {
+    final parentFolder = await _folderBox.getAsync(parentFolderId ?? rootFolderId);
 
     if (parentFolder == null) return {};
 
+    final Set<Folder> acceptableFolders = includeFromSubfolders
+        ? {parentFolder, ...(await _getAllDeeplyNestedFolders(parentFolder))}
+        : {parentFolder};
+
+    final Set<File> filteredFiles = acceptableFolders
+        .expand((folder) => folder.assignedFiles)
+        .where((file) => onlyFavourites ? file.isFavourite : true)
+        .toSet();
+
+    return filteredFiles.map((file) => file.toDto()).toSet();
+  }
+
+  Future<Set<Folder>> _getAllDeeplyNestedFolders(Folder parentFolder) async {
     Set<int> collectNestedIds(Folder folder) {
       return {
         ...folder.children.map((child) => child.id),
@@ -108,51 +66,23 @@ class FileDatasourceLocal implements FileDataSource {
       };
     }
 
-    return collectNestedIds(parentFolder);
+    final nestedFoldersIds = collectNestedIds(parentFolder).toList();
+
+    final isInFoldersQuery =
+        _folderBox.query(Folder_.id.oneOf(nestedFoldersIds)).build();
+
+    return isInFoldersQuery.find().toSet();
   }
 
   @override
-  Stream<List<FileDto>> get filteredFiles => _filteredFiles.stream;
-
-  @override
-  void setParentFolderFilter(int? parentFolderId) {
-    _parentIdFilter.add(parentFolderId);
-  }
-
-  @override
-  void setOnlyFavouritesFilter(bool onlyFavourites) {
-    _onlyFavouritesFilter.add(onlyFavourites);
-  }
-
-  @override
-  void setIncludeSubfoldersFilter(bool includeFromSubfolders) {
-    _includeSubfolderFilesFilter.add(includeFromSubfolders);
-  }
-
-  @override
-  Future<int> createFile(FileCreateDto createFileDto) async {
+  Future<int> createFile(FileCreateDto createFileDto, int? parentFolderId) async {
     final fileModel = createFileDto.toModel();
 
     final newFileId = await _fileBox.putAsync(fileModel);
-    final newFile = _fileBox.get(newFileId);
 
-    final parentFolder =
-        _folderBox.get(createFileDto.parentFolderId ?? rootFolderId);
-    if (parentFolder == null) {
-      throw FolderException.folderDoesNotExist(
-        title: 'Failed to save file to a root folder.',
-      );
-    }
-    if (newFile == null) {
-      throw FileException.fileDoesNotExist(
-        title: 'Failed to save file to a root folder.',
-      );
-    }
+    await assignFileToFolder(newFileId, parentFolderId ?? rootFolderId);
 
-    parentFolder.assignedFiles.add(newFile);
-    _folderBox.put(parentFolder);
-
-    return fileModel.id;
+    return newFileId;
   }
 
   @override
@@ -173,8 +103,8 @@ class FileDatasourceLocal implements FileDataSource {
     return _store.runInTransaction(
       TxMode.write,
       () {
-        final folder = _store.box<Folder>().get(folderId);
-        final file = _store.box<File>().get(fileId);
+        final folder = _folderBox.get(folderId);
+        final file = _fileBox.get(fileId);
 
         if (folder == null) {
           throw FolderException.folderDoesNotExist(
@@ -190,17 +120,13 @@ class FileDatasourceLocal implements FileDataSource {
 
         final updatedFile = file..parentFolders.add(folder);
 
-        _store.box<File>().put(updatedFile);
+        _fileBox.put(updatedFile);
       },
     );
   }
 
   void dispose() {
-    _filteredFiles.close();
-    _onlyFavouritesFilter.close();
-    _parentIdFilter.close();
-    _includeSubfolderFilesFilter.close();
-    _changesSubscription.cancel();
+    _filesChangesSubscription.cancel();
   }
 }
 

@@ -15,23 +15,43 @@ class FileRepositoryImpl implements FileRepository {
   const FileRepositoryImpl({
     required FileDataSource fileDataSource,
     required StorageManager storageManager,
-  })
-      : _storageManager = storageManager,
+  })  : _storageManager = storageManager,
         _fileDataSource = fileDataSource;
-  @override
-  Stream<List<FileEntity>> get filteredFiles =>
-      _fileDataSource.filteredFiles.asyncMap((fileDtos) async {
-        final futureEntities = fileDtos
-            .map(
-              (fileDto) async =>
-              fileDto.toEntity(
-                await _storageManager.retrieveMetadata(fileDto.name),
-              ),
-        )
-            .toList();
 
-        return await Future.wait(futureEntities);
-      });
+  @override
+  Future<List<FileEntity>> getFilteredFiles(
+    int? parentFolderId,
+    bool onlyFavourites,
+    bool includeFromSubfolders,
+  ) async {
+    final filteredFileDtos = await _fileDataSource.getFilteredFiles(
+      parentFolderId,
+      onlyFavourites,
+      includeFromSubfolders,
+    );
+    return Future.wait(
+      filteredFileDtos.map(
+        (fileDto) async {
+          // final metadata = await _storageManager.retrieveMetadata(fileDto.name);
+
+          return fileDto.toEntity(
+            FileStorageMetadataDto(
+              //TODO Read from storage
+              // sizeInBytes: metadata.sizeInBytes,
+              // timeCreated: metadata.timeCreated,
+              // timeLastModified: metadata.timeLastModified,
+              sizeInBytes: 0,
+              timeCreated: DateTime.now(),
+              timeLastModified: DateTime.now(),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  @override
+  Stream get fileChanges => _fileDataSource.fileChanges;
 
   @override
   Future<void> createFile(String filePath, int? parentFolderId) async {
@@ -42,14 +62,10 @@ class FileRepositoryImpl implements FileRepository {
       hash: await fsFileWrapper.contentHash,
       mimeType: await fsFileWrapper.mimeType ?? '',
       embeddings: await fsFileWrapper.embeddings,
-      parentFolderId: parentFolderId,
     );
 
-    print('Embeddings for file ${fsFileWrapper.name}${fsFileWrapper.extension}:');
-    print(fileCreateDto.embeddings);
-
     //TODO save into storage with given id
-    final fileId = await _fileDataSource.createFile(fileCreateDto);
+    final fileId = await _fileDataSource.createFile(fileCreateDto, parentFolderId);
 
     // TODO load into storage with metadata
     // await _storageManager.addFile(
@@ -77,35 +93,20 @@ class FileRepositoryImpl implements FileRepository {
   }
 
   @override
-  void setIncludeSubfoldersFilter(bool includeFromSubfolders) {
-    // TODO: implement setIncludeSubfoldersFilter
-  }
-
-  @override
-  void setOnlyFavouritesFilter(bool onlyFavourites) {
-    // TODO: implement setOnlyFavouritesFilter
-  }
-
-  @override
-  void setParentFolderFilter(int? parentFolderId) {
-    // TODO: implement setParentFolderFilter
+  Future<void> assignFileToFolder(int fileId, int folderId) async {
+    await _fileDataSource.assignFileToFolder(fileId, folderId);
   }
 }
 
 extension on FileDto {
-  FileEntity toEntity(FileStorageMetadataDto storageMetadata) =>
-      FileEntity(
+  FileEntity toEntity(FileStorageMetadataDto storageMetadata) => FileEntity(
         id: id,
         isFavourite: isFavourite,
         fileDetails: FileDetailsEntity(
           name: name,
-          //TODO Read from storage
-          // sizeInBytes: storageMetadata.sizeInBytes,
-          // timeCreated: storageMetadata.timeCreated,
-          // timeLastModified: storageMetadata.timeLastModified,
-          sizeInBytes: 0,
-          timeCreated: DateTime.now(),
-          timeLastModified: DateTime.now(),
+          sizeInBytes: storageMetadata.sizeInBytes,
+          timeCreated: storageMetadata.timeCreated,
+          timeLastModified: storageMetadata.timeLastModified,
           mimeType: mimeType,
         ),
       );

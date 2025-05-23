@@ -1,5 +1,3 @@
-import 'package:rxdart/rxdart.dart';
-
 import '../../business/repository_interfaces/folder_repository.dart';
 import '../../domain/entities/folder_entity.dart';
 import '../../domain/structures/folder_tree.dart';
@@ -14,39 +12,24 @@ class FolderRepositoryImpl implements FolderRepository {
   FolderRepositoryImpl(this._folderDataSource);
 
   @override
-  Stream<FolderTreeStructure> get folderStructure =>
-      _folderDataSource.folders.map(_folderTreeStructureFrom);
+  Stream get folderChanges => _folderDataSource.folderChanges;
 
-  FolderTreeStructure _folderTreeStructureFrom(List<FolderDto> folderDtos) {
+  @override
+  Future<FolderTreeStructure> get folderStructure async {
+    final folderDtos = await _folderDataSource.allFolders;
+
     final folderEntities =
-        folderDtos.map((folderDto) => folderDto.toEntity()).toList();
+    folderDtos.map((folderDto) => folderDto.toEntity()).toList();
 
     return FolderTree.fromList(folderEntities);
   }
 
-  final _selectedFolder = BehaviorSubject<FolderEntity?>.seeded(null);
-
   @override
-  void selectFolder(FolderEntity? newFolder) {
-    _selectedFolder.add(newFolder);
+  Future<List<FolderEntity>> getPathToFolder(int? folderId) async {
+    final folderDtos = await _folderDataSource.getPathTo(folderId);
+
+    return folderDtos.map((folderDto) => folderDto.toEntity()).toList();
   }
-
-  @override
-  Stream<FolderEntity?> get selectedFolder => _selectedFolder.stream.distinct();
-
-  @override
-  Stream<List<FolderEntity>> get pathToSelectedFolder =>
-      Rx.combineLatest2<FolderEntity?, List<FolderDto>, FolderEntity?>(
-        selectedFolder,
-        _folderDataSource.folders,
-        (folder, _) => folder,
-      )
-      .switchMap(
-        (folder) => folder == null
-            ? Stream.value([])
-            : Stream.fromFuture(_folderDataSource.getPathTo(folder.id))
-                .map((dtoList) => dtoList.toEntities()),
-      );
 
   @override
   Future<void> createFolder(int? parentFolderId, String name) async {
@@ -81,8 +64,4 @@ extension on FolderDto {
         name: name,
         parentId: parentId,
       );
-}
-
-extension on List<FolderDto> {
-  List<FolderEntity> toEntities() => map((dto) => dto.toEntity()).toList();
 }

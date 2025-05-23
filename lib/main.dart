@@ -11,6 +11,5 @@ void main() async {
 
   runApp(
       const FilenaApp(),
-    // const ProviderScope(child: FilenaApp()),
   );
 }

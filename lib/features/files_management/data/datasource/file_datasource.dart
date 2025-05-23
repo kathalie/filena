@@ -2,15 +2,15 @@ import 'dto/file_create_dto.dart';
 import 'dto/file_dto.dart';
 
 abstract interface class FileDataSource {
-  Stream<List<FileDto>> get filteredFiles;
+  Stream get fileChanges;
 
-  void setParentFolderFilter(int? parentFolderId);
+  Future<Set<FileDto>> getFilteredFiles(
+    int? parentFolderId,
+    bool onlyFavourites,
+    bool includeFromSubfolders,
+  );
 
-  void setOnlyFavouritesFilter(bool onlyFavourites);
-
-  void setIncludeSubfoldersFilter(bool includeFromSubfolders);
-
-  Future<int> createFile(FileCreateDto createFileDto);
+  Future<int> createFile(FileCreateDto createFileDto, int? parentFolderId);
 
   Future<void> createFiles(List<FileCreateDto> createFileDtos);
 

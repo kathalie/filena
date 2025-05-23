@@ -3,9 +3,11 @@ import 'dto/folder_dto.dart';
 import 'dto/folder_update_dto.dart';
 
 abstract interface class FolderDataSource {
-  Stream<List<FolderDto>> get folders;
+  Stream get folderChanges;
 
-  Future<List<FolderDto>> getPathTo(int folderId);
+  Future<List<FolderDto>> get allFolders;
+
+  Future<List<FolderDto>> getPathTo(int? folderId);
 
   Future<FolderDto?> getFolder(int id);
 

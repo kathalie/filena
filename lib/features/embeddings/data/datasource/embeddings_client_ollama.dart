@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../../../../core/common/const.dart';
-import '../../../../core/common/errors/llm_exception.dart';
 import '../../../embeddings/data/datasource/embeddings_datasource.dart';
 import 'dto/embeddings_dto.dart';
 
@@ -46,5 +45,4 @@ class EmbeddingsClientOllama implements EmbeddingsDatasource {
       return [];
     }
   }
-  
 }

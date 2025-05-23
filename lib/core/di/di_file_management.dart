@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import '../../features/files_management/business/repository_interfaces/file_repository.dart';
 import '../../features/files_management/business/repository_interfaces/folder_repository.dart';
 import '../../features/files_management/business/repository_interfaces/user_choice_repository.dart';
+import '../../features/files_management/business/providers/state_provider.dart';
 import '../../features/files_management/data/datasource/local/folder_datasource_local.dart';
 import '../../features/files_management/data/datasource/file_datasource.dart';
 import '../../features/files_management/data/datasource/local/file_datasource_local.dart';
@@ -34,5 +35,13 @@ Future<void> setupFileManagementDi() async {
   );
   GetIt.I.registerSingleton<UserChoiceRepository>(
     UserChoiceRepositoryImpl(),
+  );
+
+  //UseCases and Providers
+  GetIt.I.registerSingleton<StateProvider>(
+    StateProvider(
+      folderRepository: GetIt.I<FolderRepository>(),
+      fileRepository: GetIt.I<FileRepository>(),
+    ),
   );
 }
