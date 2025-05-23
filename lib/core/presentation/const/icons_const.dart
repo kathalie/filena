@@ -7,6 +7,7 @@ class IconsConst {
   static const notifications = FontAwesome.bell;
   static const settings = FontAwesome.gear_solid;
 
+  static const send = FontAwesome.paper_plane_solid;
   static const search = FontAwesome.magnifying_glass_solid;
   static const starOutline = FontAwesome.star;
   static const starFilled = FontAwesome.star_solid;

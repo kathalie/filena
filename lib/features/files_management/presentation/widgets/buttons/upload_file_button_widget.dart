@@ -51,6 +51,8 @@ class UploadFileButton extends StatelessWidget {
         }
       } catch (e) {
         _vm.error.add('Upload failed: $e');
+      }
+      finally {
         _vm.isLoading.add(false);
       }
     }

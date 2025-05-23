@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:split_view/split_view.dart';
 
 import '../../../core/presentation/const/theme_const.dart';
+import '../../folders_suggestion/presentation/prompt_bar/prompt_bar_widget.dart';
 import 'widgets/main_view/files_table/files_table_widget.dart';
 import 'widgets/main_view/topbar/breadcrumbs/breadcrumbs_widget.dart';
 import 'widgets/main_view/topbar/filters/all_subfolders_checkbox/all_subfolders_checkbox_widget.dart';
@@ -11,10 +12,24 @@ import 'widgets/main_view/topbar/folder_control/folder_control_widget.dart';
 import 'widgets/sidebar/folder_structure_side_bar_widget.dart';
 
 class FileManagementView extends StatelessWidget {
-  FileManagementView({super.key});
+  const FileManagementView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        _buildSplitView(),
+        Positioned(
+          left: 16,
+          right: 16,
+          bottom: 32,
+          child: PromptBar(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSplitView() {
     return SplitView(
       gripColor: ThemeConsts.primaryLightColor,
       gripColorActive: ThemeConsts.primaryColor,

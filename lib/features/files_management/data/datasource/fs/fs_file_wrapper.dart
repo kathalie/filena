@@ -13,6 +13,7 @@ import '../../../business/use_cases/get_file_category.dart';
 import '../../../domain/enums/file_category.dart';
 
 class FsFileWrapper {
+  //TODO better communication between services
   final _embeddingsRepository = GetIt.I.get<EmbeddingsRepository>();
 
   final File file;
@@ -33,12 +34,7 @@ class FsFileWrapper {
   }
 
   Future<String> get contentAsString async {
-    print('Reading file');
-    final content = await file.readAsString();
-
-    print(content);
-
-    return content;
+    return await file.readAsString();
   }
 
   Future<Uint8List> get contentAsBytes async {
@@ -55,14 +51,14 @@ class FsFileWrapper {
     final fileCategory = await category;
 
     final List<double> embeddings = switch (fileCategory) {
+      FileCategory.document => (await _embeddingsRepository
+          .getEmbeddingsForText(await contentAsString))
+          .embeddings,
       FileCategory.image => (await _embeddingsRepository
               .getEmbeddingsForImage(await contentAsBase64))
           .embeddings,
-      FileCategory.video => (await _embeddingsRepository
-              .getEmbeddingsForText(await contentAsString))
-          .embeddings,
+      FileCategory.video => <double>[],
       FileCategory.audio => <double>[],
-      FileCategory.document => <double>[],
       FileCategory.other => <double>[]
     };
 
