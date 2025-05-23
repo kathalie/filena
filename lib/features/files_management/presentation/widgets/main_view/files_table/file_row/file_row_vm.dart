@@ -13,7 +13,7 @@ class FileRowPresenter {
 
   FileRowPresenter(FileEntity fileEntity) : _fileEntity = fileEntity;
 
-  FileCategory get fileCategory => _fileEntity.fileDetails.category;
+  FileCategory get fileCategory => _fileEntity.fileDetails.fileCategory;
 
   String get name => _fileEntity.fileDetails.name;
 

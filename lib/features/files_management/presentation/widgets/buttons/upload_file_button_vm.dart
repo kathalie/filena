@@ -1,6 +1,5 @@
 import 'package:get_it/get_it.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:file_picker/file_picker.dart';
 
 import '../../../business/repository_interfaces/file_repository.dart';
 

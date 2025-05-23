@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import '../datasource/dto/file_storage_metadata_dto.dart';
+
 abstract interface class StorageManager {
 //   Future<void> write(Uint8List bytes, FL fileLocation);
 //
@@ -25,4 +27,6 @@ abstract interface class StorageManager {
     Future<void> removeFile({
         required String fileStoragePath,
     });
+
+    Future<FileStorageMetadataDto> retrieveMetadata(String uniqueFileName);
 }

@@ -2,27 +2,28 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../../../../core/errors/llm_exception.dart';
-import '../../const.dart';
-import 'embedding_retrieval_client.dart';
+import '../../../../core/common/const.dart';
+import '../../../../core/common/errors/llm_exception.dart';
+import '../../../embeddings/data/datasource/embeddings_datasource.dart';
+import 'dto/embeddings_dto.dart';
 
 class EmbeddingRetrievalConst {
   static const textEmbeddingModel = 'nomic-embed-text';
 }
 
-class EmbeddingRetrievalClientOllama implements EmbeddingRetrievalClient {
+class EmbeddingsClientOllama implements EmbeddingsDatasource {
   final String baseUrl;
 
-  EmbeddingRetrievalClientOllama({this.baseUrl = ollamaUrl});
+  EmbeddingsClientOllama({this.baseUrl = ollamaUrl});
 
   @override
-  Future<List<double>> getEmbeddingForImage(String imageBase64) async {
+  Future<EmbeddingsDto> getEmbeddingForImage(String imageBase64) async {
     // TODO: implement getEmbeddingForImage
     throw UnimplementedError();
   }
 
   @override
-  Future<List<double>> getEmbeddingForText(String text) async {
+  Future<EmbeddingsDto> getEmbeddingForText(String text) async {
     final url = Uri.parse('$baseUrl/api/embed');
 
     final payload = {
@@ -41,7 +42,8 @@ class EmbeddingRetrievalClientOllama implements EmbeddingRetrievalClient {
 
       return (jsonResponse['embeddings'][0] as List).cast<double>();
     } catch (e) {
-      throw LLMException.failedToRetrieveEmbeddings(cause: e);
+      print('Filed to retrieve embeddings for a text file');
+      return [];
     }
   }
   

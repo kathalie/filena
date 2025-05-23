@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../../../../core/errors/llm_exception.dart';
-import '../../const.dart';
+import '../../../../core/common/errors/llm_exception.dart';
+import '../../../../core/common/const.dart';
 import 'dto/analysed_user_request_dto.dart';
 import 'user_prompt_analysis_client.dart';
 

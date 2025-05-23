@@ -19,7 +19,7 @@ class File {
 
   @HnswIndex(dimensions: 10, distanceType: VectorDistanceType.cosine)
   @Property(type: PropertyType.floatVector)
-  List<double>? embeddings;
+  List<double> embeddings;
 
   @Backlink('assignedFiles')
   final parentFolders = ToMany<Folder>();
@@ -29,5 +29,6 @@ class File {
     required this.hash,
     required this.mimeType,
     required this.isFavourite,
+    required this.embeddings,
   });
 }

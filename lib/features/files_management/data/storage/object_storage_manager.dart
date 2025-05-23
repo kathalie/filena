@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:minio/io.dart';
 import 'package:minio/minio.dart';
 
+import '../datasource/dto/file_storage_metadata_dto.dart';
 import 'exceptions/minio_exception.dart';
 import 'storage_manager.dart';
 
@@ -93,5 +94,11 @@ class ObjectStorageManager implements StorageManager {
     );
 
     print('--- object removed');
+  }
+
+  @override
+  Future<FileStorageMetadataDto> retrieveMetadata(String uniqueFileName) {
+    // TODO: implement metadata
+    throw UnimplementedError();
   }
 }

@@ -1,7 +1,13 @@
 import '../../domain/entities/file_entity.dart';
 
 abstract interface class FileRepository {
-  Future<FileEntity> getFileDetails(int fileId);
+  Stream<List<FileEntity>> get filteredFiles;
+
+  void setParentFolderFilter(int? parentFolderId);
+
+  void setOnlyFavouritesFilter(bool onlyFavourites);
+
+  void setIncludeSubfoldersFilter(bool includeFromSubfolders);
 
   Future<void> createFile(String filePath);
 
@@ -10,6 +16,4 @@ abstract interface class FileRepository {
   Future<void> deleteFile(int fileId);
 
   Future<void> removeFileFromFolder(int fileId, int folderId);
-
-  Future<List<FileEntity>> getFilesInFolder(int folderId);
 }

@@ -126,7 +126,7 @@ final _entities = <obx_int.ModelEntity>[
       ],
       relations: <obx_int.ModelRelation>[
         obx_int.ModelRelation(
-            id: const obx_int.IdUid(2, 673942337030042630),
+            id: const obx_int.IdUid(4, 2727919847388667980),
             name: 'assignedFiles',
             targetId: const obx_int.IdUid(7, 3198910070472308778))
       ],
@@ -173,7 +173,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
       entities: _entities,
       lastEntityId: const obx_int.IdUid(8, 4597012346551900636),
       lastIndexId: const obx_int.IdUid(12, 8432660901793213549),
-      lastRelationId: const obx_int.IdUid(2, 673942337030042630),
+      lastRelationId: const obx_int.IdUid(4, 2727919847388667980),
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [
         2933503222850296189,
@@ -220,7 +220,11 @@ obx_int.ModelDefinition getObjectBoxModel() {
         5625579071453894052,
         4394740505661027584
       ],
-      retiredRelationUids: const [751356814963857588],
+      retiredRelationUids: const [
+        751356814963857588,
+        673942337030042630,
+        4878034946052678015
+      ],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
       version: 1);
@@ -256,7 +260,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         model: _entities[1],
         toOneRelations: (File object) => [],
         toManyRelations: (File object) => {
-              obx_int.RelInfo<Folder>.toManyBacklink(2, object.id):
+              obx_int.RelInfo<Folder>.toManyBacklink(4, object.id):
                   object.parentFolders
             },
         getId: (File object) => object.id,
@@ -267,9 +271,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final nameOffset = fbb.writeString(object.name);
           final hashOffset = fbb.writeString(object.hash);
           final mimeTypeOffset = fbb.writeString(object.mimeType);
-          final embeddingsOffset = object.embeddings == null
-              ? null
-              : fbb.writeListFloat32(object.embeddings!);
+          final embeddingsOffset = fbb.writeListFloat32(object.embeddings);
           fbb.startTable(7);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, nameOffset);
@@ -291,24 +293,25 @@ obx_int.ModelDefinition getObjectBoxModel() {
               .vTableGet(buffer, rootOffset, 10, '');
           final isFavouriteParam =
               const fb.BoolReader().vTableGet(buffer, rootOffset, 12, false);
+          final embeddingsParam =
+              const fb.ListReader<double>(fb.Float32Reader(), lazy: false)
+                  .vTableGet(buffer, rootOffset, 14, []);
           final object = File(
               name: nameParam,
               hash: hashParam,
               mimeType: mimeTypeParam,
-              isFavourite: isFavouriteParam)
-            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
-            ..embeddings =
-                const fb.ListReader<double>(fb.Float32Reader(), lazy: false)
-                    .vTableGetNullable(buffer, rootOffset, 14);
+              isFavourite: isFavouriteParam,
+              embeddings: embeddingsParam)
+            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           obx_int.InternalToManyAccess.setRelInfo<File>(object.parentFolders,
-              store, obx_int.RelInfo<Folder>.toManyBacklink(2, object.id));
+              store, obx_int.RelInfo<Folder>.toManyBacklink(4, object.id));
           return object;
         }),
     Folder: obx_int.EntityDefinition<Folder>(
         model: _entities[2],
         toOneRelations: (Folder object) => [object.parent],
         toManyRelations: (Folder object) => {
-              obx_int.RelInfo<Folder>.toMany(2, object.id):
+              obx_int.RelInfo<Folder>.toMany(4, object.id):
                   object.assignedFiles,
               obx_int.RelInfo<Folder>.toOneBacklink(
                       4, object.id, (Folder srcObject) => srcObject.parent):
@@ -320,9 +323,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (Folder object, fb.Builder fbb) {
           final nameOffset = fbb.writeString(object.name);
-          final embeddingsOffset = object.embeddings == null
-              ? null
-              : fbb.writeListFloat32(object.embeddings!);
+          final embeddingsOffset = fbb.writeListFloat32(object.embeddings);
           fbb.startTable(5);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, nameOffset);
@@ -336,16 +337,16 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final rootOffset = buffer.derefObject(0);
           final nameParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 6, '');
-          final object = Folder(name: nameParam)
-            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
-            ..embeddings =
-                const fb.ListReader<double>(fb.Float32Reader(), lazy: false)
-                    .vTableGetNullable(buffer, rootOffset, 8);
+          final embeddingsParam =
+              const fb.ListReader<double>(fb.Float32Reader(), lazy: false)
+                  .vTableGet(buffer, rootOffset, 8, []);
+          final object = Folder(name: nameParam, embeddings: embeddingsParam)
+            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           object.parent.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
           object.parent.attach(store);
           obx_int.InternalToManyAccess.setRelInfo<Folder>(object.assignedFiles,
-              store, obx_int.RelInfo<Folder>.toMany(2, object.id));
+              store, obx_int.RelInfo<Folder>.toMany(4, object.id));
           obx_int.InternalToManyAccess.setRelInfo<Folder>(
               object.children,
               store,

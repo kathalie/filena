@@ -1,41 +1,35 @@
-import 'package:get_it/get_it.dart';
-import 'package:rxdart/rxdart.dart';
+import 'dart:async';
 
-import '../../../../../../mock/MockFileRepository.dart';
-import '../../../../business/repository_interfaces/user_choice_repository.dart';
+import 'package:get_it/get_it.dart';
+
+import '../../../../business/repository_interfaces/file_repository.dart';
+import '../../../../business/repository_interfaces/folder_repository.dart';
 import '../../../../domain/entities/file_entity.dart';
+import '../../../../domain/entities/folder_entity.dart';
 
 class FilesTablePresenter {
-  final _fileRepository = MockFileRepository();
-  final _userChoiceRepository = GetIt.I.get<UserChoiceRepository>();
+  final _fileRepository = GetIt.I.get<FileRepository>();
 
-  Stream<List<FileEntity>> get files => Rx.combineLatest3(
-        _fileRepository.getMockedFilesStream(),
-        _userChoiceRepository.showSubfolderFiles,
-        _userChoiceRepository.showOnlyFavourites,
-        (
-          List<FileEntity> files,
-          bool includeSubfolders,
-          bool onlyFavorites,
-        ) {
-          var filteredFiles = files;
+  Stream<List<FileEntity>> get files => _fileRepository.filteredFiles;
 
-          //TODO method for getting
-          // 1. files from a specified folder (if null - all).
-          // 2. bool recursive - if true, then from all subfolders as well
-          // ! listen to changes in DB
+  //TODO move this logic somewhere
+  // >>>
+  final _folderRepository = GetIt.I.get<FolderRepository>();
+  late final StreamSubscription<FolderEntity?> _selectedFolderSubscription;
 
-          //TODO implement all files from subfolders filtration
-          // filteredFiles = includeSubfolders
-          //     ? files
-          //     : files.where((file) => !file.isFromSubfolder).toList();
+  _initSubscription() {
+    _selectedFolderSubscription = _folderRepository.selectedFolder.listen(
+          (newSelectedFolder) =>
+          _fileRepository.setParentFolderFilter(newSelectedFolder?.id),
+    );
+  }
+  // <<<
 
-          if (onlyFavorites) {
-            filteredFiles =
-                filteredFiles.where((file) => file.isFavourite).toList();
-          }
+  FilesTablePresenter() {
+    _initSubscription();
+  }
 
-          return filteredFiles;
-        },
-      );
+  void dispose() {
+    _selectedFolderSubscription.cancel();
+  }
 }

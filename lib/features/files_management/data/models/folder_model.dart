@@ -11,7 +11,7 @@ class Folder {
 
   @HnswIndex(dimensions: 10, distanceType: VectorDistanceType.cosine)
   @Property(type: PropertyType.floatVector)
-  List<double>? embeddings;
+  List<double> embeddings;
 
   ToOne<Folder> parent = ToOne<Folder>();
 
@@ -22,5 +22,6 @@ class Folder {
 
   Folder({
     required this.name,
+    required this.embeddings,
   });
 }

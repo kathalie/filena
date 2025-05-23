@@ -1,3 +1,4 @@
+import '../../business/use_cases/get_file_category.dart';
 import '../enums/file_category.dart';
 
 class FileDetailsEntity {
@@ -17,22 +18,5 @@ class FileDetailsEntity {
 }
 
 extension FileDetailsEntityCategory on FileDetailsEntity {
-  FileCategory get category {
-    if (mimeType.isEmpty) {
-      return FileCategory.other;
-    }
-
-    for (final category in FileCategory.values) {
-      if (category == FileCategory.other) continue;
-
-      final isSuitableCategory = category.prefixes
-          .any((prefix) => mimeType.startsWith(prefix));
-
-      if (isSuitableCategory) {
-        return category;
-      }
-    }
-
-    return FileCategory.other;
-  }
+  FileCategory get fileCategory => GetFileCategoryUseCase()(mimeType);
 }

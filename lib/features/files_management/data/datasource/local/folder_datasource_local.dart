@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../../../core/common/errors/folder_exception.dart';
 import '../../../../../core/db/objectbox.dart';
-import '../../../../../core/errors/folder_exception.dart';
 import '../../../../../objectbox.g.dart';
+import '../../../../embeddings/business/repository_interfaces/embeddings_repository.dart';
 import '../../models/folder_model.dart';
 import '../dto/folder_create_dto.dart';
 import '../dto/folder_dto.dart';
@@ -15,6 +16,7 @@ import '../folder_datasource.dart';
 class FolderDatasourceLocal implements FolderDataSource {
   final _store = GetIt.I<ObjectBox>().store;
   final _folderBox = GetIt.I<ObjectBox>().store.box<Folder>();
+  final _embeddingsRepository = GetIt.I.get<EmbeddingsRepository>();
 
   final _folders = BehaviorSubject<List<FolderDto>>.seeded([]);
 
@@ -32,10 +34,10 @@ class FolderDatasourceLocal implements FolderDataSource {
   }
 
   void _initSubscription() {
-    _foldersChangesSubscription = _folderBox
-        .query()
-        .watch()
-        .map((query) => query.find())
+    final dbFolderChanges =
+        _folderBox.query().watch().map((query) => query.find());
+
+    _foldersChangesSubscription = dbFolderChanges
         .map(
           (folders) =>
               folders.map((folder) => FolderDto.fromModel(folder)).toList(),
@@ -50,14 +52,16 @@ class FolderDatasourceLocal implements FolderDataSource {
   Future<List<FolderDto>> getPathTo(int folderId) async {
     return _store.runInTransaction(
       TxMode.read,
-          () {
+      () {
         final List<Folder> path = [];
         Folder? current = _folderBox.get(folderId);
 
         while (current != null) {
           path.add(current);
 
-          if (current.parent.targetId == 0) { break; }
+          if (current.parent.targetId == 0) {
+            break;
+          }
 
           current = current.parent.target;
         }
@@ -71,8 +75,12 @@ class FolderDatasourceLocal implements FolderDataSource {
 
   @override
   Future<int> createFolder(FolderCreateDto createFolderDto) async {
+    final nameEmbeddings =
+        await _embeddingsRepository.getEmbeddingForText(createFolderDto.name);
+
     final folderModel = Folder(
       name: createFolderDto.name,
+      embeddings: nameEmbeddings.embeddings,
     );
 
     if (createFolderDto.parentFolderId != null) {
@@ -95,24 +103,21 @@ class FolderDatasourceLocal implements FolderDataSource {
 
   @override
   Future<void> updateFolder(FolderUpdateDto folderUpdateDto) async {
-    update(Store store, int objectId) {
-      var folder = store.box<Folder>().get(objectId);
-
-      if (folder == null) {
-        throw FolderException.failedToRenameFolder(
-          explanation: 'A folder does not exist',
-        );
-      }
-
-      final updatedFolder = folder..name = folderUpdateDto.name;
-
-      _folderBox.put(updatedFolder);
-    }
-
-    await _store.runInTransactionAsync(
+    return _store.runInTransaction(
       TxMode.write,
-      update,
-      folderUpdateDto.id,
+      () {
+        var folder = _store.box<Folder>().get(folderUpdateDto.id);
+
+        if (folder == null) {
+          throw FolderException.failedToRenameFolder(
+            explanation: 'This folder does not exist',
+          );
+        }
+
+        final updatedFolder = folder..name = folderUpdateDto.name;
+
+        _folderBox.put(updatedFolder);
+      },
     );
   }
 
