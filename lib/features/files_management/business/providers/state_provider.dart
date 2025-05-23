@@ -15,7 +15,6 @@ class StateProvider {
   final _filteredFiles = BehaviorSubject<List<FileEntity>>.seeded([]);
   final _showOnlyFavorites = BehaviorSubject<bool>.seeded(false);
   final _showSubfolderFiles = BehaviorSubject<bool>.seeded(false);
-
   final _selectedFolder = BehaviorSubject<FolderEntity?>.seeded(null);
   final _folderPath = BehaviorSubject<List<FolderEntity>>.seeded([]);
   final _folderStructure = BehaviorSubject<FolderTreeStructure>.seeded([]);
@@ -29,23 +28,20 @@ class StateProvider {
     required FileRepository fileRepository,
   })  : _folderRepository = folderRepository,
         _fileRepository = fileRepository {
-    _initFilterChangeSubscription();
-    _loadInitialFilteredFiles();
-
-    _initFolderStructureChangeSubscription();
-    _loadInitialFolderStructure();
-
-    _initFolderPathChange();
-    _loadInitialFolderPath();
+    _initialize();
   }
 
-  void _initFilterChangeSubscription() {
+  Future<void> _initialize() async {
+    _setupSubscriptions();
+  }
+
+  void _setupSubscriptions() {
     _filterChangeSubscription = Rx.combineLatest4(
-      _fileRepository.fileChanges,
-      _selectedFolder,
-      _showOnlyFavorites,
-      _showSubfolderFiles,
-      (_, selectedFolder, onlyFavorites, includeSubfolders) {
+      _fileRepository.fileChanges.startWith(null),
+      _selectedFolder.distinct(),
+      _showOnlyFavorites.distinct(),
+      _showSubfolderFiles.distinct(),
+          (_, selectedFolder, onlyFavorites, includeSubfolders) {
         return _fileRepository.getFilteredFiles(
           selectedFolder?.id,
           onlyFavorites,
@@ -55,67 +51,27 @@ class StateProvider {
     )
         .asyncMap((future) async => await future)
         .listen((filteredFiles) => _filteredFiles.add(filteredFiles));
-  }
 
-  Future<void> _loadInitialFilteredFiles() async {
-    final initialFiles = await _fileRepository.getFilteredFiles(
-      _selectedFolder.value?.id,
-      _showOnlyFavorites.value,
-      _showSubfolderFiles.value,
-    );
+    _folderStructureChangeSubscription = _folderRepository.folderChanges
+        .startWith(null)
+        .asyncMap((_) => _folderRepository.folderStructure)
+        .listen((newStructure) => _folderStructure.add(newStructure));
 
-    _filteredFiles.add(initialFiles);
-  }
-
-  void _initFolderStructureChangeSubscription() {
-    _folderStructureChangeSubscription =
-        _folderRepository.folderChanges.listen((_) async {
-      final newFolderStructure = await _folderRepository.folderStructure;
-
-      _folderStructure.add(newFolderStructure);
-    });
-  }
-
-  Future<void> _loadInitialFolderStructure() async {
-    final initialFolderStructure = await _folderRepository.folderStructure;
-
-    _folderStructure.add(initialFolderStructure);
-  }
-
-  void _initFolderPathChange() {
     _folderPathChangeSubscription = Rx.combineLatest2(
-      _folderRepository.folderChanges,
-      _selectedFolder,
-      (_, newSelectedFolder) => newSelectedFolder,
-    ).listen((newSelectedFolder) async {
-      final newFolderPath =
-          await _folderRepository.getPathToFolder(newSelectedFolder?.id);
-
-      _folderPath.add(newFolderPath);
-    });
+      _folderRepository.folderChanges.startWith(null),
+      _selectedFolder.distinct(),
+          (_, newSelectedFolder) => newSelectedFolder,
+    )
+        .asyncMap((folder) => _folderRepository.getPathToFolder(folder?.id))
+        .listen((newPath) => _folderPath.add(newPath));
   }
 
-  Future<void> _loadInitialFolderPath() async {
-    final selectedFolder = _selectedFolder.value;
-    final initialFolderPath =
-        await _folderRepository.getPathToFolder(selectedFolder?.id);
-
-    _folderPath.add(initialFolderPath);
-  }
-
-  Stream<List<FileEntity>> get filteredFiles =>
-      _filteredFiles.stream.distinct();
-
-  Stream<bool> get showOnlyFavorites => _showOnlyFavorites.stream.distinct();
-
-  Stream<bool> get showSubfolderFiles => _showSubfolderFiles.stream.distinct();
-
-  Stream<FolderEntity?> get selectedFolder => _selectedFolder.stream.distinct();
-
-  Stream<List<FolderEntity>> get folderPath => _folderPath.stream.distinct();
-
-  Stream<FolderTreeStructure> get folderStructure =>
-      _folderStructure.stream.distinct();
+  Stream<List<FileEntity>> get filteredFiles => _filteredFiles.stream;
+  Stream<bool> get showOnlyFavorites => _showOnlyFavorites.stream;
+  Stream<bool> get showSubfolderFiles => _showSubfolderFiles.stream;
+  Stream<FolderEntity?> get selectedFolder => _selectedFolder.stream;
+  Stream<List<FolderEntity>> get folderPath => _folderPath.stream;
+  Stream<FolderTreeStructure> get folderStructure => _folderStructure.stream;
 
   void toggleShowOnlyFavourites() {
     _showOnlyFavorites.add(!_showOnlyFavorites.value);
