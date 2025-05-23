@@ -50,11 +50,13 @@ class FolderDatasourceLocal implements FolderDataSource {
 
   @override
   Future<List<FolderDto>> getPathTo(int? folderId) async {
+    if (folderId == null) return [];
+
     return _store.runInTransaction(
       TxMode.read,
           () {
         final List<Folder> path = [];
-        Folder? current = _folderBox.get(folderId ?? rootFolderId);
+        Folder? current = _folderBox.get(folderId);
 
         while (current != null) {
           path.add(current);
