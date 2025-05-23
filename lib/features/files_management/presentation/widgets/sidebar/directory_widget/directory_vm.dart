@@ -10,7 +10,7 @@ typedef DirectoryCharacteristics = ({
   bool isRoot,
 });
 
-class DirectoryViewModel {
+class DirectoryPresenter {
   final FolderEntity? folderEntity;
   final bool hasNestedFolders;
   final bool isRoot;
@@ -21,7 +21,7 @@ class DirectoryViewModel {
   Stream<FolderEntity?> get selectedFolder =>
       _folderRepository.selectedFolder;
 
-  DirectoryViewModel({
+  DirectoryPresenter({
     required this.folderEntity,
     required this.hasNestedFolders,
   })  : isRoot = folderEntity == null,

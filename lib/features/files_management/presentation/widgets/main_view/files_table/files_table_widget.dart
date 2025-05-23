@@ -5,7 +5,7 @@ import 'file_row/file_row.dart';
 import 'files_table_vm.dart';
 
 class FilesTable extends StatelessWidget {
-  final _vm = FilesTableViewModel();
+  final _vm = FilesTablePresenter();
 
   FilesTable({super.key});
 

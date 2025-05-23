@@ -7,9 +7,9 @@ import '../../../../../domain/enums/file_category.dart';
 import 'file_row_vm.dart';
 
 class FileRow {
-  final FileRowViewModel _vm;
+  final FileRowPresenter _vm;
   
-  FileRow(FileEntity fileEntity): _vm = FileRowViewModel(fileEntity);
+  FileRow(FileEntity fileEntity): _vm = FileRowPresenter(fileEntity);
   
   DataRow build() {
     return DataRow(

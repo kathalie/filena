@@ -7,7 +7,7 @@ import '../../../../../domain/entities/folder_entity.dart';
 import 'breadcrumbs_vm.dart';
 
 class BreadcrumbsView extends StatelessWidget {
-  final _vm = BreadcrumbsViewModel();
+  final _vm = BreadcrumbsPresenter();
 
   BreadcrumbsView({super.key});
 

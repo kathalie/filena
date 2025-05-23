@@ -5,7 +5,7 @@ import '../../../../../../../../core/presentation/const/theme_const.dart';
 import 'all_subfolders_checkbox_vm.dart';
 
 class AllSubfoldersCheckbox extends StatelessWidget {
-  final _vm = AllSubfoldersCheckboxViewModel();
+  final _vm = AllSubfoldersCheckboxPresenter();
 
   AllSubfoldersCheckbox({super.key});
 

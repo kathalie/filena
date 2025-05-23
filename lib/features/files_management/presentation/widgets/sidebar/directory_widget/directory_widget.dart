@@ -8,13 +8,13 @@ import '../../../../domain/entities/folder_entity.dart';
 import 'directory_vm.dart';
 
 class DirectoryWidget extends StatelessWidget {
-  final DirectoryViewModel _vm;
+  final DirectoryPresenter _vm;
 
   DirectoryWidget({
     required FolderEntity? folderEntity,
     required bool hasNestedFolders,
     super.key,
-  }) : _vm = DirectoryViewModel(
+  }) : _vm = DirectoryPresenter(
           folderEntity: folderEntity,
           hasNestedFolders: hasNestedFolders,
         );

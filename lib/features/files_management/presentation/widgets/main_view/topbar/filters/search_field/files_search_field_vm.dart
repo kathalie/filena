@@ -1,6 +1,6 @@
 import 'package:rxdart/rxdart.dart';
 
-class FilesSearchFieldViewModel {
+class FilesSearchFieldPresenter {
   final _searchQuery = BehaviorSubject<String>.seeded('');
 
   Stream<String> get searchQuery => _searchQuery.stream;

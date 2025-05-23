@@ -7,7 +7,7 @@ import '../../../../domain/enums/folder_structure_mode.dart';
 import 'folder_structure_control_vm.dart';
 
 class FolderStructureControl extends StatelessWidget {
-  final _vm = FolderStructureControlViewModel();
+  final _vm = FolderStructureControlPresenter();
 
   FolderStructureControl({
     super.key,

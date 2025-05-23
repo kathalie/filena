@@ -13,7 +13,7 @@ typedef FolderControlOption = ({
 });
 
 class FolderControl extends StatelessWidget {
-  final _vm = FolderControlViewModel();
+  final _vm = FolderControlPresenter();
 
   FolderControl({super.key});
 

@@ -7,11 +7,11 @@ import '../../../../../domain/entities/file_details_entity.dart';
 import '../../../../../domain/entities/file_entity.dart';
 import '../../../../../domain/enums/file_category.dart';
 
-class FileRowViewModel {
+class FileRowPresenter {
   final _fileRepository = GetIt.I.get<FileRepository>();
   final FileEntity _fileEntity;
 
-  FileRowViewModel(FileEntity fileEntity) : _fileEntity = fileEntity;
+  FileRowPresenter(FileEntity fileEntity) : _fileEntity = fileEntity;
 
   FileCategory get fileCategory => _fileEntity.fileDetails.category;
 

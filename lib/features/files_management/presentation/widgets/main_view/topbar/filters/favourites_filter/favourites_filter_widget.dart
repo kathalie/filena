@@ -5,7 +5,7 @@ import '../../../../../../../../core/presentation/const/theme_const.dart';
 import 'favourites_filter_vm.dart';
 
 class FavouritesFilter extends StatelessWidget {
-  final _vm = FavouritesFilterViewModel();
+  final _vm = FavouritesFilterPresenter();
 
   FavouritesFilter({super.key});
 

@@ -5,7 +5,7 @@ import '../../../../../../mock/MockFileRepository.dart';
 import '../../../../business/repository_interfaces/user_choice_repository.dart';
 import '../../../../domain/entities/file_entity.dart';
 
-class FilesTableViewModel {
+class FilesTablePresenter {
   final _fileRepository = MockFileRepository();
   final _userChoiceRepository = GetIt.I.get<UserChoiceRepository>();
 

@@ -4,7 +4,7 @@ import '../../../../../../../../core/presentation/const/icons_const.dart';
 import 'files_search_field_vm.dart';
 
 class FilesSearchField extends StatefulWidget {
-  final _vm = FilesSearchFieldViewModel();
+  final _vm = FilesSearchFieldPresenter();
 
   FilesSearchField({super.key});
 

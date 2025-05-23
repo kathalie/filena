@@ -7,7 +7,7 @@ import 'folder_structure_views/classified_files/folders_tree/folders_tree_widget
 import 'structure_mode_toggle/folder_structure_control_widget.dart';
 
 class FolderStructureSideBar extends StatelessWidget {
-  final _vm = FolderStructureSideBarViewModel();
+  final _vm = FolderStructureSideBarPresenter();
 
   FolderStructureSideBar({super.key});
 

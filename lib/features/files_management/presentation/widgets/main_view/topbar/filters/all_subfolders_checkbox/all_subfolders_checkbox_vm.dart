@@ -2,7 +2,7 @@ import 'package:get_it/get_it.dart';
 
 import '../../../../../../business/repository_interfaces/user_choice_repository.dart';
 
-class AllSubfoldersCheckboxViewModel {
+class AllSubfoldersCheckboxPresenter {
   final _userChoiceRepository = GetIt.I.get<UserChoiceRepository>();
 
   Stream<bool> get showSubfolderFiles =>

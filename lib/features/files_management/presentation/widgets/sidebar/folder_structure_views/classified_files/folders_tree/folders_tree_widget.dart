@@ -6,7 +6,7 @@ import '../../../directory_widget/directory_widget.dart';
 import 'folders_tree_vm.dart';
 
 class FoldersTreeView extends StatelessWidget {
-  final _vm = FoldersTreeViewModel();
+  final _vm = FoldersTreePresenter();
 
   FoldersTreeView({super.key});
 

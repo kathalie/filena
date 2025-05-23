@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 import '../../../../../business/repository_interfaces/folder_repository.dart';
 import '../../../../../domain/entities/folder_entity.dart';
 
-class FolderControlViewModel {
+class FolderControlPresenter {
   final _folderRepository = GetIt.I.get<FolderRepository>();
 
   Stream<FolderEntity?> get selectedFolder => _folderRepository.selectedFolder;
