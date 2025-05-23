@@ -6,9 +6,9 @@ import 'di_embeddings.dart';
 import 'di_file_management.dart';
 
 Future<void> setupDI() async {
-  GetIt.I.registerSingleton<ObjectBox>(await ObjectBox.create());
+  final objectBox = await ObjectBox.create();
+  GetIt.I.registerSingleton<ObjectBox>(objectBox);
 
   setupEmbeddingsDi();
   await setupFileManagementDi();
 }
-

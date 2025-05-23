@@ -1,5 +1,3 @@
-import '../../models/folder_model.dart';
-
 class FolderDto {
   final int id;
   final String name;
@@ -10,9 +8,4 @@ class FolderDto {
     required this.name,
     required this.parentId,
   });
-
-  FolderDto.fromModel(Folder model)
-      : id = model.id,
-        name = model.name,
-        parentId = model.parent.targetId;
 }

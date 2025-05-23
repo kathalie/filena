@@ -9,7 +9,7 @@ abstract interface class FileRepository {
 
   void setIncludeSubfoldersFilter(bool includeFromSubfolders);
 
-  Future<void> createFile(String filePath);
+  Future<void> createFile(String filePath, int? parentFolderId);
 
   Future<void> updateFile(String filePath);
 

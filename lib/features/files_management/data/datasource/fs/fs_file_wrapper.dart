@@ -34,7 +34,11 @@ class FsFileWrapper {
   }
 
   Future<String> get contentAsString async {
-    return await file.readAsString();
+    final content = await file.readAsString();
+
+    print(content);
+
+    return content;
   }
 
   Future<Uint8List> get contentAsBytes async {
@@ -52,10 +56,10 @@ class FsFileWrapper {
 
     final List<double> embeddings = switch (fileCategory) {
       FileCategory.image => (await _embeddingsRepository
-          .getEmbeddingForImage(await contentAsBase64))
+          .getEmbeddingsForImage(await contentAsBase64))
           .embeddings,
       FileCategory.video =>
-      (await _embeddingsRepository.getEmbeddingForText(await contentAsString))
+      (await _embeddingsRepository.getEmbeddingsForText(await contentAsString))
           .embeddings,
       FileCategory.audio => <double>[],
       FileCategory.document => <double>[],

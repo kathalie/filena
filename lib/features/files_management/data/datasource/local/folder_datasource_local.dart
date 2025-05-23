@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../../../core/common/const.dart';
 import '../../../../../core/common/errors/folder_exception.dart';
 import '../../../../../core/db/objectbox.dart';
 import '../../../../../objectbox.g.dart';
@@ -24,8 +25,10 @@ class FolderDatasourceLocal implements FolderDataSource {
 
   FolderDatasourceLocal() {
     final initialFolders = _folderBox
-        .getAll()
-        .map((folder) => FolderDto.fromModel(folder))
+        .query(Folder_.id.notEquals(rootFolderId))
+        .build()
+        .find()
+        .map((folder) => folder.toDto())
         .toList();
 
     _folders.add(initialFolders);
@@ -39,10 +42,13 @@ class FolderDatasourceLocal implements FolderDataSource {
 
     _foldersChangesSubscription = dbFolderChanges
         .map(
-          (folders) =>
-              folders.map((folder) => FolderDto.fromModel(folder)).toList(),
+          (folders) => folders.map((folder) => folder.toDto()).toList(),
         )
-        .listen((folders) => _folders.add(folders));
+        .listen(
+          (folders) => _folders.add(
+            folders.where((folder) => folder.parentId != rootFolderId).toList(),
+          ),
+        );
   }
 
   @override
@@ -59,16 +65,14 @@ class FolderDatasourceLocal implements FolderDataSource {
         while (current != null) {
           path.add(current);
 
-          if (current.parent.targetId == 0) {
-            break;
-          }
+          if (current.parent.targetId == rootFolderId) break;
 
           current = current.parent.target;
         }
 
         final result = path.reversed.toList();
 
-        return result.map((folder) => FolderDto.fromModel(folder)).toList();
+        return result.map((folder) => folder.toDto()).toList();
       },
     );
   }
@@ -76,18 +80,17 @@ class FolderDatasourceLocal implements FolderDataSource {
   @override
   Future<int> createFolder(FolderCreateDto createFolderDto) async {
     final nameEmbeddings =
-        await _embeddingsRepository.getEmbeddingForText(createFolderDto.name);
+        await _embeddingsRepository.getEmbeddingsForText(createFolderDto.name);
 
     final folderModel = Folder(
       name: createFolderDto.name,
       embeddings: nameEmbeddings.embeddings,
     );
 
-    if (createFolderDto.parentFolderId != null) {
-      final parentFolder = _folderBox.get(createFolderDto.parentFolderId!);
+    final int parentFolderId = createFolderDto.parentFolderId ?? rootFolderId;
+    final parentFolder = _folderBox.get(parentFolderId);
 
-      folderModel.parent.target = parentFolder;
-    }
+    folderModel.parent.target = parentFolder;
 
     await _folderBox.putAsync(folderModel);
 
@@ -98,7 +101,7 @@ class FolderDatasourceLocal implements FolderDataSource {
   Future<FolderDto?> getFolder(int id) async {
     final folder = await _folderBox.getAsync(id);
 
-    return folder == null ? null : FolderDto.fromModel(folder);
+    return folder?.toDto();
   }
 
   @override
@@ -129,5 +132,11 @@ class FolderDatasourceLocal implements FolderDataSource {
   void dispose() {
     _folders.close();
     _foldersChangesSubscription.cancel();
+  }
+}
+
+extension on Folder {
+  FolderDto toDto() {
+    return FolderDto(id: id, name: name, parentId: parent.targetId);
   }
 }

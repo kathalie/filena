@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 
+import '../../../../core/common/const.dart';
 import '../entities/folder_entity.dart';
 
 typedef FolderTreeStructure = List<FolderTree>;
@@ -20,7 +21,7 @@ class FolderTree {
     );
 
     final List<FolderEntity> rootFolders = folders
-        .where((folder) => folder.parentId == 0)
+        .where((folder) => folder.parentId == rootFolderId)
         .toList();
 
     return rootFolders.map((rootFolder) {

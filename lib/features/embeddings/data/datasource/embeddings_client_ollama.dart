@@ -17,13 +17,13 @@ class EmbeddingsClientOllama implements EmbeddingsDatasource {
   EmbeddingsClientOllama({this.baseUrl = ollamaUrl});
 
   @override
-  Future<EmbeddingsDto> getEmbeddingForImage(String imageBase64) async {
+  Future<EmbeddingsDto> getEmbeddingsForImage(String imageBase64) async {
     // TODO: implement getEmbeddingForImage
     throw UnimplementedError();
   }
 
   @override
-  Future<EmbeddingsDto> getEmbeddingForText(String text) async {
+  Future<EmbeddingsDto> getEmbeddingsForText(String text) async {
     final url = Uri.parse('$baseUrl/api/embed');
 
     final payload = {

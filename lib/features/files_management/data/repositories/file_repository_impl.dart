@@ -34,7 +34,7 @@ class FileRepositoryImpl implements FileRepository {
       });
 
   @override
-  Future<void> createFile(String filePath) async {
+  Future<void> createFile(String filePath, int? parentFolderId) async {
     final fsFileWrapper = FsFileWrapper(filePath);
 
     final fileCreateDto = FileCreateDto(
@@ -42,6 +42,7 @@ class FileRepositoryImpl implements FileRepository {
       hash: await fsFileWrapper.contentHash,
       mimeType: await fsFileWrapper.mimeType ?? '',
       embeddings: await fsFileWrapper.embeddings,
+      parentFolderId: parentFolderId,
     );
 
     print('Embeddings for file ${fsFileWrapper.name}${fsFileWrapper.extension}:');

@@ -1,7 +1,7 @@
 import '../../domain/entities/embeddings_entity.dart';
 
 abstract interface class EmbeddingsRepository {
-  Future<EmbeddingsEntity> getEmbeddingForText(String text);
+  Future<EmbeddingsEntity> getEmbeddingsForText(String text);
 
-  Future<EmbeddingsEntity> getEmbeddingForImage(String imageBase64);
+  Future<EmbeddingsEntity> getEmbeddingsForImage(String imageBase64);
 }

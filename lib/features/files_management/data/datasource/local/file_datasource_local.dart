@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../../../core/common/const.dart';
 import '../../../../../core/common/errors/file_exception.dart';
 import '../../../../../core/common/errors/folder_exception.dart';
 import '../../../../../core/db/objectbox.dart';
@@ -26,6 +27,16 @@ class FileDatasourceLocal implements FileDataSource {
   late final StreamSubscription<List<FileDto>> _changesSubscription;
 
   FileDatasourceLocal() {
+    final initialFiles = _applyFilters(
+      _parentIdFilter.value,
+      _onlyFavouritesFilter.value,
+      _includeSubfolderFilesFilter.value,
+    ).map((file) => file.toDto()).toList();
+
+    _fileBox.getAll().map((file) => file.toDto()).toList();
+
+    _filteredFiles.add(initialFiles);
+
     _initSubscription();
   }
 
@@ -37,7 +48,11 @@ class FileDatasourceLocal implements FileDataSource {
       _parentIdFilter,
       _onlyFavouritesFilter,
       _includeSubfolderFilesFilter,
-      _applyFilters,
+      (_, parentId, onlyFavorites, includeSubfolders) => _applyFilters(
+        parentId,
+        onlyFavorites,
+        includeSubfolders,
+      ),
     )
         .map(
           (file) => file.map((file) => file.toDto()).toList(),
@@ -46,13 +61,14 @@ class FileDatasourceLocal implements FileDataSource {
   }
 
   List<File> _applyFilters(
-      List<File> files,
-      int? parentId,
-      bool onlyFavorites,
-      bool includeSubfolders,
-      ) {
+    int? parentId,
+    bool onlyFavorites,
+    bool includeSubfolders,
+  ) {
+    final parentFolderId = parentId ?? 0;
+
     final acceptableFolders =
-    _acceptableParentFolders(parentId, includeSubfolders);
+        _acceptableParentFolders(parentFolderId, includeSubfolders);
 
     final Set<File> filteredFiles = acceptableFolders
         .expand((folder) => folder.assignedFiles)
@@ -63,18 +79,19 @@ class FileDatasourceLocal implements FileDataSource {
   }
 
   List<Folder> _acceptableParentFolders(
-      int? parentId,
-      bool includeSubfolders,
-      ) {
-    final List<int> folderIds = parentId == null
-        ? []
-        : [parentId, ...(includeSubfolders ? _nestedFolderIds(parentId) : [])];
+    int parentId,
+    bool includeSubfolders,
+  ) {
+    final List<int> folderIds = [
+      parentId,
+      ...(includeSubfolders ? _nestedFolderIds(parentId) : []),
+    ];
 
     final isInFoldersQuery =
-    _folderBox.query(Folder_.id.oneOf(folderIds)).build();
+        _folderBox.query(Folder_.id.oneOf(folderIds)).build();
 
     final acceptableFolders =
-    folderIds.isEmpty ? _folderBox.getAll() : isInFoldersQuery.find();
+        folderIds.isEmpty ? _folderBox.getAll() : isInFoldersQuery.find();
 
     return acceptableFolders;
   }
@@ -116,7 +133,24 @@ class FileDatasourceLocal implements FileDataSource {
   Future<int> createFile(FileCreateDto createFileDto) async {
     final fileModel = createFileDto.toModel();
 
-    await _fileBox.putAsync(fileModel);
+    final newFileId = await _fileBox.putAsync(fileModel);
+    final newFile = _fileBox.get(newFileId);
+
+    final parentFolder =
+        _folderBox.get(createFileDto.parentFolderId ?? rootFolderId);
+    if (parentFolder == null) {
+      throw FolderException.folderDoesNotExist(
+        title: 'Failed to save file to a root folder.',
+      );
+    }
+    if (newFile == null) {
+      throw FileException.fileDoesNotExist(
+        title: 'Failed to save file to a root folder.',
+      );
+    }
+
+    parentFolder.assignedFiles.add(newFile);
+    _folderBox.put(parentFolder);
 
     return fileModel.id;
   }
