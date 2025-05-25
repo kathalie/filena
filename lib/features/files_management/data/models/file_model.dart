@@ -1,21 +1,21 @@
 import 'package:objectbox/objectbox.dart';
 
-import 'folder_model.dart';
+import '../../../organizing_assistant/data/models/folder_suggestion_model.dart';
+import '../../../folders_management/data/models/folder_model.dart';
 
-// @Index() for searched columns
 @Entity()
 class File {
   @Id()
   int id = 0;
 
-  final String name;
-
   @Unique()
-  final String hash;
+  String hash;
 
-  final String mimeType;
+  bool isFavourite;
 
-  final bool isFavourite;
+  int currentVersion;
+
+  String mimeType;
 
   @HnswIndex(dimensions: 10, distanceType: VectorDistanceType.cosine)
   @Property(type: PropertyType.floatVector)
@@ -24,8 +24,11 @@ class File {
   @Backlink('assignedFiles')
   final parentFolders = ToMany<Folder>();
 
+  @Backlink('files')
+  final folderSuggestions = ToMany<FolderSuggestion>();
+
   File({
-    required this.name,
+    required this.currentVersion,
     required this.hash,
     required this.mimeType,
     required this.isFavourite,

@@ -1,0 +1,1 @@
+typedef EmbeddingsDto = List<double>;

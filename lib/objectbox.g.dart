@@ -15,35 +15,16 @@ import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'features/files_management/data/models/file_model.dart';
-import 'features/files_management/data/models/folder_model.dart';
-import 'features/folders_suggestion/data/models/folder_suggestion_model.dart';
+import 'features/folders_management/data/models/folder_model.dart';
+import 'features/organizing_assistant/data/models/folder_suggestion_model.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
 final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
-      id: const obx_int.IdUid(6, 5437082916840256973),
-      name: 'FolderSuggestion',
-      lastPropertyId: const obx_int.IdUid(3, 1044572771021859128),
-      flags: 0,
-      properties: <obx_int.ModelProperty>[
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(1, 749559492770492987),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(2, 3682903132046443271),
-            name: 'colorHex',
-            type: 9,
-            flags: 0)
-      ],
-      relations: <obx_int.ModelRelation>[],
-      backlinks: <obx_int.ModelBacklink>[]),
-  obx_int.ModelEntity(
       id: const obx_int.IdUid(7, 3198910070472308778),
       name: 'File',
-      lastPropertyId: const obx_int.IdUid(6, 5445411653240817735),
+      lastPropertyId: const obx_int.IdUid(7, 1926349587610987794),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -51,11 +32,6 @@ final _entities = <obx_int.ModelEntity>[
             name: 'id',
             type: 6,
             flags: 1),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(2, 1000748808178318440),
-            name: 'name',
-            type: 9,
-            flags: 0),
         obx_int.ModelProperty(
             id: const obx_int.IdUid(3, 1219110727449541090),
             name: 'hash',
@@ -81,19 +57,28 @@ final _entities = <obx_int.ModelEntity>[
             hnswParams: obx_int.ModelHnswParams(
               dimensions: 10,
               distanceType: 2,
-            ))
+            )),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(7, 1926349587610987794),
+            name: 'currentVersion',
+            type: 6,
+            flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[
         obx_int.ModelBacklink(
             name: 'parentFolders',
             srcEntity: 'Folder',
-            srcField: 'assignedFiles')
+            srcField: 'assignedFiles'),
+        obx_int.ModelBacklink(
+            name: 'folderSuggestions',
+            srcEntity: 'FolderSuggestion',
+            srcField: 'files')
       ]),
   obx_int.ModelEntity(
       id: const obx_int.IdUid(8, 4597012346551900636),
       name: 'Folder',
-      lastPropertyId: const obx_int.IdUid(4, 146942432817682329),
+      lastPropertyId: const obx_int.IdUid(6, 1841474384396990161),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -117,11 +102,16 @@ final _entities = <obx_int.ModelEntity>[
               distanceType: 2,
             )),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(4, 146942432817682329),
-            name: 'parentId',
+            id: const obx_int.IdUid(5, 7002970365571862900),
+            name: 'isPending',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(6, 1841474384396990161),
+            name: 'parentFolderId',
             type: 11,
             flags: 520,
-            indexId: const obx_int.IdUid(12, 8432660901793213549),
+            indexId: const obx_int.IdUid(14, 3524152134377728438),
             relationTarget: 'Folder')
       ],
       relations: <obx_int.ModelRelation>[
@@ -132,8 +122,50 @@ final _entities = <obx_int.ModelEntity>[
       ],
       backlinks: <obx_int.ModelBacklink>[
         obx_int.ModelBacklink(
-            name: 'children', srcEntity: 'Folder', srcField: 'parent')
-      ])
+            name: 'nestedFolders',
+            srcEntity: 'Folder',
+            srcField: 'parentFolder'),
+        obx_int.ModelBacklink(
+            name: 'folderSuggestions',
+            srcEntity: 'FolderSuggestion',
+            srcField: 'folder')
+      ]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(10, 9157757429217051349),
+      name: 'FolderSuggestion',
+      lastPropertyId: const obx_int.IdUid(4, 7864662996612991050),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 4723021148355831887),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 513498909032251599),
+            name: 'colorHex',
+            type: 6,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 2421245002072396975),
+            name: 'explanation',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 7864662996612991050),
+            name: 'folderId',
+            type: 11,
+            flags: 520,
+            indexId: const obx_int.IdUid(15, 429392515660225108),
+            relationTarget: 'Folder')
+      ],
+      relations: <obx_int.ModelRelation>[
+        obx_int.ModelRelation(
+            id: const obx_int.IdUid(6, 8590250266704814531),
+            name: 'files',
+            targetId: const obx_int.IdUid(7, 3198910070472308778))
+      ],
+      backlinks: <obx_int.ModelBacklink>[])
 ];
 
 /// Shortcut for [obx.Store.new] that passes [getObjectBoxModel] and for Flutter
@@ -171,18 +203,20 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(8, 4597012346551900636),
-      lastIndexId: const obx_int.IdUid(12, 8432660901793213549),
-      lastRelationId: const obx_int.IdUid(4, 2727919847388667980),
+      lastEntityId: const obx_int.IdUid(10, 9157757429217051349),
+      lastIndexId: const obx_int.IdUid(15, 429392515660225108),
+      lastRelationId: const obx_int.IdUid(6, 8590250266704814531),
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [
         2933503222850296189,
         9188907239455043372,
         2434098858427425647,
         4018076896688383719,
-        3488129098117443698
+        3488129098117443698,
+        5437082916840256973,
+        2271779336525364246
       ],
-      retiredIndexUids: const [3097284329043120526],
+      retiredIndexUids: const [3097284329043120526, 8432660901793213549],
       retiredPropertyUids: const [
         6558802783405580143,
         9106844457950300752,
@@ -218,7 +252,16 @@ obx_int.ModelDefinition getObjectBoxModel() {
         304757736854911331,
         1152471620539843306,
         5625579071453894052,
-        4394740505661027584
+        4394740505661027584,
+        749559492770492987,
+        3682903132046443271,
+        1000748808178318440,
+        146942432817682329,
+        1808112662385733985,
+        3390336334708104704,
+        4171609210939420261,
+        2282620523277041572,
+        8279566911880169955
       ],
       retiredRelationUids: const [
         751356814963857588,
@@ -230,63 +273,38 @@ obx_int.ModelDefinition getObjectBoxModel() {
       version: 1);
 
   final bindings = <Type, obx_int.EntityDefinition>{
-    FolderSuggestion: obx_int.EntityDefinition<FolderSuggestion>(
-        model: _entities[0],
-        toOneRelations: (FolderSuggestion object) => [],
-        toManyRelations: (FolderSuggestion object) => {},
-        getId: (FolderSuggestion object) => object.id,
-        setId: (FolderSuggestion object, int id) {
-          object.id = id;
-        },
-        objectToFB: (FolderSuggestion object, fb.Builder fbb) {
-          final colorHexOffset = fbb.writeString(object.colorHex);
-          fbb.startTable(4);
-          fbb.addInt64(0, object.id);
-          fbb.addOffset(1, colorHexOffset);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (obx.Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-          final colorHexParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 6, '');
-          final object = FolderSuggestion(colorHex: colorHexParam)
-            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
-
-          return object;
-        }),
     File: obx_int.EntityDefinition<File>(
-        model: _entities[1],
+        model: _entities[0],
         toOneRelations: (File object) => [],
         toManyRelations: (File object) => {
               obx_int.RelInfo<Folder>.toManyBacklink(4, object.id):
-                  object.parentFolders
+                  object.parentFolders,
+              obx_int.RelInfo<FolderSuggestion>.toManyBacklink(6, object.id):
+                  object.folderSuggestions
             },
         getId: (File object) => object.id,
         setId: (File object, int id) {
           object.id = id;
         },
         objectToFB: (File object, fb.Builder fbb) {
-          final nameOffset = fbb.writeString(object.name);
           final hashOffset = fbb.writeString(object.hash);
           final mimeTypeOffset = fbb.writeString(object.mimeType);
           final embeddingsOffset = fbb.writeListFloat32(object.embeddings);
-          fbb.startTable(7);
+          fbb.startTable(8);
           fbb.addInt64(0, object.id);
-          fbb.addOffset(1, nameOffset);
           fbb.addOffset(2, hashOffset);
           fbb.addOffset(3, mimeTypeOffset);
           fbb.addBool(4, object.isFavourite);
           fbb.addOffset(5, embeddingsOffset);
+          fbb.addInt64(6, object.currentVersion);
           fbb.finish(fbb.endTable());
           return object.id;
         },
         objectFromFB: (obx.Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
-          final nameParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 6, '');
+          final currentVersionParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0);
           final hashParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 8, '');
           final mimeTypeParam = const fb.StringReader(asciiOptimization: true)
@@ -297,7 +315,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
               const fb.ListReader<double>(fb.Float32Reader(), lazy: false)
                   .vTableGet(buffer, rootOffset, 14, []);
           final object = File(
-              name: nameParam,
+              currentVersion: currentVersionParam,
               hash: hashParam,
               mimeType: mimeTypeParam,
               isFavourite: isFavouriteParam,
@@ -305,17 +323,24 @@ obx_int.ModelDefinition getObjectBoxModel() {
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           obx_int.InternalToManyAccess.setRelInfo<File>(object.parentFolders,
               store, obx_int.RelInfo<Folder>.toManyBacklink(4, object.id));
+          obx_int.InternalToManyAccess.setRelInfo<File>(
+              object.folderSuggestions,
+              store,
+              obx_int.RelInfo<FolderSuggestion>.toManyBacklink(6, object.id));
           return object;
         }),
     Folder: obx_int.EntityDefinition<Folder>(
-        model: _entities[2],
-        toOneRelations: (Folder object) => [object.parent],
+        model: _entities[1],
+        toOneRelations: (Folder object) => [object.parentFolder],
         toManyRelations: (Folder object) => {
               obx_int.RelInfo<Folder>.toMany(4, object.id):
                   object.assignedFiles,
-              obx_int.RelInfo<Folder>.toOneBacklink(
-                      4, object.id, (Folder srcObject) => srcObject.parent):
-                  object.children
+              obx_int.RelInfo<Folder>.toOneBacklink(6, object.id,
+                      (Folder srcObject) => srcObject.parentFolder):
+                  object.nestedFolders,
+              obx_int.RelInfo<FolderSuggestion>.toOneBacklink(4, object.id,
+                      (FolderSuggestion srcObject) => srcObject.folder):
+                  object.folderSuggestions
             },
         getId: (Folder object) => object.id,
         setId: (Folder object, int id) {
@@ -324,11 +349,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
         objectToFB: (Folder object, fb.Builder fbb) {
           final nameOffset = fbb.writeString(object.name);
           final embeddingsOffset = fbb.writeListFloat32(object.embeddings);
-          fbb.startTable(5);
+          fbb.startTable(7);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, nameOffset);
           fbb.addOffset(2, embeddingsOffset);
-          fbb.addInt64(3, object.parent.targetId);
+          fbb.addBool(4, object.isPending);
+          fbb.addInt64(5, object.parentFolder.targetId);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -340,18 +366,69 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final embeddingsParam =
               const fb.ListReader<double>(fb.Float32Reader(), lazy: false)
                   .vTableGet(buffer, rootOffset, 8, []);
-          final object = Folder(name: nameParam, embeddings: embeddingsParam)
+          final isPendingParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 12, false);
+          final object = Folder(
+              name: nameParam,
+              embeddings: embeddingsParam,
+              isPending: isPendingParam)
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
-          object.parent.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
-          object.parent.attach(store);
+          object.parentFolder.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
+          object.parentFolder.attach(store);
           obx_int.InternalToManyAccess.setRelInfo<Folder>(object.assignedFiles,
               store, obx_int.RelInfo<Folder>.toMany(4, object.id));
           obx_int.InternalToManyAccess.setRelInfo<Folder>(
-              object.children,
+              object.nestedFolders,
               store,
               obx_int.RelInfo<Folder>.toOneBacklink(
-                  4, object.id, (Folder srcObject) => srcObject.parent));
+                  6, object.id, (Folder srcObject) => srcObject.parentFolder));
+          obx_int.InternalToManyAccess.setRelInfo<Folder>(
+              object.folderSuggestions,
+              store,
+              obx_int.RelInfo<FolderSuggestion>.toOneBacklink(4, object.id,
+                  (FolderSuggestion srcObject) => srcObject.folder));
+          return object;
+        }),
+    FolderSuggestion: obx_int.EntityDefinition<FolderSuggestion>(
+        model: _entities[2],
+        toOneRelations: (FolderSuggestion object) => [object.folder],
+        toManyRelations: (FolderSuggestion object) => {
+              obx_int.RelInfo<FolderSuggestion>.toMany(6, object.id):
+                  object.files
+            },
+        getId: (FolderSuggestion object) => object.id,
+        setId: (FolderSuggestion object, int id) {
+          object.id = id;
+        },
+        objectToFB: (FolderSuggestion object, fb.Builder fbb) {
+          final explanationOffset = fbb.writeString(object.explanation);
+          fbb.startTable(5);
+          fbb.addInt64(0, object.id);
+          fbb.addInt64(1, object.colorHex);
+          fbb.addOffset(2, explanationOffset);
+          fbb.addInt64(3, object.folder.targetId);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final colorHexParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
+          final explanationParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 8, '');
+          final object = FolderSuggestion(
+              colorHex: colorHexParam, explanation: explanationParam)
+            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          object.folder.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
+          object.folder.attach(store);
+          obx_int.InternalToManyAccess.setRelInfo<FolderSuggestion>(
+              object.files,
+              store,
+              obx_int.RelInfo<FolderSuggestion>.toMany(6, object.id));
           return object;
         })
   };
@@ -359,64 +436,86 @@ obx_int.ModelDefinition getObjectBoxModel() {
   return obx_int.ModelDefinition(model, bindings);
 }
 
-/// [FolderSuggestion] entity fields to define ObjectBox queries.
-class FolderSuggestion_ {
-  /// See [FolderSuggestion.id].
-  static final id =
-      obx.QueryIntegerProperty<FolderSuggestion>(_entities[0].properties[0]);
-
-  /// See [FolderSuggestion.colorHex].
-  static final colorHex =
-      obx.QueryStringProperty<FolderSuggestion>(_entities[0].properties[1]);
-}
-
 /// [File] entity fields to define ObjectBox queries.
 class File_ {
   /// See [File.id].
-  static final id = obx.QueryIntegerProperty<File>(_entities[1].properties[0]);
-
-  /// See [File.name].
-  static final name = obx.QueryStringProperty<File>(_entities[1].properties[1]);
+  static final id = obx.QueryIntegerProperty<File>(_entities[0].properties[0]);
 
   /// See [File.hash].
-  static final hash = obx.QueryStringProperty<File>(_entities[1].properties[2]);
+  static final hash = obx.QueryStringProperty<File>(_entities[0].properties[1]);
 
   /// See [File.mimeType].
   static final mimeType =
-      obx.QueryStringProperty<File>(_entities[1].properties[3]);
+      obx.QueryStringProperty<File>(_entities[0].properties[2]);
 
   /// See [File.isFavourite].
   static final isFavourite =
-      obx.QueryBooleanProperty<File>(_entities[1].properties[4]);
+      obx.QueryBooleanProperty<File>(_entities[0].properties[3]);
 
   /// See [File.embeddings].
   static final embeddings =
-      obx.QueryHnswProperty<File>(_entities[1].properties[5]);
+      obx.QueryHnswProperty<File>(_entities[0].properties[4]);
+
+  /// See [File.currentVersion].
+  static final currentVersion =
+      obx.QueryIntegerProperty<File>(_entities[0].properties[5]);
 }
 
 /// [Folder] entity fields to define ObjectBox queries.
 class Folder_ {
   /// See [Folder.id].
   static final id =
-      obx.QueryIntegerProperty<Folder>(_entities[2].properties[0]);
+      obx.QueryIntegerProperty<Folder>(_entities[1].properties[0]);
 
   /// See [Folder.name].
   static final name =
-      obx.QueryStringProperty<Folder>(_entities[2].properties[1]);
+      obx.QueryStringProperty<Folder>(_entities[1].properties[1]);
 
   /// See [Folder.embeddings].
   static final embeddings =
-      obx.QueryHnswProperty<Folder>(_entities[2].properties[2]);
+      obx.QueryHnswProperty<Folder>(_entities[1].properties[2]);
 
-  /// See [Folder.parent].
-  static final parent =
-      obx.QueryRelationToOne<Folder, Folder>(_entities[2].properties[3]);
+  /// See [Folder.isPending].
+  static final isPending =
+      obx.QueryBooleanProperty<Folder>(_entities[1].properties[3]);
+
+  /// See [Folder.parentFolder].
+  static final parentFolder =
+      obx.QueryRelationToOne<Folder, Folder>(_entities[1].properties[4]);
 
   /// see [Folder.assignedFiles]
   static final assignedFiles =
-      obx.QueryRelationToMany<Folder, File>(_entities[2].relations[0]);
+      obx.QueryRelationToMany<Folder, File>(_entities[1].relations[0]);
 
-  /// see [Folder.children]
-  static final children =
-      obx.QueryBacklinkToMany<Folder, Folder>(Folder_.parent);
+  /// see [Folder.nestedFolders]
+  static final nestedFolders =
+      obx.QueryBacklinkToMany<Folder, Folder>(Folder_.parentFolder);
+
+  /// see [Folder.folderSuggestions]
+  static final folderSuggestions =
+      obx.QueryBacklinkToMany<FolderSuggestion, Folder>(
+          FolderSuggestion_.folder);
+}
+
+/// [FolderSuggestion] entity fields to define ObjectBox queries.
+class FolderSuggestion_ {
+  /// See [FolderSuggestion.id].
+  static final id =
+      obx.QueryIntegerProperty<FolderSuggestion>(_entities[2].properties[0]);
+
+  /// See [FolderSuggestion.colorHex].
+  static final colorHex =
+      obx.QueryIntegerProperty<FolderSuggestion>(_entities[2].properties[1]);
+
+  /// See [FolderSuggestion.explanation].
+  static final explanation =
+      obx.QueryStringProperty<FolderSuggestion>(_entities[2].properties[2]);
+
+  /// See [FolderSuggestion.folder].
+  static final folder = obx.QueryRelationToOne<FolderSuggestion, Folder>(
+      _entities[2].properties[3]);
+
+  /// see [FolderSuggestion.files]
+  static final files = obx.QueryRelationToMany<FolderSuggestion, File>(
+      _entities[2].relations[0]);
 }

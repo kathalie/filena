@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-import '../../features/files_management/data/models/folder_model.dart';
+import '../../features/folders_management/data/models/folder_model.dart';
 import '../../objectbox.g.dart';
-import '../common/const.dart';
 
 class ObjectBox {
   late final Store store;
+  late final int rootFolderId;
 
   ObjectBox._create(this.store) {
     _initializeRootFolder();
@@ -17,21 +17,22 @@ class ObjectBox {
   void _initializeRootFolder() {
     final folderBox = store.box<Folder>();
 
-    if (folderBox.isEmpty()) {
-      final newRootFolder = Folder(
-        name: "Root",
-        embeddings: List<double>.filled(10, 0.0),
-      );
-
-      final newFolderId = folderBox.put(newRootFolder);
-
-      rootFolderId = newFolderId;
-
-      print("Root folder created with ID: ${rootFolderId}");
+    if (!folderBox.isEmpty()) {
+      print("Root folder already exists.");
 
       return;
     }
-    print("Root folder already exists with ID:");
+
+    final newRootFolder = Folder(
+      name: "Root",
+      embeddings: [],
+    );
+
+    final newFolderId = folderBox.put(newRootFolder);
+
+    rootFolderId = newFolderId;
+
+    print("Root folder created with ID: ${rootFolderId}");
   }
 
   static Future<ObjectBox> create() async {

@@ -1,15 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'core/di/di.dart';
-import 'core/presentation/app.dart';
+import 'core/api/providers.dart';
+import 'core/db/objectbox.dart';
+import 'core/presentation/app/app.dart';
+import 'core/presentation/app/loading_app.dart';
+import 'features/files_management/data/datasource/object_storage_manager.dart';
 
 void main() async {
-  //TODO Login to MinIO
+  //TODO register an login to minio
   WidgetsFlutterBinding.ensureInitialized();
 
-  await setupDI();
+  runApp(const LoadingApp());
+
+  final objectBox = await ObjectBox.create();
+  final storageManager = await MinioStorageManager.create();
 
   runApp(
-      const FilenaApp(),
+    ProviderScope(
+      overrides: [
+        storeProvider.overrideWithValue(objectBox.store),
+        // rootFolderIdProvider.overrideWithValue(objectBox.rootFolderId),
+        storageManagerProvider.overrideWithValue(storageManager),
+      ],
+      child: const FilenaApp(),
+    ),
   );
 }
