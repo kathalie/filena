@@ -13,7 +13,7 @@ class SuggestionsView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final suggestions = ref.watch(allSuggestionsProvider);
-    final setSelectedSuggestionId =
+    final setSelectedSuggestion =
         ref.read(selectedSuggestionIdProvider.notifier).update;
 
     return suggestions.when(
@@ -21,7 +21,7 @@ class SuggestionsView extends ConsumerWidget {
         return Column(
           children: [
             const Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               child: _ConfirmAllButton(),
             ),
             Expanded(
@@ -31,7 +31,7 @@ class SuggestionsView extends ConsumerWidget {
                   final suggestion = suggestions[index];
 
                   return GestureDetector(
-                    onTap: () => setSelectedSuggestionId(suggestion.id),
+                    onTap: () => setSelectedSuggestion(suggestion),
                     child: SuggestionCard(
                       suggestion: suggestion,
                     ),

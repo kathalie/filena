@@ -1,4 +1,4 @@
-import '../../../folders_management/data/dto/folder_dto.dart';
+import '../../../folder_management/data/dto/folder_dto.dart';
 
 class FolderSuggestionDto {
   final int id;

@@ -13,14 +13,12 @@ class CurrentPromptNotifier extends StateNotifier<String> {
   }
 
   Future<void> submitPrompt() async {
-    final prompt = ref.read(currentPromptProvider);
-
-    if (prompt.isEmpty) return;
+    if (state.isEmpty) return;
 
     final promptRepo = ref.read(promptAnalysisRepositoryProvider);
     final suggestionsRepo = ref.read(folderSuggestionRepositoryProvider);
 
-    final analysisResults = await promptRepo.analyseUserPrompt(prompt);
+    final analysisResults = await promptRepo.analyseUserPrompt(state);
     await suggestionsRepo.createSuggestion(
       analysisResults
           .map(

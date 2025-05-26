@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-import '../../../features/files_management/presentation/widgets/upload_file_button.dart';
+import '../../../features/file_management/presentation/widgets/upload_file_button.dart';
 import '../widgets/app_logo.dart';
 import '../widgets/prompts_history_button.dart';
 

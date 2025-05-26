@@ -1,4 +1,4 @@
-import '../../../folders_management/domain/types/folder_type.dart';
+import '../../../folder_management/domain/types/folder_type.dart';
 import '../../domain/entities/folder_suggestion_entity.dart';
 
 class SuggestionCardPresenter {

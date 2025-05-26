@@ -1,4 +1,4 @@
-import '../../../folders_management/data/translators/to_dto.dart';
+import '../../../folder_management/data/translators/to_dto.dart';
 import '../../domain/entities/folder_suggestion_entity.dart';
 import '../dto/folder_suggestion_dto.dart';
 import '../models/folder_suggestion_model.dart';

@@ -7,7 +7,7 @@ import '../domain/repository_interfaces/repository.dart';
 
 // Data sources
 final _llmClient = Provider<LlmClient>((ref) {
-  return OllamLlmClient();
+  return OllamaClient();
 });
 
 // Repositories

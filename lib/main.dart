@@ -5,7 +5,7 @@ import 'core/api/providers.dart';
 import 'core/db/objectbox.dart';
 import 'core/presentation/app/app.dart';
 import 'core/presentation/app/loading_app.dart';
-import 'features/files_management/data/datasource/object_storage_manager.dart';
+import 'features/file_management/data/datasource/object_storage_manager.dart';
 
 void main() async {
   //TODO register an login to minio

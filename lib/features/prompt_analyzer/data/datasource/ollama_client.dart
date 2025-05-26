@@ -20,19 +20,20 @@ class PromptAnalysisConst {
   ''';
 
   static const system = '''
-      You are a sophisticated file organization assistant.
-      Analyze user requests to classify files ($filesKeyword) into folders (folder).
-      Output a JSON array.
-      '$filesKeyword' describes file types;
-      'folder' specifies the destination.
-      If no folder is mentioned, suggest the most relevant one-word folder name.
+      You are an accurate file organizing assistant.
+      1. Identify groups of files which a user wants to organize. 
+      Return an empty array if none are found.
+      2. For each file group identify a one-word "$filesKeyword" that best describes them.
+      3. For each file group identify if a user provides a specific folder name.
+      If no, suggest the most relevant one. The result is a one-word "$folderSuggestion".
+      4. Output a JSON array, where each element corresponds to a file group.
       ''';
 }
 
-class OllamLlmClient implements LlmClient {
+class OllamaClient implements LlmClient {
   final String baseUrl;
 
-  OllamLlmClient({this.baseUrl = Const.ollamaUrl});
+  OllamaClient({this.baseUrl = Const.ollamaUrl});
 
   @override
   Future<List<AnalysedPromptDto>> analyseUserPrompt(String prompt) async {

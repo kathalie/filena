@@ -1,8 +1,9 @@
 import 'dart:async';
 
+import '../../../../core/errors/folder_exception.dart';
 import '../../../../objectbox.g.dart';
-import '../../../files_management/data/models/file_model.dart';
-import '../../../folders_management/data/models/folder_model.dart';
+import '../../../file_management/data/models/file_model.dart';
+import '../../../folder_management/data/models/folder_model.dart';
 import '../../common/helpers/random_color_generator.dart';
 import '../datasource_interfaces/datasource.dart';
 import '../dto/folder_suggestion_dto.dart';
@@ -16,7 +17,7 @@ class FolderSuggestionDatasourceLocal implements FolderSuggestionDatasource {
   late final _fileBox = _store.box<File>();
   late final _folderBox = _store.box<Folder>();
 
-  FolderSuggestionDatasourceLocal(Store store): _store = store;
+  FolderSuggestionDatasourceLocal(Store store) : _store = store;
 
   @override
   Stream get suggestionsChanges => _folderSuggestionBox.query().watch();
@@ -37,32 +38,65 @@ class FolderSuggestionDatasourceLocal implements FolderSuggestionDatasource {
   }) async {
     final nearestFolderQuery = _folderBox
         .query(
-          Folder_.embeddings
-              .nearestNeighborsF32(folderEmbeddings, 5),
+          Folder_.embeddings.nearestNeighborsF32(folderEmbeddings, 1),
         )
         .build();
 
     final nearestFilesQuery = _fileBox
         .query(
-          File_.embeddings
-              .nearestNeighborsF32(filesDescriptionEmbeddings, 5),
+          File_.embeddings.nearestNeighborsF32(filesDescriptionEmbeddings, 3),
         )
         .build();
 
-    final nearestFolders = nearestFolderQuery.findWithScores();
-    final nearestFiles = nearestFilesQuery.findWithScores();
+    final nearestFolderWithScores = nearestFolderQuery.findWithScores().first;
+    final nearestFilesWithScores = nearestFilesQuery.findWithScores();
 
     //TODO decide whether to create a folder or use the first one
+    print(
+        "Folder: ${nearestFolderWithScores.object.name}, distance: ${nearestFolderWithScores.score}");
 
-    for (final nearestFolder in nearestFolders) {
+    for (final fileWithScores in nearestFilesWithScores) {
       print(
-          "Folder: ${nearestFolder.object.name}, distance: ${nearestFolder.score}");
+          "File: ${fileWithScores.object.id}, distance: ${fileWithScores.score}");
     }
 
-    await _saveSuggestion(
-      nearestFolders.first.object,
-      nearestFiles.map((file) => file.object).toList(),
+    const threshold = 0.1;
+
+    final targetFiles =
+        nearestFilesWithScores.map((file) => file.object).toList();
+
+    final targetFolder = nearestFolderWithScores.score < threshold
+        ? nearestFolderWithScores.object
+        : await _createPendingFolder(
+            suggestedFolder,
+            folderEmbeddings,
+            parentFolder: nearestFolderWithScores.object,
+          );
+
+    await _saveSuggestion(targetFolder, targetFiles);
+  }
+
+  Future<Folder> _createPendingFolder(
+    String name,
+    List<double> embeddings, {
+    required Folder parentFolder,
+  }) async {
+    final folderModel = Folder(
+      name: name,
+      isPending: true,
+      embeddings: embeddings,
     );
+
+    folderModel.parentFolder.target = parentFolder;
+
+    final newFolderId = await _folderBox.putAsync(folderModel);
+    final newFolder = await _folderBox.getAsync(newFolderId);
+
+    if (newFolder == null) {
+      throw FolderException.failedToCreateFolder(folderName: 'name');
+    }
+
+    return newFolder;
   }
 
   Future<void> _saveSuggestion(Folder folder, List<File> files) async {
@@ -103,4 +137,3 @@ class FolderSuggestionDatasourceLocal implements FolderSuggestionDatasource {
     throw UnimplementedError();
   }
 }
-

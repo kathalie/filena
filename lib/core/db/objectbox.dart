@@ -3,12 +3,11 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-import '../../features/folders_management/data/models/folder_model.dart';
+import '../../features/folder_management/data/models/folder_model.dart';
 import '../../objectbox.g.dart';
 
 class ObjectBox {
   late final Store store;
-  late final int rootFolderId;
 
   ObjectBox._create(this.store) {
     _initializeRootFolder();
@@ -30,9 +29,7 @@ class ObjectBox {
 
     final newFolderId = folderBox.put(newRootFolder);
 
-    rootFolderId = newFolderId;
-
-    print("Root folder created with ID: ${rootFolderId}");
+    print("Root folder created with ID: ${newFolderId}");
   }
 
   static Future<ObjectBox> create() async {

@@ -1,7 +1,7 @@
 import 'package:objectbox/objectbox.dart';
 
-import '../../../files_management/data/models/file_model.dart';
-import '../../../folders_management/data/models/folder_model.dart';
+import '../../../file_management/data/models/file_model.dart';
+import '../../../folder_management/data/models/folder_model.dart';
 
 @Entity()
 class FolderSuggestion {

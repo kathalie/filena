@@ -1,4 +1,4 @@
-import '../../../folders_management/domain/entities/folder_entity.dart';
+import '../../../folder_management/domain/entities/folder_entity.dart';
 
 class FolderSuggestionEntity {
   final int id;

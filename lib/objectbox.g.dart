@@ -14,8 +14,8 @@ import 'package:objectbox/internal.dart'
 import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
-import 'features/files_management/data/models/file_model.dart';
-import 'features/folders_management/data/models/folder_model.dart';
+import 'features/file_management/data/models/file_model.dart';
+import 'features/folder_management/data/models/folder_model.dart';
 import 'features/organizing_assistant/data/models/folder_suggestion_model.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file

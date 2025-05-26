@@ -1,4 +1,4 @@
-import '../../../files_management/domain/entities/file_metadata_entity.dart';
+import '../../../file_management/domain/entities/file_metadata_entity.dart';
 
 class FileVersion {
   final int id;
