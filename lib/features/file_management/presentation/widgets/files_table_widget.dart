@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/const/icons_const.dart';
+import '../../../organizing_assistant/api/providers.dart';
 import '../../../organizing_assistant/presentation/change_notifiers/file_suggestions_in_folder.dart';
 import '../../domain/entities/file_entity.dart';
 import '../change_notifiers/filtered_files.dart';
@@ -26,7 +28,11 @@ class FilesTable extends ConsumerWidget {
             return DataTable(
               columns: _buildDataColumn(),
               rows: [
-                ..._buildSuggestionRows(suggestions, (String fileId) async {}),
+                ..._buildSuggestionRows(
+                  suggestions,
+                  (String fileId) async {},
+                  ref,
+                ),
                 //TODO update file state
                 ..._buildFileRows(files, (String fileId) async {}),
                 //TODO update file state
@@ -43,16 +49,25 @@ class FilesTable extends ConsumerWidget {
   }
 
   List<DataRow> _buildSuggestionRows(
-      List<({int colorHex, List<FileEntity> files})> suggestions,
-      Future<void> Function(String) onToggleFavorite) {
+    List<({int colorHex, List<FileEntity> files})> suggestions,
+    Future<void> Function(String) onToggleFavorite,
+    WidgetRef ref,
+  ) {
     final suggestionRows = <DataRow>[];
+    final removeFileFromSuggestion =
+        ref.read(folderSuggestionRepositoryProvider).removeFilesFromSuggestion;
 
     for (final suggestion in suggestions) {
       final rows = suggestion.files.map(
         (fileEntity) => SuggestionFileRow(
           fileEntity,
           onToggleFavorite,
-          (String fileId) => Placeholder(), // TODO controls for suggestion rows
+          (String fileId) => IconButton(
+            // onPressed: () async => await removeFileFromSuggestion(suggestion, [fileId]),
+            onPressed: () {},
+            icon: const Icon(IconsConst.declineSuggestion),
+          ),
+          // TODO controls for suggestion rows
           suggestion.colorHex,
         ).build(),
       );

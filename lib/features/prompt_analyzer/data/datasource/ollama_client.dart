@@ -24,17 +24,14 @@ class _PromptAnalysisConst {
   A brief explanation regarding the decision.
   ''';
 
-  // static const system = '''
-  //     You are an accurate file organizing assistant.
-  //     1. Identify groups of files which a user wants to organize.
-  //     Return an empty array if none are found.
-  //     2. For each file group identify a one-word "$filesKeyword" that best describes them.
-  //     3. For each file group identify if a user provides a specific folder name.
-  //     If no, suggest the most relevant one. The result is a one-word "$folderSuggestion".
-  //     4. Output a JSON array, where each element corresponds to a file group.
-  //     ''';
   static const system = '''
-You are a file organization assistant. Analyze user requests to classify files (files_keyword) into folders (folder). Output a JSON array. 'files_keyword' describes file types; 'folder' specifies the destination. If no folder is mentioned, suggest the most relevant one.
+You are a file organization assistant. 
+Analyze user requests to classify files (files_keyword) into folders (folder) and provide your reasoning (explanation). 
+Output a JSON array. 
+'files_keyword' describes file types; 
+'folder' specifies the destination;
+'explanation' specifies your reasoning. 
+If no folder is mentioned, suggest the most relevant one.
       ''';
   // 5. Provide a brief explanation of your decision "$explanation".
 
@@ -71,16 +68,16 @@ class PromptAnalysisOllamaClient implements LlmClient {
               'description':
                   _PromptAnalysisConst.folderSuggestionDescription,
             },
-            // _PromptAnalysisConst.explanation: {
-            //   'type': 'string',
-            //   'description':
-            //   _PromptAnalysisConst.explanationDescription,
-            // },
+            _PromptAnalysisConst.explanation: {
+              'type': 'string',
+              'description':
+              _PromptAnalysisConst.explanationDescription,
+            },
           },
           'required': [
             _PromptAnalysisConst.filesKeyword,
             _PromptAnalysisConst.folderSuggestion,
-            // _PromptAnalysisConst.explanation,
+            _PromptAnalysisConst.explanation,
           ],
         },
       },
@@ -97,7 +94,7 @@ class PromptAnalysisOllamaClient implements LlmClient {
 
       print('Analysis finished: $result');
 
-      return result;
+      return result.toSet().toList();
     } catch (e) {
       throw LLMException.failedToAnalyseUserPrompt(prompt: prompt, cause: e);
     }
@@ -114,13 +111,12 @@ class PromptAnalysisOllamaClient implements LlmClient {
       final filesKeyword = item[_PromptAnalysisConst.filesKeyword] as String;
       final folderSuggestion =
           item[_PromptAnalysisConst.folderSuggestion] as String;
-      // final explanation = item[_PromptAnalysisConst.explanation] as String;
+      final explanation = item[_PromptAnalysisConst.explanation] ?? '';
 
       return AnalysedPromptDto(
         filesKeyword: filesKeyword,
         suggestedFolder: folderSuggestion,
-        // explanation: explanation,
-        explanation: '',
+        explanation: explanation,
       );
     }).toList();
   }

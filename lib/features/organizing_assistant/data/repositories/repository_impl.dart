@@ -72,7 +72,7 @@ class FolderSuggestionsRepositoryImpl implements FolderSuggestionsRepository {
   @override
   Future<void> removeFilesFromSuggestion(
     int suggestionId,
-    List<int> fileIds,
+    List<String> fileIds,
   ) async {
     await _folderSuggestionDatasource.removeFilesFromSuggestion(
       suggestionId,

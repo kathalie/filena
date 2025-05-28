@@ -14,7 +14,7 @@ class FilePresenter {
 
   String get id => _fileEntity.id;
 
-  String get name => _fileEntity.fileMetadata.name;
+  String get name => '${_fileEntity.fileMetadata.name}${_fileEntity.fileMetadata.extension}';
 
   bool get isPrioritized => _fileEntity.isPrioritized;
 

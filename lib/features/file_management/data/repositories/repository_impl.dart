@@ -59,13 +59,13 @@ class FileRepositoryImpl implements FileRepository {
             objectName: fileDto.id.toString(),
           );
 
-          //TODO lazy load or store in db. Works very slowly.
           return fileDto.toEntity(
             FileMetadataDto(
               sizeInBytes: metadata.sizeInBytes,
               timeCreated: metadata.timeCreated,
               timeLastModified: metadata.timeLastModified,
               name: metadata.name,
+              extension: metadata.extension,
             ),
           );
         },
@@ -78,7 +78,7 @@ class FileRepositoryImpl implements FileRepository {
 
   @override
   Future<void> createFile(String filePath, int parentFolderId) async {
-    final uuid = const Uuid().toString();
+    final uuid = const Uuid().v1();
 
     final fsFileWrapper = FsFileWrapper(filePath);
     final hash = await fsFileWrapper.contentHash;
@@ -92,6 +92,7 @@ class FileRepositoryImpl implements FileRepository {
       bytes: bytes,
       metadata: FileMetadataEntity(
         name: fsFileWrapper.name,
+        extension: fsFileWrapper.extension,
         sizeInBytes: metadata.size,
         timeCreated: metadata.modified,
         timeLastModified: metadata.changed,

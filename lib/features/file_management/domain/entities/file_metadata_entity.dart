@@ -2,6 +2,7 @@ import '../../common/helpers/file_category.dart';
 
 class FileMetadataEntity {
   final String name;
+  final String extension;
   final int sizeInBytes;
   final DateTime timeCreated;
   final DateTime timeLastModified;
@@ -9,6 +10,7 @@ class FileMetadataEntity {
 
   FileMetadataEntity({
     required this.name,
+    required this.extension,
     required this.sizeInBytes,
     required this.timeCreated,
     required this.timeLastModified,

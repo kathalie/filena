@@ -247,7 +247,7 @@ class FolderSuggestionDatasourceLocal implements FolderSuggestionDatasource {
   @override
   Future<void> removeFilesFromSuggestion(
     int suggestionId,
-    List<int> fileIds,
+    List<String> fileIds,
   ) async {
     return _store.runInTransaction(
       TxMode.write,

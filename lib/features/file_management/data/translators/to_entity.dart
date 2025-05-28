@@ -10,6 +10,7 @@ extension FileDtoToEntity on FileDto {
     currentVersion: currentVersion,
     fileMetadata: FileMetadataEntity(
       name: storageMetadata.name,
+      extension: storageMetadata.extension,
       sizeInBytes: storageMetadata.sizeInBytes,
       timeCreated: storageMetadata.timeCreated,
       timeLastModified: storageMetadata.timeLastModified,

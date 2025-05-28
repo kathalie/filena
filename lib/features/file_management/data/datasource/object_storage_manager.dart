@@ -159,6 +159,7 @@ class MinioStorageManager implements StorageManager {
       );
 
       return FileMetadataEntity(
+        extension: metadataMap['extension'] ?? '',
         name: metadataMap['name'] ?? objectName.split('/').last,
         sizeInBytes: int.tryParse(metadataMap['size-in-bytes'] ?? '')!,
         timeCreated: DateTime.tryParse(metadataMap['time-created'] ?? '')!,
@@ -186,6 +187,7 @@ class MinioStorageManager implements StorageManager {
 extension on FileMetadataEntity {
   Map<String, String> toMetadataMap() {
     return {
+      'extension': extension,
       'name': name,
       'size-in-bytes': sizeInBytes.toString(),
       'time-created': timeCreated.toIso8601String(),
@@ -197,6 +199,7 @@ extension on FileMetadataEntity {
   static FileMetadataEntity fromMetadataMap(Map<String, String> metadata) {
     return FileMetadataEntity(
       name: metadata['name'] ?? '',
+      extension:  metadata['extension'] ?? '',
       sizeInBytes: int.tryParse(metadata['size-in-bytes'] ?? '0') ?? 0,
       timeCreated: DateTime.tryParse(metadata['time-created'] ?? '') ?? DateTime.now(),
       timeLastModified: DateTime.tryParse(metadata['time-last-modified'] ?? '') ?? DateTime.now(),

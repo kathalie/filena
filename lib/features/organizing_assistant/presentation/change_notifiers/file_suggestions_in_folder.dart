@@ -11,13 +11,11 @@ final fileSuggestionsInFolderProvider =
   final fileRepo = ref.watch(fileRepositoryProvider);
   final allSuggestions = await ref.watch(allSuggestionsProvider.future);
   final selectedFolder = await ref.watch(selectedFolderProvider.future);
-  final currentSuggestionId = ref.watch(selectedSuggestionProvider);
 
   final matchingSuggestions = allSuggestions
       .where(
         (s) =>
-            (s.suggestedFolder.id == selectedFolder.id) &&
-            (s.id == (currentSuggestionId ?? s.id)),
+            (s.suggestedFolder.id == selectedFolder.id),
       )
       .toList();
 
