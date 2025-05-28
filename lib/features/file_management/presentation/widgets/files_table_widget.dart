@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../organizing_assistant/presentation/change_notifiers/file_suggestions_in_folder.dart';
 import '../../domain/entities/file_entity.dart';
 import '../change_notifiers/filtered_files.dart';
+import 'file_control.dart';
 import 'file_row.dart';
 
 class FilesTable extends ConsumerWidget {
@@ -15,7 +16,7 @@ class FilesTable extends ConsumerWidget {
     final filesAsync = ref.watch(filteredFilesProvider);
     //
     // void toggleFileFavorite(FileEntity file) async {
-    //   await FileRowPresenter(file).toggleFavourite();
+    //   await FileRowPresenter(file).togglePrioritized();
     // }
 
     return suggestionsAsync.when(
@@ -25,10 +26,9 @@ class FilesTable extends ConsumerWidget {
             return DataTable(
               columns: _buildDataColumn(),
               rows: [
-                ..._buildSuggestionRows(
-                    suggestions, (int fileId) async {}),
+                ..._buildSuggestionRows(suggestions, (String fileId) async {}),
                 //TODO update file state
-                ..._buildFileRows(files, (int fileId) async {}),
+                ..._buildFileRows(files, (String fileId) async {}),
                 //TODO update file state
               ],
             );
@@ -44,7 +44,7 @@ class FilesTable extends ConsumerWidget {
 
   List<DataRow> _buildSuggestionRows(
       List<({int colorHex, List<FileEntity> files})> suggestions,
-      Future<void> Function(int) onToggleFavorite) {
+      Future<void> Function(String) onToggleFavorite) {
     final suggestionRows = <DataRow>[];
 
     for (final suggestion in suggestions) {
@@ -52,6 +52,7 @@ class FilesTable extends ConsumerWidget {
         (fileEntity) => SuggestionFileRow(
           fileEntity,
           onToggleFavorite,
+          (String fileId) => Placeholder(), // TODO controls for suggestion rows
           suggestion.colorHex,
         ).build(),
       );
@@ -63,13 +64,14 @@ class FilesTable extends ConsumerWidget {
 
   List<DataRow> _buildFileRows(
     List<FileEntity> files,
-      Future<void> Function(int) onToggleFavorite,
+    Future<void> Function(String) onToggleFavorite,
   ) {
     return files
         .map(
           (fileEntity) => FileRow(
             fileEntity,
             onToggleFavorite,
+            (String fileId) => FileControl(fileId),
           ).build(),
         )
         .toList();
@@ -79,7 +81,7 @@ class FilesTable extends ConsumerWidget {
     final columnCaptions = [
       '',
       'Name',
-      'Favourite',
+      'Prioritized',
       'Size',
       'Last modified',
       'Created',

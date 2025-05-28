@@ -1,5 +1,6 @@
 import 'package:rxdart/rxdart.dart';
 
+//TODO move to notifiers
 class FilesSearchFieldPresenter {
   final _searchQuery = BehaviorSubject<String>.seeded('');
 

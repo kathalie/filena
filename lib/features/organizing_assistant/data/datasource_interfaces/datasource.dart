@@ -10,10 +10,11 @@ abstract interface class FolderSuggestionDatasource {
     required List<double> folderEmbeddings,
     required String filesDescription,
     required List<double> filesDescriptionEmbeddings,
+    required String explanation,
   });
 
   Future<void> removeFilesFromSuggestion(
-      FolderSuggestionDto suggestion,
+      int suggestionId,
       List<int> fileIds,
       );
 

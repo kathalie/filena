@@ -31,7 +31,7 @@ class SelectedSuggestionNotifier
   }
 }
 
-final selectedSuggestionIdProvider =
+final selectedSuggestionProvider =
     StateNotifierProvider<SelectedSuggestionNotifier, FolderSuggestionEntity?>(
         (ref) {
   return SelectedSuggestionNotifier(ref);

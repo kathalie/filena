@@ -24,7 +24,7 @@ class FileDatasourceLocal implements FileDataSource {
   @override
   Future<Set<FileDto>> getFilteredFiles(
     int parentFolderId,
-    bool onlyFavourites,
+    bool onlyPrioritized,
     bool includeFromSubfolders,
   ) async {
     final parentFolder = await _folderBox.getAsync(parentFolderId);
@@ -37,14 +37,14 @@ class FileDatasourceLocal implements FileDataSource {
 
     final Set<File> filteredFiles = acceptableFolders
         .expand((folder) => folder.assignedFiles)
-        .where((file) => onlyFavourites ? file.isFavourite : true)
+        .where((file) => onlyPrioritized ? file.isPrioritized : true)
         .toSet();
 
     return filteredFiles.map((file) => file.toDto()).toSet();
   }
 
   @override
-  Future<List<FileDto>> getFiles(List<int> fileIds) async {
+  Future<List<FileDto>> getFiles(List<String> fileIds) async {
     final files =
         await _fileBox.query(File_.id.oneOf(fileIds)).build().findAsync();
 
@@ -76,7 +76,9 @@ class FileDatasourceLocal implements FileDataSource {
 
     final newFileId = await _fileBox.putAsync(fileModel);
 
-    await assignFileToFolder(newFileId, parentFolderId);
+    final newFile = _fileBox.get(newFileId)!;
+
+    await assignFileToFolder(newFile.id, parentFolderId);
 
     return newFileId;
   }
@@ -90,17 +92,26 @@ class FileDatasourceLocal implements FileDataSource {
   }
 
   @override
-  Future<void> deleteFile(int id) async {
-    await _fileBox.removeAsync(id);
+  Future<void> deleteFile(String id) async {
+    final fileToRemove =
+        _fileBox.query(File_.id.equals(id)).build().findFirst();
+
+    if (fileToRemove == null) {
+      throw FileException.fileDoesNotExist(
+        title: "Filed to delete a file",
+      );
+    }
+
+    await _fileBox.removeAsync(fileToRemove.obId);
   }
 
   @override
-  Future<void> assignFileToFolder(int fileId, int folderId) async {
+  Future<void> assignFileToFolder(String fileId, int folderId) async {
     return _store.runInTransaction(
       TxMode.write,
       () {
         final folder = _folderBox.get(folderId);
-        final file = _fileBox.get(fileId);
+        final file = _fileBox.query(File_.id.equals(fileId)).build().findFirst();
 
         if (folder == null) {
           throw FolderException.folderDoesNotExist(
@@ -117,6 +128,26 @@ class FileDatasourceLocal implements FileDataSource {
         final updatedFile = file..parentFolders.add(folder);
 
         _fileBox.put(updatedFile);
+      },
+    );
+  }
+
+  @override
+  Future<void> removeFilesFromFolder(List<String> fileIds, int folderId) async {
+    return _store.runInTransaction(
+      TxMode.write,
+      () {
+        final folder = _folderBox.get(folderId);
+
+        if (folder == null) {
+          throw FolderException.folderDoesNotExist(
+            title: 'Failed to assign file to a folder',
+          );
+        }
+
+        folder.assignedFiles.removeWhere((file) => fileIds.contains(file.id));
+
+        _folderBox.put(folder);
       },
     );
   }

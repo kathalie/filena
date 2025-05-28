@@ -1,4 +1,4 @@
-import '../../domain/entities/prompt_entity.dart';
+import '../../domain/entities/analysed_prompt_entity.dart';
 import '../dto/analysed_user_request_dto.dart';
 
 extension AnalysedPromptDtoToEntity on AnalysedPromptDto {
@@ -6,6 +6,7 @@ extension AnalysedPromptDtoToEntity on AnalysedPromptDto {
     return AnalysedPromptEntity(
       filesKeyword: filesKeyword,
       suggestedFolder: suggestedFolder,
+      explanation: explanation,
     );
   }
 }

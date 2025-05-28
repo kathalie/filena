@@ -14,7 +14,7 @@ class SuggestionsView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final suggestions = ref.watch(allSuggestionsProvider);
     final setSelectedSuggestion =
-        ref.read(selectedSuggestionIdProvider.notifier).update;
+        ref.read(selectedSuggestionProvider.notifier).update;
 
     return suggestions.when(
       data: (suggestions) {

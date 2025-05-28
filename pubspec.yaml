@@ -55,6 +55,7 @@ dependencies:
   proper_filesize: ^1.0.2
   split_view: ^3.2.1
   flutter_riverpod: ^2.6.1
+  uuid: ^4.5.1
 
 dev_dependencies:
   flutter_test:

@@ -6,17 +6,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/const/icons_const.dart';
 import '../../../folder_management/domain/entities/folder_entity.dart';
 import '../../../folder_management/presentation/change_notifiers/selected_folder.dart';
-import '../presenters/upload_file_button_presenter.dart';
+import '../change_notifiers/file_upload_state.dart';
 
 class UploadFileButton extends ConsumerWidget {
   const UploadFileButton({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final uploadState = ref.watch(uploadStateProvider);
+    final uploadState = ref.watch(fileUploadStateProvider);
     final selectedFolderAsync = ref.watch(selectedFolderProvider);
 
-    ref.listen<UploadState>(uploadStateProvider, (_, state) {
+    ref.listen<UploadState>(fileUploadStateProvider, (_, state) {
       if (state.error != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showDialog(
@@ -28,7 +28,7 @@ class UploadFileButton extends ConsumerWidget {
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    ref.read(uploadStateProvider.notifier).clearError();
+                    ref.read(fileUploadStateProvider.notifier).clearError();
                   },
                   child: const Text('OK'),
                 ),
@@ -65,7 +65,7 @@ class UploadFileButton extends ConsumerWidget {
     if (result == null) return;
 
     final filePaths = result.files.map((file) => file.path).whereType<String>();
-    final uploader = ref.read(uploadStateProvider.notifier);
+    final uploader = ref.read(fileUploadStateProvider.notifier);
 
     for (final path in filePaths) {
       await uploader.createFile(path, selectedFolder);

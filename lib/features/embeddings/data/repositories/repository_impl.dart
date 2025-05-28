@@ -9,17 +9,9 @@ class EmbeddingsRepositoryImpl implements EmbeddingsRepository {
   EmbeddingsRepositoryImpl(this._embeddingsDatasource);
 
   @override
-  Future<EmbeddingsEntity> getEmbeddingsForImage(String imageBase64) async {
+  Future<EmbeddingsEntity> generateEmbeddings(String text) async {
     final embeddingsDto =
-        await _embeddingsDatasource.getEmbeddingsForImage(imageBase64);
-
-    return embeddingsDto.toEntity();
-  }
-
-  @override
-  Future<EmbeddingsEntity> getEmbeddingsForText(String text) async {
-    final embeddingsDto =
-        await _embeddingsDatasource.getEmbeddingsForText(text);
+        await _embeddingsDatasource.generateEmbeddings(text);
 
     return embeddingsDto.toEntity();
   }

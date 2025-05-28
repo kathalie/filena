@@ -6,11 +6,11 @@ abstract interface class FileDataSource {
 
   Future<Set<FileDto>> getFilteredFiles(
     int parentFolderId,
-    bool onlyFavourites,
+    bool onlyPrioritized,
     bool includeFromSubfolders,
   );
 
-  Future<List<FileDto>> getFiles(List<int> fileIds);
+  Future<List<FileDto>> getFiles(List<String> fileIds);
 
   Future<int> createFile(FileCreateDto createFileDto, int parentFolderId);
 
@@ -18,7 +18,9 @@ abstract interface class FileDataSource {
 
   // Future<void> updateFile(UpdateFileDto updateFileDto);
 
-  Future<void> assignFileToFolder(int fileId, int folderId);
+  Future<void> removeFilesFromFolder(List<String> fileIds, int folderId);
 
-  Future<void> deleteFile(int id);
+  Future<void> assignFileToFolder(String fileId, int folderId);
+
+  Future<void> deleteFile(String id);
 }

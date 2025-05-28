@@ -5,18 +5,18 @@ import '../../common/helpers/file_category.dart';
 import '../../domain/entities/file_metadata_entity.dart';
 import '../../domain/entities/file_entity.dart';
 
-class FileRowPresenter {
+class FilePresenter {
   final FileEntity _fileEntity;
 
-  FileRowPresenter(FileEntity fileEntity) : _fileEntity = fileEntity;
+  FilePresenter(FileEntity fileEntity) : _fileEntity = fileEntity;
 
   FileCategory get fileCategory => _fileEntity.fileMetadata.fileCategory;
 
-  int get id => _fileEntity.id;
+  String get id => _fileEntity.id;
 
   String get name => _fileEntity.fileMetadata.name;
 
-  bool get isFavourite => _fileEntity.isFavourite;
+  bool get isPrioritized => _fileEntity.isPrioritized;
 
   String get size => toMetricFileSize(_fileEntity.fileMetadata.sizeInBytes);
 
@@ -40,7 +40,7 @@ class FileRowPresenter {
     return formatter.format(dateTime);
   }
 
-  void toggleFavourite() {
+  void togglePrioritized() {
     //TODO toggle favourite
   }
 }

@@ -4,7 +4,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import '../../../../core/const/icons_const.dart';
 import '../../common/helpers/file_category.dart';
 import '../../domain/entities/file_entity.dart';
-import '../presenters/file_row_presenter.dart';
+import '../presenters/file_presenter.dart';
 
 class SuggestionFileRow extends _FileRow {
   final int _colorHex;
@@ -12,6 +12,7 @@ class SuggestionFileRow extends _FileRow {
   SuggestionFileRow(
     super.fileEntity,
     super.onToggleFavorite,
+    super.buildInfoButton,
     int colorHex,
   ) : _colorHex = colorHex;
 
@@ -41,6 +42,7 @@ class FileRow extends _FileRow {
   FileRow(
     super.fileEntity,
     super.onToggleFavorite,
+      super.buildInfoButton,
   );
 
   @override
@@ -63,12 +65,17 @@ class FileRow extends _FileRow {
 }
 
 abstract class _FileRow {
-  final FileRowPresenter _presenter;
-  final Future<void> Function(int) _onToggleFavorite;
+  final FilePresenter _presenter;
+  final Future<void> Function(String) _onToggleFavorite;
+  final Widget Function(String) _buildInfoButton;
 
-  _FileRow(FileEntity fileEntity, Future<void> Function(int) onToggleFavorite)
-      : _presenter = FileRowPresenter(fileEntity),
-        _onToggleFavorite = onToggleFavorite;
+  _FileRow(
+    FileEntity fileEntity,
+    Future<void> Function(String) onToggleFavorite,
+    Widget Function(String) buildInfoButton,
+  )   : _presenter = FilePresenter(fileEntity),
+        _onToggleFavorite = onToggleFavorite,
+        _buildInfoButton = buildInfoButton;
 
   DataRow build();
 
@@ -78,11 +85,11 @@ abstract class _FileRow {
     return [
       DataCell(_buildFileIcon()),
       DataCell(_buildTextInfo(_presenter.name)),
-      DataCell(_buildFavouriteButton()),
+      DataCell(_buildPrioritizedButton()),
       DataCell(_buildTextInfo(_presenter.size)),
       DataCell(_buildTextInfo(_presenter.lastModified)),
       DataCell(_buildTextInfo(_presenter.dateCreated)),
-      DataCell(_buildInfoButton()),
+      DataCell(_buildInfoButton(_presenter.id)),
     ];
   }
 
@@ -90,20 +97,14 @@ abstract class _FileRow {
     return Text(caption);
   }
 
-  Widget _buildFavouriteButton() {
-    final iconData =
-        _presenter.isFavourite ? IconsConst.starFilled : IconsConst.starOutline;
+  Widget _buildPrioritizedButton() {
+    final iconData = _presenter.isPrioritized
+        ? IconsConst.starFilled
+        : IconsConst.starOutline;
 
     return PlatformIconButton(
       icon: Icon(iconData),
       onPressed: () async => await _onToggleFavorite(_presenter.id),
-    );
-  }
-
-  Widget _buildInfoButton() {
-    return PlatformIconButton(
-      icon: const Icon(IconsConst.moreInfo),
-      onPressed: () {}, //TODO open file info
     );
   }
 }

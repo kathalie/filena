@@ -5,7 +5,7 @@ extension FileToDto on File {
   FileDto toDto() {
     return FileDto(
       id: id,
-      isFavourite: isFavourite,
+      isPrioritized: isPrioritized,
       currentVersion: currentVersion,
       mimeType: mimeType,
     );

@@ -6,16 +6,16 @@ import '../../../../core/const/icons_const.dart';
 import '../../../../core/const/theme_const.dart';
 import '../../domain/entities/folder_entity.dart';
 import '../change_notifiers/selected_folder.dart';
-import '../presenters/directory_presenter.dart';
+import '../presenters/folder_presenter.dart';
 
 class DirectoryWidget extends ConsumerWidget {
-  final DirectoryPresenter _presenter;
+  final FolderPresenter _presenter;
 
   DirectoryWidget({
     required FolderEntity folderEntity,
     required bool hasNestedFolders,
     super.key,
-  }) : _presenter = DirectoryPresenter(
+  }) : _presenter = FolderPresenter(
           folderEntity: folderEntity,
           hasNestedFolders: hasNestedFolders,
         );
@@ -58,7 +58,7 @@ class DirectoryWidget extends ConsumerWidget {
 }
 
 class _DirectoryIcon extends StatelessWidget {
-  final DirectoryPresenter _presenter;
+  final FolderPresenter _presenter;
 
   const _DirectoryIcon(this._presenter);
 
@@ -73,7 +73,7 @@ class _DirectoryIcon extends StatelessWidget {
 }
 
 class _DirectoryTitle extends StatelessWidget {
-  final DirectoryPresenter _presenter;
+  final FolderPresenter _presenter;
 
   const _DirectoryTitle(this._presenter);
 

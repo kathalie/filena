@@ -16,4 +16,10 @@ class LLMException extends LoggableException {
               'Failed to analyze the following prompt for files organisation.',
           explanation: 'Prompt: $prompt',
         );
+
+  LLMException.failedToProcessFileContent({
+    super.cause,
+  }) : super(
+          title: 'Failed to process file content.',
+        );
 }

@@ -5,13 +5,13 @@ import '../../../../core/const/icons_const.dart';
 import '../../../../core/const/theme_const.dart';
 import '../change_notifiers/file_filters.dart';
 
-class FavouritesFilter extends ConsumerWidget {
-  const FavouritesFilter({super.key});
+class PrioritizedsFilter extends ConsumerWidget {
+  const PrioritizedsFilter({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final onlyFavourites = ref.watch(filterStateProvider).showOnlyFavorites;
-    final toggleOnlyFavourites =
+    final onlyPrioritized = ref.watch(filterStateProvider).showOnlyFavorites;
+    final toggleOnlyPrioritizeds =
         ref.read(filterStateProvider.notifier).toggleShowOnlyFavorites;
 
     return Container(
@@ -21,11 +21,11 @@ class FavouritesFilter extends ConsumerWidget {
       ),
       child: IconButton(
         icon: Icon(
-          onlyFavourites ? IconsConst.starFilled : IconsConst.starOutline,
+          onlyPrioritized ? IconsConst.starFilled : IconsConst.starOutline,
           color: Colors.white,
           size: 18,
         ),
-        onPressed: toggleOnlyFavourites,
+        onPressed: toggleOnlyPrioritizeds,
         padding: EdgeInsets.zero,
       ),
     );

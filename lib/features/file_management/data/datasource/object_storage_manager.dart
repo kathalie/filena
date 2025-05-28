@@ -13,9 +13,11 @@ class MinioStorageManager implements StorageManager {
 
   //TODO 1. user registration and logic 2. securely store the key
   final Minio _minio = Minio(
-    endPoint: 'play.min.io',
-    accessKey: 'Q3AM3UQ867SPQQA43P2F',
-    secretKey: 'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG',
+    endPoint: 'localhost',
+    port: 9000,
+    useSSL: false,
+    accessKey: 'minioadmin',
+    secretKey: 'minioadmin',
   );
 
   MinioStorageManager._();
@@ -53,7 +55,7 @@ class MinioStorageManager implements StorageManager {
     try {
       final metadataMap = metadata.toMetadataMap();
 
-      metadataMap['X-Amz-Server-Side-Encryption'] = 'AES256';
+      // metadataMap['X-Amz-Server-Side-Encryption'] = 'AES256';
 
       final fileSize = bytes.length;
 

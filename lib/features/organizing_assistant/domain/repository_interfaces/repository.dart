@@ -10,12 +10,13 @@ abstract interface class FolderSuggestionsRepository {
             ({
               String suggestedFolder,
               String filesKeyword,
+              String explanation,
             })>
         analysedPrompts,
   );
 
   Future<void> removeFilesFromSuggestion(
-    FolderSuggestionEntity suggestion,
+    int suggestionId,
     List<int> fileIds,
   );
 

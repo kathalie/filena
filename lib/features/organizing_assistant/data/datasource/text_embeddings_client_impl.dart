@@ -9,7 +9,7 @@ class TextEmbeddingsClientImpl implements TextEmbeddingsClient {
 
   @override
   Future<List<double>> getEmbeddings(String text) async {
-    final result = await _embeddingsRepository.getEmbeddingsForText(text);
+    final result = await _embeddingsRepository.generateEmbeddings(text);
 
     return result.embeddings;
   }

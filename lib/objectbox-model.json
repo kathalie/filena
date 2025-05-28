@@ -5,14 +5,15 @@
   "entities": [
     {
       "id": "7:3198910070472308778",
-      "lastPropertyId": "7:1926349587610987794",
+      "lastPropertyId": "8:4861979566373310195",
       "name": "File",
       "properties": [
         {
           "id": "1:17814420269547781",
           "name": "id",
-          "type": 6,
-          "flags": 1
+          "type": 9,
+          "flags": 2080,
+          "indexId": "16:5749827854860536586"
         },
         {
           "id": "3:1219110727449541090",
@@ -28,7 +29,7 @@
         },
         {
           "id": "5:1109865782872316809",
-          "name": "isFavourite",
+          "name": "isPrioritized",
           "type": 1
         },
         {
@@ -42,6 +43,12 @@
           "id": "7:1926349587610987794",
           "name": "currentVersion",
           "type": 6
+        },
+        {
+          "id": "8:4861979566373310195",
+          "name": "obId",
+          "type": 6,
+          "flags": 1
         }
       ],
       "relations": []
@@ -131,7 +138,7 @@
     }
   ],
   "lastEntityId": "10:9157757429217051349",
-  "lastIndexId": "15:429392515660225108",
+  "lastIndexId": "16:5749827854860536586",
   "lastRelationId": "6:8590250266704814531",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

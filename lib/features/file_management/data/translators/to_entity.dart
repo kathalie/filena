@@ -6,7 +6,7 @@ import '../dto/file_storage_metadata_dto.dart';
 extension FileDtoToEntity on FileDto {
   FileEntity toEntity(FileMetadataDto storageMetadata) => FileEntity(
     id: id,
-    isFavourite: isFavourite,
+    isPrioritized: isPrioritized,
     currentVersion: currentVersion,
     fileMetadata: FileMetadataEntity(
       name: storageMetadata.name,

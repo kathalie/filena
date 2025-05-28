@@ -6,12 +6,15 @@ import '../../../folder_management/data/models/folder_model.dart';
 @Entity()
 class File {
   @Id()
-  int id = 0;
+  int obId = 0;
+
+  @Unique()
+  String id;
 
   @Unique()
   String hash;
 
-  bool isFavourite;
+  bool isPrioritized;
 
   int currentVersion;
 
@@ -28,10 +31,11 @@ class File {
   final folderSuggestions = ToMany<FolderSuggestion>();
 
   File({
+    required this.id,
     required this.currentVersion,
     required this.hash,
     required this.mimeType,
-    required this.isFavourite,
+    required this.isPrioritized,
     required this.embeddings,
   });
 }

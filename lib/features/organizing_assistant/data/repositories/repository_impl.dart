@@ -2,7 +2,6 @@ import '../../domain/entities/folder_suggestion_entity.dart';
 import '../../domain/repository_interfaces/repository.dart';
 import '../datasource_interfaces/datasource.dart';
 import '../datasource_interfaces/text_embeddings_client.dart';
-import '../translators/to_dto.dart';
 import '../translators/to_entity.dart';
 
 class FolderSuggestionsRepositoryImpl implements FolderSuggestionsRepository {
@@ -29,12 +28,21 @@ class FolderSuggestionsRepositoryImpl implements FolderSuggestionsRepository {
   }
 
   @override
-  Future<void> createSuggestion(List<({String suggestedFolder, String filesKeyword,})> analysedPrompts) async {
+  Future<void> createSuggestion(
+      List<
+              ({
+                String suggestedFolder,
+                String filesKeyword,
+                String explanation,
+              })>
+          analysedPrompts) async {
     for (final analysedPrompt in analysedPrompts) {
       final suggestedFolder = analysedPrompt.suggestedFolder;
       final filesDescription = analysedPrompt.filesKeyword;
+      final explanation = analysedPrompt.explanation;
       print('Suggested folder: $suggestedFolder');
       print('For files description: $filesDescription');
+      print('With explanation: $explanation');
 
       final folderEmbeddings =
           await _embeddingsClient.getEmbeddings(suggestedFolder);
@@ -46,6 +54,7 @@ class FolderSuggestionsRepositoryImpl implements FolderSuggestionsRepository {
         filesDescription: filesDescription,
         folderEmbeddings: folderEmbeddings,
         filesDescriptionEmbeddings: fileDescriptionEmbeddings,
+        explanation: explanation,
       );
     }
   }
@@ -62,11 +71,11 @@ class FolderSuggestionsRepositoryImpl implements FolderSuggestionsRepository {
 
   @override
   Future<void> removeFilesFromSuggestion(
-    FolderSuggestionEntity suggestion,
+    int suggestionId,
     List<int> fileIds,
   ) async {
     await _folderSuggestionDatasource.removeFilesFromSuggestion(
-      suggestion.toDto(),
+      suggestionId,
       fileIds,
     );
   }
@@ -76,4 +85,3 @@ class FolderSuggestionsRepositoryImpl implements FolderSuggestionsRepository {
     await _folderSuggestionDatasource.acceptAll();
   }
 }
-

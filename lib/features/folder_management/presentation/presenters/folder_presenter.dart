@@ -1,13 +1,13 @@
 import '../../domain/entities/folder_entity.dart';
 import '../../domain/types/folder_type.dart';
 
-typedef DirectoryCharacteristics = ({
+typedef FolderCharacteristics = ({
   String name,
   bool hasNestedFolders,
   bool isRoot,
 });
 
-class DirectoryPresenter {
+class FolderPresenter {
   final FolderEntity folderEntity;
   final bool hasNestedFolders;
   final bool isRoot;
@@ -15,7 +15,7 @@ class DirectoryPresenter {
 
   bool get isPending => folderEntity.folderType == FolderType.pending;
 
-  DirectoryPresenter({
+  FolderPresenter({
     required this.folderEntity,
     required this.hasNestedFolders,
   })  : isRoot = folderEntity.isRoot,

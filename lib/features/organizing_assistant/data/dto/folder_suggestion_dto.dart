@@ -6,7 +6,7 @@ class FolderSuggestionDto {
   final String explanation;
   // TODO Think of getting rid of this dependency
   final FolderDto suggestedFolder;
-  final List<int> assignedFileIds;
+  final List<String> assignedFileIds;
 
   FolderSuggestionDto({
     required this.id,

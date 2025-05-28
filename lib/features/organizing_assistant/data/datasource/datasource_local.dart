@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import '../../../../core/errors/folder_exception.dart';
+import '../../../../core/errors/folder_suggestion_exception.dart';
 import '../../../../objectbox.g.dart';
 import '../../../file_management/data/models/file_model.dart';
 import '../../../folder_management/data/models/folder_model.dart';
@@ -11,7 +12,6 @@ import '../models/folder_suggestion_model.dart';
 import '../translators/to_dto.dart';
 
 class FolderSuggestionDatasourceLocal implements FolderSuggestionDatasource {
-  //TODO come up with proper communication between features
   final Store _store;
   late final _folderSuggestionBox = _store.box<FolderSuggestion>();
   late final _fileBox = _store.box<File>();
@@ -35,45 +35,87 @@ class FolderSuggestionDatasourceLocal implements FolderSuggestionDatasource {
     required List<double> folderEmbeddings,
     required String filesDescription,
     required List<double> filesDescriptionEmbeddings,
+    required String explanation,
   }) async {
-    final nearestFolderQuery = _folderBox
-        .query(
-          Folder_.embeddings.nearestNeighborsF32(folderEmbeddings, 1),
-        )
-        .build();
+    final targetFolder =
+        await _nearestFolder(folderEmbeddings, suggestedFolder);
+    final targetFiles = await _nearestFiles(filesDescriptionEmbeddings);
 
+    await _saveSuggestion(targetFolder, targetFiles, explanation);
+  }
+
+  Future<List<File>> _nearestFiles(
+    List<double> filesDescriptionEmbeddings,
+  ) async {
+    const threshold = 0.5;
+
+    final numberOfFiles = _fileBox.count();
     final nearestFilesQuery = _fileBox
         .query(
-          File_.embeddings.nearestNeighborsF32(filesDescriptionEmbeddings, 3),
+          File_.embeddings.nearestNeighborsF32(
+            filesDescriptionEmbeddings,
+            numberOfFiles,
+          ),
         )
         .build();
 
-    final nearestFolderWithScores = nearestFolderQuery.findWithScores().first;
-    final nearestFilesWithScores = nearestFilesQuery.findWithScores();
-
-    //TODO decide whether to create a folder or use the first one
-    print(
-        "Folder: ${nearestFolderWithScores.object.name}, distance: ${nearestFolderWithScores.score}");
+    // Select only "closest" files based on a threshold
+    final nearestFilesWithScores = nearestFilesQuery
+        .findWithScores()
+        .where((value) => value.score < threshold);
 
     for (final fileWithScores in nearestFilesWithScores) {
       print(
           "File: ${fileWithScores.object.id}, distance: ${fileWithScores.score}");
     }
 
+    return nearestFilesWithScores.map((file) => file.object).toList();
+  }
+
+  Future<Folder> _nearestFolder(
+      List<double> folderEmbeddings, String suggestedFolder) async {
     const threshold = 0.1;
 
-    final targetFiles =
-        nearestFilesWithScores.map((file) => file.object).toList();
+    final nearestFolderQuery = _folderBox
+        .query(
+          Folder_.isPending
+              .equals(false)
+              .and(Folder_.embeddings.nearestNeighborsF32(folderEmbeddings, 1)),
+        )
+        .build();
 
-    final targetFolder = nearestFolderWithScores.score < threshold
-        ? nearestFolderWithScores.object
-        : await _createPendingFolder(
-            suggestedFolder,
-            folderEmbeddings,
-            parentFolder: nearestFolderWithScores.object,
-          );
+    final nearestFoldersWithScores = nearestFolderQuery.findWithScores();
 
-    await _saveSuggestion(targetFolder, targetFiles);
+    // If no embeddings found, then create a pending folder in a root
+    if (nearestFoldersWithScores.isEmpty) {
+      final rootFolder = await _folderBox
+          .query(Folder_.parentFolder.equals(0))
+          .build()
+          .findFirstAsync();
+
+      return await _createPendingFolder(
+        suggestedFolder,
+        folderEmbeddings,
+        parentFolder: rootFolder!,
+      );
+    }
+
+    final nearestFolderWithScores = nearestFoldersWithScores.first;
+
+    print(
+        "Folder: ${nearestFolderWithScores.object.name}, distance: ${nearestFolderWithScores.score}");
+
+    // Choose a folder if it is "close enough"
+    if (nearestFolderWithScores.score < threshold) {
+      return nearestFolderWithScores.object;
+    }
+
+    // Create a new folder in the closestexisting
+    return await _createPendingFolder(
+      suggestedFolder,
+      folderEmbeddings,
+      parentFolder: nearestFolderWithScores.object,
+    );
   }
 
   Future<Folder> _createPendingFolder(
@@ -99,11 +141,14 @@ class FolderSuggestionDatasourceLocal implements FolderSuggestionDatasource {
     return newFolder;
   }
 
-  Future<void> _saveSuggestion(Folder folder, List<File> files) async {
-    //TODO explanation
+  Future<void> _saveSuggestion(
+    Folder folder,
+    List<File> files,
+    String explanation,
+  ) async {
     final newSuggestionModel = FolderSuggestion(
       colorHex: ColorGenerator.generateContrastingRandomColor(),
-      explanation: '',
+      explanation: explanation,
     );
 
     newSuggestionModel.folder.target = folder;
@@ -113,27 +158,112 @@ class FolderSuggestionDatasourceLocal implements FolderSuggestionDatasource {
   }
 
   @override
-  Future<void> acceptSuggestion(int suggestionId) {
-    // TODO: implement acceptSuggestion
-    throw UnimplementedError();
+  Future<void> acceptAll() async {
+    return _store.runInTransaction(
+      TxMode.write,
+      () {
+        final allFolderSuggestions = _folderSuggestionBox.getAll();
+
+        for (final suggestion in allFolderSuggestions) {
+          _acceptSuggestion(suggestion);
+        }
+      },
+    );
   }
 
   @override
-  Future<void> declineSuggestion(int suggestionId) {
-    // TODO: implement declineSuggestion
-    throw UnimplementedError();
+  Future<void> acceptSuggestion(int suggestionId) async {
+    return _store.runInTransaction(
+      TxMode.write,
+      () {
+        final folderSuggestion = _folderSuggestionBox.get(suggestionId);
+
+        if (folderSuggestion == null) {
+          throw FolderSuggestionException.folderSuggestionDoesNotExist(
+            title: 'Failed to accept suggestion',
+          );
+        }
+
+        _acceptSuggestion(folderSuggestion);
+      },
+    );
+  }
+
+  Future<void> _acceptSuggestion(FolderSuggestion folderSuggestion) async {
+    final folder = folderSuggestion.folder.target;
+
+    if (folder == null) {
+      throw FolderException.folderDoesNotExist(
+        title: 'Failed to accept suggestion',
+      );
+    }
+
+    // Accept generated folders (not pending anymore)
+    folder.isPending = false;
+
+    // Assign suggested files to a suggested folder
+    for (final file in folderSuggestion.files) {
+      folder.assignedFiles.add(file);
+    }
+
+    _folderBox.put(folder);
+
+    // Remove a suggestion
+    _folderSuggestionBox.remove(folderSuggestion.id);
+  }
+
+  @override
+  Future<void> declineSuggestion(int suggestionId) async {
+    return _store.runInTransaction(
+      TxMode.write,
+      () {
+        final folderSuggestion = _folderSuggestionBox.get(suggestionId);
+
+        if (folderSuggestion == null) {
+          throw FolderSuggestionException.folderSuggestionDoesNotExist(
+            title: 'Failed to decline suggestion',
+          );
+        }
+
+        final folder = folderSuggestion.folder.target;
+
+        if (folder == null) {
+          throw FolderException.folderDoesNotExist(
+            title: 'Failed to decline suggestion',
+          );
+        }
+
+        // Remove a generated folder
+        if (folder.isPending) {
+          _folderBox.remove(folder.id);
+        }
+
+        // Remove a suggestion
+        _folderSuggestionBox.remove(folderSuggestion.id);
+      },
+    );
   }
 
   @override
   Future<void> removeFilesFromSuggestion(
-      FolderSuggestionDto suggestion, List<int> fileIds) {
-    // TODO: implement removeFilesFromSuggestion
-    throw UnimplementedError();
-  }
+    int suggestionId,
+    List<int> fileIds,
+  ) async {
+    return _store.runInTransaction(
+      TxMode.write,
+      () {
+        final folderSuggestion = _folderSuggestionBox.get(suggestionId);
 
-  @override
-  Future<void> acceptAll() {
-    // TODO: implement acceptAll
-    throw UnimplementedError();
+        if (folderSuggestion == null) {
+          throw FolderSuggestionException.folderSuggestionDoesNotExist(
+            title: 'Failed to remove files from suggestion',
+          );
+        }
+
+        folderSuggestion.files.removeWhere((file) => fileIds.contains(file.id));
+
+        _folderSuggestionBox.remove(folderSuggestion.id);
+      },
+    );
   }
 }

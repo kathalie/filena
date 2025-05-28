@@ -6,7 +6,7 @@ class FolderSuggestionEntity {
   //TODO think of getting rid of this dependency
   final int colorHex;
   final FolderEntity suggestedFolder;
-  final List<int> assignedFileIds;
+  final List<String> assignedFileIds;
 
   FolderSuggestionEntity({
     required this.id,

@@ -11,7 +11,7 @@ final fileSuggestionsInFolderProvider =
   final fileRepo = ref.watch(fileRepositoryProvider);
   final allSuggestions = await ref.watch(allSuggestionsProvider.future);
   final selectedFolder = await ref.watch(selectedFolderProvider.future);
-  final currentSuggestionId = ref.watch(selectedSuggestionIdProvider);
+  final currentSuggestionId = ref.watch(selectedSuggestionProvider);
 
   final matchingSuggestions = allSuggestions
       .where(

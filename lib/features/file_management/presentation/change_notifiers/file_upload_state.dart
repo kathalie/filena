@@ -4,7 +4,7 @@ import '../../../folder_management/domain/entities/folder_entity.dart';
 import '../../api/providers.dart';
 import '../../domain/repository_interfaces/file_repository.dart';
 
-final uploadStateProvider = StateNotifierProvider<UploadStateNotifier, UploadState>((ref) {
+final fileUploadStateProvider = StateNotifierProvider<UploadStateNotifier, UploadState>((ref) {
   return UploadStateNotifier(ref.watch(fileRepositoryProvider));
 });
 

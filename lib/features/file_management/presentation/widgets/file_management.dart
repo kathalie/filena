@@ -111,7 +111,7 @@ class _SearchBar extends StatelessWidget {
           SizedBox(width: 8.0),
           AllSubfoldersCheckbox(),
           SizedBox(width: 8.0),
-          FavouritesFilter(),
+          PrioritizedsFilter(),
         ],
       ),
     );

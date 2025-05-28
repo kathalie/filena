@@ -5,19 +5,19 @@ abstract interface class FileRepository {
 
   Future<List<FileEntity>> getFilteredFiles(
     int parentFolderId,
-    bool onlyFavourites,
+    bool onlyPrioritized,
     bool includeFromSubfolders,
   );
 
-  Future<List<FileEntity>> getFiles(List<int> fileIds);
+  Future<List<FileEntity>> getFiles(List<String> fileIds);
 
   Future<void> createFile(String filePath, int parentFolderId);
 
   Future<void> updateFile(String filePath);
 
-  Future<void> deleteFile(int fileId);
+  Future<void> deleteFile(String fileId);
 
-  Future<void> removeFileFromFolder(int fileId, int folderId);
+  Future<void> removeFilesFromFolder(List<String> fileIds, int folderId);
 
-  Future<void> assignFileToFolder(int fileId, int folderId);
+  Future<void> assignFileToFolder(String fileId, int folderId);
 }

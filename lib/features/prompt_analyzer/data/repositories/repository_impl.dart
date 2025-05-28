@@ -1,4 +1,4 @@
-import '../../domain/entities/prompt_entity.dart';
+import '../../domain/entities/analysed_prompt_entity.dart';
 import '../../domain/repository_interfaces/repository.dart';
 import '../datasource_interfaces/llm_client.dart';
 import '../translators/to_entity.dart';
@@ -14,6 +14,4 @@ class PromptAnalysisRepositoryImpl implements PromptAnalysisRepository {
 
     return resultDtos.map((resultDto) => resultDto.toEntity()).toList();
   }
-
-
 }

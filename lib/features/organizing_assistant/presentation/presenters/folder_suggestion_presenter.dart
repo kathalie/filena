@@ -1,10 +1,10 @@
 import '../../../folder_management/domain/types/folder_type.dart';
 import '../../domain/entities/folder_suggestion_entity.dart';
 
-class SuggestionCardPresenter {
+class FolderSuggestionPresenter {
   final FolderSuggestionEntity _folderSuggestion;
 
-  SuggestionCardPresenter(FolderSuggestionEntity folderSuggestion)
+  FolderSuggestionPresenter(FolderSuggestionEntity folderSuggestion)
       : _folderSuggestion = folderSuggestion;
 
   int get suggestionId => _folderSuggestion.id;

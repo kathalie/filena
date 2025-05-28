@@ -7,7 +7,8 @@ import '../datasource_interfaces/client.dart';
 import '../dto/embeddings_dto.dart';
 
 class EmbeddingRetrievalConst {
-  static const textEmbeddingModel = 'nomic-embed-text';
+  // static const textEmbeddingModel = 'nomic-embed-text';
+  static const textEmbeddingModel = 'bge-large';
 }
 
 class EmbeddingsClientOllama implements EmbeddingsDatasource {
@@ -16,13 +17,7 @@ class EmbeddingsClientOllama implements EmbeddingsDatasource {
   EmbeddingsClientOllama({this.baseUrl = Const.ollamaUrl});
 
   @override
-  Future<EmbeddingsDto> getEmbeddingsForImage(String imageBase64) async {
-    // TODO: implement getEmbeddingForImage
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<EmbeddingsDto> getEmbeddingsForText(String text) async {
+  Future<EmbeddingsDto> generateEmbeddings(String text) async {
     final url = Uri.parse('$baseUrl/api/embed');
 
     final payload = {
@@ -41,7 +36,7 @@ class EmbeddingsClientOllama implements EmbeddingsDatasource {
 
       return (jsonResponse['embeddings'][0] as List).cast<double>();
     } catch (e) {
-      print('Filed to retrieve embeddings for a text file');
+      print('Failed to retrieve embeddings for a text file');
       return [];
     }
   }

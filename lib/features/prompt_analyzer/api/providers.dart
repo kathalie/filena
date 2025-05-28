@@ -7,13 +7,13 @@ import '../domain/repository_interfaces/repository.dart';
 
 // Data sources
 final _llmClient = Provider<LlmClient>((ref) {
-  return OllamaClient();
+  return PromptAnalysisOllamaClient();
 });
 
 // Repositories
 final promptAnalysisRepositoryProvider =
     Provider<PromptAnalysisRepository>((ref) {
-  final datasource = ref.watch(_llmClient);
+  final datasource = ref.read(_llmClient);
 
   return PromptAnalysisRepositoryImpl(datasource);
 });
