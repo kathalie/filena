@@ -10,15 +10,21 @@ import '../presenters/folder_presenter.dart';
 
 class DirectoryWidget extends ConsumerWidget {
   final FolderPresenter _presenter;
+  final void Function() _toggleExpansion;
+  final bool _isExpanded;
 
   DirectoryWidget({
     required FolderEntity folderEntity,
     required bool hasNestedFolders,
+    required void Function() toggleExpansion,
+    required bool isExpanded,
     super.key,
-  }) : _presenter = FolderPresenter(
+  })  : _presenter = FolderPresenter(
           folderEntity: folderEntity,
           hasNestedFolders: hasNestedFolders,
-        );
+        ),
+        _toggleExpansion = toggleExpansion,
+        _isExpanded = isExpanded;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,8 +34,7 @@ class DirectoryWidget extends ConsumerWidget {
       data: (selectedFolder) {
         final isSelected = selectedFolder == _presenter.folderEntity;
 
-        final selectFolder =
-            ref.watch(selectedFolderProvider.notifier).select;
+        final selectFolder = ref.watch(selectedFolderProvider.notifier).select;
 
         return Card(
           elevation: 1,
@@ -44,7 +49,9 @@ class DirectoryWidget extends ConsumerWidget {
           child: PlatformListTile(
             leading: _DirectoryIcon(_presenter),
             title: _DirectoryTitle(_presenter),
-            trailing: _presenter.hasNestedFolders ? const _ExpandButton() : null,
+            trailing: _presenter.hasNestedFolders
+                ? _ExpandButton(_toggleExpansion, _isExpanded)
+                : null,
             onTap: () => selectFolder(_presenter.folderEntity),
           ),
         );
@@ -90,16 +97,20 @@ class _DirectoryTitle extends StatelessWidget {
 }
 
 class _ExpandButton extends StatelessWidget {
-  const _ExpandButton();
+  final void Function() _toggleExpansion;
+  final bool _isExpanded;
+
+  const _ExpandButton(this._toggleExpansion, this._isExpanded);
 
   @override
   Widget build(BuildContext context) {
     return PlatformIconButton(
-      icon: const Icon(
-        IconsConst.chevronRight,
+      icon: Icon(
+        _isExpanded ? IconsConst.chevronDown : IconsConst.chevronRight,
         color: ThemeConsts.primaryColor,
       ),
       padding: EdgeInsets.zero,
+      onPressed: _toggleExpansion,
     );
   }
 }

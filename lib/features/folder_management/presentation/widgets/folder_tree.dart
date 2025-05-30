@@ -5,6 +5,7 @@ import 'package:tree_view_flutter/tree_view_flutter.dart';
 import '../../domain/types/folder_tree.dart';
 import '../change_notifiers/folder_structure.dart';
 import 'directory.dart';
+import 'folder_tree_node.dart';
 
 class FoldersTreeView extends ConsumerWidget {
   const FoldersTreeView({super.key});
@@ -18,11 +19,9 @@ class FoldersTreeView extends ConsumerWidget {
         return TreeView(
           startExpanded: true,
           children: [
-            TreeViewChild(
-              parent: DirectoryWidget(
-                folderEntity: folderTree.folder,
-                hasNestedFolders: folderTree.children.isNotEmpty,
-              ),
+            FolderTreeNode(
+              folderEntity: folderTree.folder,
+              hasNestedFolders: folderTree.children.isNotEmpty,
               children: _buildNestedFolders(folderTree.children),
             ),
           ],
@@ -39,14 +38,10 @@ class FoldersTreeView extends ConsumerWidget {
     return folders.map((folderTree) {
       return Container(
         margin: const EdgeInsets.only(left: 16.0),
-        child: TreeViewChild(
-          parent: DirectoryWidget(
-            folderEntity: folderTree.folder,
-            hasNestedFolders: folderTree.children.isNotEmpty,
-          ),
-          children: folderTree.children.isNotEmpty
-              ? _buildNestedFolders(folderTree.children)
-              : [],
+        child: FolderTreeNode(
+          folderEntity: folderTree.folder,
+          hasNestedFolders: folderTree.children.isNotEmpty,
+          children: _buildNestedFolders(folderTree.children),
         ),
       );
     }).toList();
