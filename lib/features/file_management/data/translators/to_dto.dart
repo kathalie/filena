@@ -8,6 +8,7 @@ extension FileToDto on File {
       storageKey: storageKey,
       isPrioritized: isPrioritized,
       currentVersion: currentVersion,
+      name: name,
       mimeType: mimeType,
     );
   }

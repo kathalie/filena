@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -7,6 +6,8 @@ import '../../../../core/const/icons_const.dart';
 import '../../../../core/const/theme_const.dart';
 import '../../../../core/presentation/dialogs/confirmation_dialog.dart';
 import '../../../../core/presentation/dialogs/text_field_dialog.dart';
+import '../../api/providers.dart';
+import '../../domain/entities/file_entity.dart';
 import '../change_notifiers/file_operations.dart';
 
 typedef FileControlOption = ({
@@ -16,9 +17,9 @@ typedef FileControlOption = ({
 });
 
 class FileControl extends ConsumerWidget {
-  final int _fileId;
+  final FileEntity _fileEntity;
 
-  const FileControl(this._fileId, {super.key});
+  const FileControl(this._fileEntity, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -87,16 +88,17 @@ class FileControl extends ConsumerWidget {
   ) async {
     final newFileName = await showTextFieldDialog(
       context,
-      'Rename file',
-      'New file name...',
+      title: 'Rename file',
+      inputHint: 'New file name...',
+      initialValue: _fileEntity.name
     );
-    //TODO rename file
-    // if (newFolderName == null) return;
-    //
-    // final renameSelectedFolder =
-    //     ref.read(folderOperationsProvider.notifier).renameSelectedFolder;
-    //
-    // await renameSelectedFolder(newFolderName);
+
+    if (newFileName == null) return;
+
+    final renameFile =
+        ref.read(fileRepositoryProvider).renameFile;
+
+    await renameFile(_fileEntity.id, newFileName);
   }
 
   Future<void> _removeFileFromSelectedFolder(
@@ -114,7 +116,7 @@ class FileControl extends ConsumerWidget {
     final removeFileFromSelectedFolder =
         ref.read(fileOperationsProvider.notifier).removeFileFromSelectedFolder;
 
-    await removeFileFromSelectedFolder(_fileId);
+    await removeFileFromSelectedFolder(_fileEntity.id);
   }
 
   Future<void> _deleteFileFromSystem(
@@ -132,6 +134,6 @@ class FileControl extends ConsumerWidget {
     final deleteFileFromSystem =
         ref.read(fileOperationsProvider.notifier).deleteFileFromSystem;
 
-    await deleteFileFromSystem(_fileId);
+    await deleteFileFromSystem(_fileEntity.id);
   }
 }

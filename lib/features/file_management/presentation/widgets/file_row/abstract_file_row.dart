@@ -8,12 +8,12 @@ import '../../presenters/file_presenter.dart';
 abstract class AbstractFileRow {
   final FilePresenter presenter;
   final Future<void> Function(int) _onToggleFavorite;
-  final Widget Function(int) _buildInfoButton;
+  final Widget Function(FileEntity) _buildInfoButton;
 
   AbstractFileRow(
     FileEntity fileEntity,
     Future<void> Function(int) onToggleFavorite,
-    Widget Function(int) buildInfoButton,
+    Widget Function(FileEntity) buildInfoButton,
   )   : presenter = FilePresenter(fileEntity),
         _onToggleFavorite = onToggleFavorite,
         _buildInfoButton = buildInfoButton;
@@ -30,7 +30,7 @@ abstract class AbstractFileRow {
       DataCell(_buildTextInfo(presenter.size)),
       DataCell(_buildTextInfo(presenter.lastModified)),
       DataCell(_buildTextInfo(presenter.dateCreated)),
-      DataCell(_buildInfoButton(presenter.id)),
+      DataCell(_buildInfoButton(presenter.fileEntity)),
     ];
   }
 

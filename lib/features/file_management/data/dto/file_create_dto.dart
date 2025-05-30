@@ -1,12 +1,12 @@
 class FileCreateDto {
   final String storageKey;
-  final String hash;
+  final String name;
   final String mimeType;
   final List<double> embeddings;
 
   const FileCreateDto({
     required this.storageKey,
-    required this.hash,
+    required this.name,
     required this.mimeType,
     required this.embeddings,
   });

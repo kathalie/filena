@@ -64,8 +64,6 @@ class FileRepositoryImpl implements FileRepository {
               sizeInBytes: metadata.sizeInBytes,
               timeCreated: metadata.timeCreated,
               timeLastModified: metadata.timeLastModified,
-              name: metadata.name,
-              extension: metadata.extension,
             ),
           );
         },
@@ -81,7 +79,7 @@ class FileRepositoryImpl implements FileRepository {
     final uuid = const Uuid().v1();
 
     final fsFileWrapper = FsFileWrapper(filePath);
-    final hash = await fsFileWrapper.contentHash;
+    final name = '${fsFileWrapper.name}${fsFileWrapper.extension}';
     final mimeType = await fsFileWrapper.mimeType;
 
     final bytes = await fsFileWrapper.contentAsBytes;
@@ -91,12 +89,9 @@ class FileRepositoryImpl implements FileRepository {
       objectName: uuid,
       bytes: bytes,
       metadata: FileMetadataEntity(
-        name: fsFileWrapper.name,
-        extension: fsFileWrapper.extension,
         sizeInBytes: metadata.size,
         timeCreated: metadata.modified,
         timeLastModified: metadata.changed,
-        mimeType: mimeType,
       ),
     );
 
@@ -105,7 +100,7 @@ class FileRepositoryImpl implements FileRepository {
 
     final fileCreateDto = FileCreateDto(
       storageKey: uuid,
-      hash: hash,
+      name: name,
       mimeType: mimeType,
       embeddings: embeddings,
     );
@@ -137,5 +132,15 @@ class FileRepositoryImpl implements FileRepository {
   @override
   Future<void> assignFileToFolder(int fileId, int folderId) async {
     await _fileDataSource.assignFileToFolder(fileId, folderId);
+  }
+
+  @override
+  Future<void> renameFile(int fileId, String newName) async {
+    await _fileDataSource.renameFile(fileId, newName);
+  }
+
+  @override
+  Future<void> togglePrioritized(int fileId) async {
+    await _fileDataSource.togglePrioritized(fileId);
   }
 }

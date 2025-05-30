@@ -16,7 +16,9 @@ abstract interface class FileDataSource {
 
   Future<void> createFiles(List<FileCreateDto> createFileDtos);
 
-  // Future<void> updateFile(UpdateFileDto updateFileDto);
+  Future<void> togglePrioritized(int fileId);
+
+  Future<void> renameFile(int fileId, String newName);
 
   Future<void> removeFilesFromFolder(List<int> fileIds, int folderId);
 

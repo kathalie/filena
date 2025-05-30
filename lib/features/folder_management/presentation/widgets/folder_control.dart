@@ -7,6 +7,7 @@ import '../../../../core/const/theme_const.dart';
 import '../../../../core/presentation/dialogs/confirmation_dialog.dart';
 import '../../../../core/presentation/dialogs/text_field_dialog.dart';
 import '../change_notifiers/folder_operations.dart';
+import '../change_notifiers/selected_folder.dart';
 
 typedef FolderControlOption = ({
   String caption,
@@ -84,8 +85,8 @@ class FolderControl extends ConsumerWidget {
   ) async {
     final newFolderName = await showTextFieldDialog(
       context,
-      'Create folder',
-      'New folder name...',
+      title: 'Create folder',
+      inputHint: 'New folder name...',
     );
 
     if (newFolderName == null) return;
@@ -100,10 +101,13 @@ class FolderControl extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) async {
+    final selectedFolder = ref.watch(selectedFolderProvider).value;
+
     final newFolderName = await showTextFieldDialog(
       context,
-      'Rename folder',
-      'New folder name...',
+      title: 'Rename folder',
+      inputHint: 'New folder name...',
+      initialValue: selectedFolder?.name ?? '',
     );
 
     if (newFolderName == null) return;

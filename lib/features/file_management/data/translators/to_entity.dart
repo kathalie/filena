@@ -9,13 +9,12 @@ extension FileDtoToEntity on FileDto {
     storageKey: storageKey,
     isPrioritized: isPrioritized,
     currentVersion: currentVersion,
+    name: name,
+    mimeType: mimeType,
     fileMetadata: FileMetadataEntity(
-      name: storageMetadata.name,
-      extension: storageMetadata.extension,
       sizeInBytes: storageMetadata.sizeInBytes,
       timeCreated: storageMetadata.timeCreated,
       timeLastModified: storageMetadata.timeLastModified,
-      mimeType: mimeType,
     ),
   );
 }

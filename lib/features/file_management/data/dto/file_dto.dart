@@ -3,6 +3,7 @@ class FileDto {
   final String storageKey;
   final bool isPrioritized;
   final int currentVersion;
+  final String name;
   final String mimeType;
 
   const FileDto({
@@ -10,6 +11,7 @@ class FileDto {
     required this.storageKey,
     required this.isPrioritized,
     required this.currentVersion,
+    required this.name,
     required this.mimeType,
   });
 }

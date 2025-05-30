@@ -15,6 +15,10 @@ abstract interface class FileRepository {
 
   Future<void> updateFile(String filePath);
 
+  Future<void> togglePrioritized(int fileId);
+
+  Future<void> renameFile(int fileId, String newName);
+
   Future<void> deleteFile(int fileId);
 
   Future<void> removeFilesFromFolder(List<int> fileIds, int folderId);

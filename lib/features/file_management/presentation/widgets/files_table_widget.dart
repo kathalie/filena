@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/const/icons_const.dart';
 import '../../../organizing_assistant/api/providers.dart';
 import '../../../organizing_assistant/presentation/change_notifiers/file_suggestions_in_folder.dart';
+import '../../api/providers.dart';
 import '../../domain/entities/file_entity.dart';
 import '../change_notifiers/filtered_files.dart';
 import 'file_control.dart';
@@ -17,10 +18,8 @@ class FilesTable extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final suggestionsAsync = ref.watch(fileSuggestionsInFolderProvider);
     final filesAsync = ref.watch(filteredFilesProvider);
-    //
-    // void toggleFileFavorite(FileEntity file) async {
-    //   await FileRowPresenter(file).togglePrioritized();
-    // }
+    final togglePrioritized =
+        ref.read(fileRepositoryProvider).togglePrioritized;
 
     return suggestionsAsync.when(
       data: (suggestions) {
@@ -31,12 +30,13 @@ class FilesTable extends ConsumerWidget {
               rows: [
                 ..._buildSuggestionRows(
                   suggestions,
-                  (int fileId) async {},
+                  togglePrioritized,
                   ref,
                 ),
-                //TODO update file state
-                ..._buildFileRows(files, (int fileId) async {}),
-                //TODO update file state
+                ..._buildFileRows(
+                  files,
+                  togglePrioritized,
+                ),
               ],
             );
           },
@@ -50,7 +50,8 @@ class FilesTable extends ConsumerWidget {
   }
 
   List<DataRow> _buildSuggestionRows(
-    List<({int suggestionId, int colorHex, List<FileEntity> files})> suggestions,
+    List<({int suggestionId, int colorHex, List<FileEntity> files})>
+        suggestions,
     Future<void> Function(int) onToggleFavorite,
     WidgetRef ref,
   ) {
@@ -63,8 +64,9 @@ class FilesTable extends ConsumerWidget {
         (fileEntity) => SuggestedFileRow(
           fileEntity,
           onToggleFavorite,
-          (int fileId) => IconButton(
-            onPressed: () async => await removeFileFromSuggestion(suggestion.suggestionId, [fileId]),
+          (FileEntity fileEntity) => IconButton(
+            onPressed: () async => await removeFileFromSuggestion(
+                suggestion.suggestionId, [fileEntity.id]),
             icon: const Icon(IconsConst.declineSuggestion),
           ),
           suggestion.colorHex,
@@ -85,7 +87,7 @@ class FilesTable extends ConsumerWidget {
           (fileEntity) => FileRow(
             fileEntity,
             onToggleFavorite,
-            (int fileId) => FileControl(fileId),
+            (FileEntity fileEntity) => FileControl(fileEntity),
           ).build(),
         )
         .toList();

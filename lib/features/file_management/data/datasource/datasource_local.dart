@@ -93,8 +93,7 @@ class FileDatasourceLocal implements FileDataSource {
 
   @override
   Future<void> deleteFile(int fileId) async {
-    final fileToRemove = await
-        _fileBox.getAsync(fileId);
+    final fileToRemove = await _fileBox.getAsync(fileId);
 
     if (fileToRemove == null) {
       throw FileException.fileDoesNotExist(
@@ -111,7 +110,8 @@ class FileDatasourceLocal implements FileDataSource {
       TxMode.write,
       () {
         final folder = _folderBox.get(folderId);
-        final file = _fileBox.query(File_.id.equals(fileId)).build().findFirst();
+        final file =
+            _fileBox.query(File_.id.equals(fileId)).build().findFirst();
 
         if (folder == null) {
           throw FolderException.folderDoesNotExist(
@@ -134,21 +134,50 @@ class FileDatasourceLocal implements FileDataSource {
 
   @override
   Future<void> removeFilesFromFolder(List<int> fileIds, int folderId) async {
-    return _store.runInTransaction(
-      TxMode.write,
-      () {
-        final folder = _folderBox.get(folderId);
+    return _store.runInTransaction(TxMode.write, () {
+      final folder = _folderBox.get(folderId);
 
-        if (folder == null) {
-          throw FolderException.folderDoesNotExist(
-            title: 'Failed to assign file to a folder',
-          );
-        }
+      if (folder == null) {
+        throw FolderException.folderDoesNotExist(
+          title: 'Failed to assign file to a folder',
+        );
+      }
 
-        folder.assignedFiles.removeWhere((file) => fileIds.contains(file.id));
+      folder.assignedFiles.removeWhere((file) => fileIds.contains(file.id));
 
-        _folderBox.put(folder);
-      },
-    );
+      _folderBox.put(folder);
+    });
+  }
+
+  @override
+  Future<void> togglePrioritized(int fileId) async {
+    _store.runInTransaction(TxMode.write, () {
+      final file = _fileBox.get(fileId);
+
+      if (file == null) {
+        throw FileException.fileDoesNotExist(
+          title: 'Failed to change priority for a file',
+        );
+      }
+
+      file.isPrioritized = !file.isPrioritized;
+
+      _fileBox.put(file);
+    });
+  }
+
+  @override
+  Future<void> renameFile(int fileId, String newName) async {
+    _store.runInTransaction(TxMode.write, () {
+      final file = _fileBox.get(fileId);
+
+      if (file == null) {
+        throw FileException.fileDoesNotExist(title: 'Failed to rename a file');
+      }
+
+      file.name = newName;
+
+      _fileBox.put(file);
+    });
   }
 }

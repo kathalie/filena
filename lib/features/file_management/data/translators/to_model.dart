@@ -5,7 +5,7 @@ extension FileCreateDtoToModel on FileCreateDto {
   File toModel() {
     return File(
       storageKey: storageKey,
-      hash: hash,
+      name: name,
       isPrioritized: false,
       embeddings: embeddings,
       currentVersion: 0,

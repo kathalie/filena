@@ -37,9 +37,12 @@ class FolderSuggestionDatasourceLocal implements FolderSuggestionDatasource {
     required List<double> filesDescriptionEmbeddings,
     required String explanation,
   }) async {
+    final targetFiles = await _nearestFiles(filesDescriptionEmbeddings);
+
+    if (targetFiles.isEmpty) return;
+
     final targetFolder =
         await _nearestFolder(folderEmbeddings, suggestedFolder);
-    final targetFiles = await _nearestFiles(filesDescriptionEmbeddings);
 
     await _saveSuggestion(targetFolder, targetFiles, explanation);
   }
@@ -110,7 +113,7 @@ class FolderSuggestionDatasourceLocal implements FolderSuggestionDatasource {
       return nearestFolderWithScores.object;
     }
 
-    // Create a new folder in the closestexisting
+    // Create a new folder in the closest existing
     return await _createPendingFolder(
       suggestedFolder,
       folderEmbeddings,
@@ -261,6 +264,12 @@ class FolderSuggestionDatasourceLocal implements FolderSuggestionDatasource {
         }
 
         folderSuggestion.files.removeWhere((file) => fileIds.contains(file.id));
+
+        if (folderSuggestion.files.isEmpty) {
+          _folderSuggestionBox.remove(folderSuggestion.id);
+
+          return;
+        }
 
         _folderSuggestionBox.put(folderSuggestion);
       },

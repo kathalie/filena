@@ -6,25 +6,25 @@ import '../../domain/entities/file_metadata_entity.dart';
 import '../../domain/entities/file_entity.dart';
 
 class FilePresenter {
-  final FileEntity _fileEntity;
+  final FileEntity fileEntity;
 
-  FilePresenter(FileEntity fileEntity) : _fileEntity = fileEntity;
+  FilePresenter(this.fileEntity);
 
-  FileCategory get fileCategory => _fileEntity.fileMetadata.fileCategory;
+  FileCategory get fileCategory => fileEntity.fileCategory;
 
-  int get id => _fileEntity.id;
+  int get id => fileEntity.id;
 
-  String get name => '${_fileEntity.fileMetadata.name}${_fileEntity.fileMetadata.extension}';
+  String get name => fileEntity.name;
 
-  bool get isPrioritized => _fileEntity.isPrioritized;
+  bool get isPrioritized => fileEntity.isPrioritized;
 
-  String get size => toMetricFileSize(_fileEntity.fileMetadata.sizeInBytes);
+  String get size => toMetricFileSize(fileEntity.fileMetadata.sizeInBytes);
 
   String get lastModified =>
-      formatDateTime(_fileEntity.fileMetadata.timeLastModified);
+      formatDateTime(fileEntity.fileMetadata.timeLastModified);
 
   String get dateCreated =>
-      formatDateTime(_fileEntity.fileMetadata.timeLastModified);
+      formatDateTime(fileEntity.fileMetadata.timeLastModified);
 
   String toMetricFileSize(int bytes) {
     return FileSize.fromBytes(bytes).toString(
@@ -38,9 +38,5 @@ class FilePresenter {
     final DateFormat formatter = DateFormat('MMM dd, yyyy');
 
     return formatter.format(dateTime);
-  }
-
-  void togglePrioritized() {
-    //TODO toggle favourite
   }
 }

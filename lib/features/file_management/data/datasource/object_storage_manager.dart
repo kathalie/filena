@@ -159,12 +159,10 @@ class MinioStorageManager implements StorageManager {
       );
 
       return FileMetadataEntity(
-        extension: metadataMap['extension'] ?? '',
-        name: metadataMap['name'] ?? objectName.split('/').last,
         sizeInBytes: int.tryParse(metadataMap['size-in-bytes'] ?? '')!,
         timeCreated: DateTime.tryParse(metadataMap['time-created'] ?? '')!,
-        timeLastModified: DateTime.tryParse(metadataMap['time-last-modified'] ?? '')!,
-        mimeType: metadataMap['mime-type']!,
+        timeLastModified:
+            DateTime.tryParse(metadataMap['time-last-modified'] ?? '')!,
       );
     } catch (e) {
       throw Exception('Failed to get file metadata: $e');
@@ -179,31 +177,26 @@ class MinioStorageManager implements StorageManager {
       _mainBucketName,
       fileStoragePath,
     );
-
-    print('--- object removed');
   }
 }
 
 extension on FileMetadataEntity {
   Map<String, String> toMetadataMap() {
     return {
-      'extension': extension,
-      'name': name,
       'size-in-bytes': sizeInBytes.toString(),
       'time-created': timeCreated.toIso8601String(),
       'time-last-modified': timeLastModified.toIso8601String(),
-      'mime-type': mimeType,
     };
   }
 
   static FileMetadataEntity fromMetadataMap(Map<String, String> metadata) {
     return FileMetadataEntity(
-      name: metadata['name'] ?? '',
-      extension:  metadata['extension'] ?? '',
       sizeInBytes: int.tryParse(metadata['size-in-bytes'] ?? '0') ?? 0,
-      timeCreated: DateTime.tryParse(metadata['time-created'] ?? '') ?? DateTime.now(),
-      timeLastModified: DateTime.tryParse(metadata['time-last-modified'] ?? '') ?? DateTime.now(),
-      mimeType: metadata['mime-type'] ?? 'application/octet-stream',
+      timeCreated:
+          DateTime.tryParse(metadata['time-created'] ?? '') ?? DateTime.now(),
+      timeLastModified:
+          DateTime.tryParse(metadata['time-last-modified'] ?? '') ??
+              DateTime.now(),
     );
   }
 }

@@ -11,8 +11,7 @@ class File {
   @Unique()
   String storageKey;
 
-  @Unique()
-  String hash;
+  String name;
 
   bool isPrioritized;
 
@@ -33,7 +32,7 @@ class File {
   File({
     required this.storageKey,
     required this.currentVersion,
-    required this.hash,
+    required this.name,
     required this.mimeType,
     required this.isPrioritized,
     required this.embeddings,

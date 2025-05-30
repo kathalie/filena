@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 Future<String?> showTextFieldDialog(
-  BuildContext context,
-  String title,
-  String inputHint,
-) {
-  final TextEditingController controller = TextEditingController();
+  BuildContext context, {
+  required String title,
+  required String inputHint,
+  String initialValue = '',
+}) {
+  final TextEditingController controller = TextEditingController(text: initialValue);
 
   return showDialog<String>(
     context: context,
@@ -40,7 +41,8 @@ class _DialogInputField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hint,
         border: const OutlineInputBorder(),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       ),
       onSubmitted: (value) => _handleSubmit(value, context),
     );
