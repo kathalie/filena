@@ -9,15 +9,15 @@ abstract interface class FileRepository {
     bool includeFromSubfolders,
   );
 
-  Future<List<FileEntity>> getFiles(List<String> fileIds);
+  Future<List<FileEntity>> getFiles(List<int> fileIds);
 
   Future<void> createFile(String filePath, int parentFolderId);
 
   Future<void> updateFile(String filePath);
 
-  Future<void> deleteFile(String fileId);
+  Future<void> deleteFile(int fileId);
 
-  Future<void> removeFilesFromFolder(List<String> fileIds, int folderId);
+  Future<void> removeFilesFromFolder(List<int> fileIds, int folderId);
 
-  Future<void> assignFileToFolder(String fileId, int folderId);
+  Future<void> assignFileToFolder(int fileId, int folderId);
 }

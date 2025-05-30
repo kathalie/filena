@@ -10,7 +10,7 @@ abstract interface class FileDataSource {
     bool includeFromSubfolders,
   );
 
-  Future<List<FileDto>> getFiles(List<String> fileIds);
+  Future<List<FileDto>> getFiles(List<int> fileIds);
 
   Future<int> createFile(FileCreateDto createFileDto, int parentFolderId);
 
@@ -18,9 +18,9 @@ abstract interface class FileDataSource {
 
   // Future<void> updateFile(UpdateFileDto updateFileDto);
 
-  Future<void> removeFilesFromFolder(List<String> fileIds, int folderId);
+  Future<void> removeFilesFromFolder(List<int> fileIds, int folderId);
 
-  Future<void> assignFileToFolder(String fileId, int folderId);
+  Future<void> assignFileToFolder(int fileId, int folderId);
 
-  Future<void> deleteFile(String id);
+  Future<void> deleteFile(int fileId);
 }

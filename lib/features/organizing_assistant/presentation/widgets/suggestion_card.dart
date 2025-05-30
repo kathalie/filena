@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/const/icons_const.dart';
+import '../../../folder_management/domain/entities/folder_entity.dart';
 import '../../domain/entities/folder_suggestion_entity.dart';
 import '../change_notifiers/folder_suggestion_operations.dart';
 import '../change_notifiers/selected_suggestion_id.dart';
@@ -10,12 +11,15 @@ import '../presenters/folder_suggestion_presenter.dart';
 class SuggestionCard extends ConsumerWidget {
   final FolderSuggestionPresenter _presenter;
 
-  SuggestionCard({required FolderSuggestionEntity suggestion, super.key})
-      : _presenter = FolderSuggestionPresenter(suggestion);
+  SuggestionCard(
+      {required FolderSuggestionEntity suggestion,
+      required FolderEntity folder,
+      super.key})
+      : _presenter = FolderSuggestionPresenter(suggestion, folder);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedSuggestion = ref.read(selectedSuggestionProvider);
+    final selectedSuggestion = ref.watch(selectedSuggestionProvider);
     final isSelected = selectedSuggestion?.id == _presenter.suggestionId;
 
     return Container(
@@ -42,7 +46,10 @@ class SuggestionCard extends ConsumerWidget {
         children: [
           Expanded(
             child: _SuggestionContent(
-                _presenter.title, _presenter.message, isSelected),
+              _presenter.title,
+              _presenter.message,
+              isSelected,
+            ),
           ),
           _SuggestionControls(_presenter.suggestionId),
         ],

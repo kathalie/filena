@@ -21,7 +21,7 @@ class FileOperationsNotifier extends StateNotifier<AsyncValue<void>> {
   //   }
   // }
 
-  Future<void> removeFileFromSelectedFolder(String fileId) async {
+  Future<void> removeFileFromSelectedFolder(int fileId) async {
     state = const AsyncValue.loading();
 
     try {
@@ -41,7 +41,7 @@ class FileOperationsNotifier extends StateNotifier<AsyncValue<void>> {
     }
   }
 
-  Future<void> deleteFileFromSystem(String fileId) async {
+  Future<void> deleteFileFromSystem(int fileId) async {
     state = const AsyncValue.loading();
 
     try {

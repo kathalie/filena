@@ -28,12 +28,13 @@ class SuggestionsView extends ConsumerWidget {
               child: ListView.builder(
                 itemCount: suggestions.length,
                 itemBuilder: (context, index) {
-                  final suggestion = suggestions[index];
+                  final suggestionTuple = suggestions[index];
 
                   return GestureDetector(
-                    onTap: () => setSelectedSuggestion(suggestion),
+                    onTap: () => setSelectedSuggestion(suggestionTuple.suggestion),
                     child: SuggestionCard(
-                      suggestion: suggestion,
+                      suggestion: suggestionTuple.suggestion,
+                      folder: suggestionTuple.folder,
                     ),
                   );
                 },
@@ -44,7 +45,7 @@ class SuggestionsView extends ConsumerWidget {
       },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) => const Center(
-        child: Text('Failed to folder tree'),
+        child: Text('Failed to load folder tree'),
       ),
     );
   }
@@ -56,10 +57,10 @@ class _ConfirmAllButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final acceptAll =
-        ref.read(folderSuggestionOperationsProvider.notifier).accept;
+        ref.read(folderSuggestionOperationsProvider.notifier).acceptAll;
 
     return PlatformElevatedButton(
-      onPressed: () => acceptAll,
+      onPressed: acceptAll,
       child: const Row(
         children: [
           Icon(

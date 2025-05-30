@@ -24,15 +24,14 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(7, 3198910070472308778),
       name: 'File',
-      lastPropertyId: const obx_int.IdUid(8, 4861979566373310195),
+      lastPropertyId: const obx_int.IdUid(9, 8400224179369619729),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
             id: const obx_int.IdUid(1, 17814420269547781),
             name: 'id',
-            type: 9,
-            flags: 2080,
-            indexId: const obx_int.IdUid(16, 5749827854860536586)),
+            type: 6,
+            flags: 1),
         obx_int.ModelProperty(
             id: const obx_int.IdUid(3, 1219110727449541090),
             name: 'hash',
@@ -65,10 +64,11 @@ final _entities = <obx_int.ModelEntity>[
             type: 6,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(8, 4861979566373310195),
-            name: 'obId',
-            type: 6,
-            flags: 1)
+            id: const obx_int.IdUid(9, 8400224179369619729),
+            name: 'storageKey',
+            type: 9,
+            flags: 2080,
+            indexId: const obx_int.IdUid(17, 6548433182222302740))
       ],
       relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[
@@ -210,7 +210,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
       lastEntityId: const obx_int.IdUid(10, 9157757429217051349),
-      lastIndexId: const obx_int.IdUid(16, 5749827854860536586),
+      lastIndexId: const obx_int.IdUid(17, 6548433182222302740),
       lastRelationId: const obx_int.IdUid(6, 8590250266704814531),
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [
@@ -222,7 +222,11 @@ obx_int.ModelDefinition getObjectBoxModel() {
         5437082916840256973,
         2271779336525364246
       ],
-      retiredIndexUids: const [3097284329043120526, 8432660901793213549],
+      retiredIndexUids: const [
+        3097284329043120526,
+        8432660901793213549,
+        5749827854860536586
+      ],
       retiredPropertyUids: const [
         6558802783405580143,
         9106844457950300752,
@@ -267,7 +271,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
         3390336334708104704,
         4171609210939420261,
         2282620523277041572,
-        8279566911880169955
+        8279566911880169955,
+        4861979566373310195
       ],
       retiredRelationUids: const [
         751356814963857588,
@@ -283,36 +288,36 @@ obx_int.ModelDefinition getObjectBoxModel() {
         model: _entities[0],
         toOneRelations: (File object) => [],
         toManyRelations: (File object) => {
-              obx_int.RelInfo<Folder>.toManyBacklink(4, object.obId):
+              obx_int.RelInfo<Folder>.toManyBacklink(4, object.id):
                   object.parentFolders,
-              obx_int.RelInfo<FolderSuggestion>.toManyBacklink(6, object.obId):
+              obx_int.RelInfo<FolderSuggestion>.toManyBacklink(6, object.id):
                   object.folderSuggestions
             },
-        getId: (File object) => object.obId,
+        getId: (File object) => object.id,
         setId: (File object, int id) {
-          object.obId = id;
+          object.id = id;
         },
         objectToFB: (File object, fb.Builder fbb) {
-          final idOffset = fbb.writeString(object.id);
           final hashOffset = fbb.writeString(object.hash);
           final mimeTypeOffset = fbb.writeString(object.mimeType);
           final embeddingsOffset = fbb.writeListFloat32(object.embeddings);
-          fbb.startTable(9);
-          fbb.addOffset(0, idOffset);
+          final storageKeyOffset = fbb.writeString(object.storageKey);
+          fbb.startTable(10);
+          fbb.addInt64(0, object.id);
           fbb.addOffset(2, hashOffset);
           fbb.addOffset(3, mimeTypeOffset);
           fbb.addBool(4, object.isPrioritized);
           fbb.addOffset(5, embeddingsOffset);
           fbb.addInt64(6, object.currentVersion);
-          fbb.addInt64(7, object.obId);
+          fbb.addOffset(8, storageKeyOffset);
           fbb.finish(fbb.endTable());
-          return object.obId;
+          return object.id;
         },
         objectFromFB: (obx.Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
-          final idParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 4, '');
+          final storageKeyParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 20, '');
           final currentVersionParam =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0);
           final hashParam = const fb.StringReader(asciiOptimization: true)
@@ -325,20 +330,19 @@ obx_int.ModelDefinition getObjectBoxModel() {
               const fb.ListReader<double>(fb.Float32Reader(), lazy: false)
                   .vTableGet(buffer, rootOffset, 14, []);
           final object = File(
-              id: idParam,
+              storageKey: storageKeyParam,
               currentVersion: currentVersionParam,
               hash: hashParam,
               mimeType: mimeTypeParam,
               isPrioritized: isPrioritizedParam,
               embeddings: embeddingsParam)
-            ..obId =
-                const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0);
+            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           obx_int.InternalToManyAccess.setRelInfo<File>(object.parentFolders,
-              store, obx_int.RelInfo<Folder>.toManyBacklink(4, object.obId));
+              store, obx_int.RelInfo<Folder>.toManyBacklink(4, object.id));
           obx_int.InternalToManyAccess.setRelInfo<File>(
               object.folderSuggestions,
               store,
-              obx_int.RelInfo<FolderSuggestion>.toManyBacklink(6, object.obId));
+              obx_int.RelInfo<FolderSuggestion>.toManyBacklink(6, object.id));
           return object;
         }),
     Folder: obx_int.EntityDefinition<Folder>(
@@ -451,7 +455,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
 /// [File] entity fields to define ObjectBox queries.
 class File_ {
   /// See [File.id].
-  static final id = obx.QueryStringProperty<File>(_entities[0].properties[0]);
+  static final id = obx.QueryIntegerProperty<File>(_entities[0].properties[0]);
 
   /// See [File.hash].
   static final hash = obx.QueryStringProperty<File>(_entities[0].properties[1]);
@@ -472,9 +476,9 @@ class File_ {
   static final currentVersion =
       obx.QueryIntegerProperty<File>(_entities[0].properties[5]);
 
-  /// See [File.obId].
-  static final obId =
-      obx.QueryIntegerProperty<File>(_entities[0].properties[6]);
+  /// See [File.storageKey].
+  static final storageKey =
+      obx.QueryStringProperty<File>(_entities[0].properties[6]);
 }
 
 /// [Folder] entity fields to define ObjectBox queries.

@@ -9,7 +9,7 @@ extension FolderSuggestionToDto on FolderSuggestion {
       id: id,
       colorHex: colorHex,
       explanation: explanation,
-      suggestedFolder: folder.target!.toDto(),
+      suggestedFolderId: folder.target!.id,
       assignedFileIds: files.map((file) => file.id).toList(),
     );
   }
@@ -21,7 +21,7 @@ extension FolderSuggestionEntityToDto on FolderSuggestionEntity {
       id: id,
       colorHex: colorHex,
       explanation: explanation,
-      suggestedFolder: suggestedFolder.toDto(),
+      suggestedFolderId: suggestedFolderId,
       assignedFileIds: assignedFileIds,
     );
   }

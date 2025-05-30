@@ -44,7 +44,7 @@ class FileDatasourceLocal implements FileDataSource {
   }
 
   @override
-  Future<List<FileDto>> getFiles(List<String> fileIds) async {
+  Future<List<FileDto>> getFiles(List<int> fileIds) async {
     final files =
         await _fileBox.query(File_.id.oneOf(fileIds)).build().findAsync();
 
@@ -92,21 +92,21 @@ class FileDatasourceLocal implements FileDataSource {
   }
 
   @override
-  Future<void> deleteFile(String id) async {
-    final fileToRemove =
-        _fileBox.query(File_.id.equals(id)).build().findFirst();
+  Future<void> deleteFile(int fileId) async {
+    final fileToRemove = await
+        _fileBox.getAsync(fileId);
 
     if (fileToRemove == null) {
       throw FileException.fileDoesNotExist(
-        title: "Filed to delete a file",
+        title: 'Failed to delete a file',
       );
     }
 
-    await _fileBox.removeAsync(fileToRemove.obId);
+    await _fileBox.removeAsync(fileToRemove.id);
   }
 
   @override
-  Future<void> assignFileToFolder(String fileId, int folderId) async {
+  Future<void> assignFileToFolder(int fileId, int folderId) async {
     return _store.runInTransaction(
       TxMode.write,
       () {
@@ -133,7 +133,7 @@ class FileDatasourceLocal implements FileDataSource {
   }
 
   @override
-  Future<void> removeFilesFromFolder(List<String> fileIds, int folderId) async {
+  Future<void> removeFilesFromFolder(List<int> fileIds, int folderId) async {
     return _store.runInTransaction(
       TxMode.write,
       () {

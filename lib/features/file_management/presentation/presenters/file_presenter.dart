@@ -12,7 +12,7 @@ class FilePresenter {
 
   FileCategory get fileCategory => _fileEntity.fileMetadata.fileCategory;
 
-  String get id => _fileEntity.id;
+  int get id => _fileEntity.id;
 
   String get name => '${_fileEntity.fileMetadata.name}${_fileEntity.fileMetadata.extension}';
 

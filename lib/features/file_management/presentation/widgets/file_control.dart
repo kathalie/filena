@@ -16,7 +16,7 @@ typedef FileControlOption = ({
 });
 
 class FileControl extends ConsumerWidget {
-  final String _fileId;
+  final int _fileId;
 
   const FileControl(this._fileId, {super.key});
 

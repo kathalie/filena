@@ -15,7 +15,7 @@ abstract interface class FolderSuggestionDatasource {
 
   Future<void> removeFilesFromSuggestion(
       int suggestionId,
-      List<String> fileIds,
+      List<int> fileIds,
       );
 
   Future<void> acceptAll();

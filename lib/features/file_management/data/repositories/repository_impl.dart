@@ -45,7 +45,7 @@ class FileRepositoryImpl implements FileRepository {
   }
 
   @override
-  Future<List<FileEntity>> getFiles(List<String> fileIds) async {
+  Future<List<FileEntity>> getFiles(List<int> fileIds) async {
     final fileDtos = await _fileDataSource.getFiles(fileIds);
 
     return _getFileEntities(fileDtos);
@@ -56,7 +56,7 @@ class FileRepositoryImpl implements FileRepository {
       fileDtos.map(
         (fileDto) async {
           final metadata = await _storageManager.getFileMetadata(
-            objectName: fileDto.id.toString(),
+            objectName: fileDto.storageKey,
           );
 
           return fileDto.toEntity(
@@ -104,7 +104,7 @@ class FileRepositoryImpl implements FileRepository {
     final embeddings = await _embeddingsClient.generateEmbeddings(summary);
 
     final fileCreateDto = FileCreateDto(
-      id: uuid,
+      storageKey: uuid,
       hash: hash,
       mimeType: mimeType,
       embeddings: embeddings,
@@ -123,19 +123,19 @@ class FileRepositoryImpl implements FileRepository {
   }
 
   @override
-  Future<void> deleteFile(String fileId) async {
+  Future<void> deleteFile(int fileId) async {
     await _storageManager.removeFile(fileStoragePath: fileId.toString());
 
     await _fileDataSource.deleteFile(fileId);
   }
 
   @override
-  Future<void> removeFilesFromFolder(List<String> fileIds, int folderId) async {
+  Future<void> removeFilesFromFolder(List<int> fileIds, int folderId) async {
     await _fileDataSource.removeFilesFromFolder(fileIds, folderId);
   }
 
   @override
-  Future<void> assignFileToFolder(String fileId, int folderId) async {
+  Future<void> assignFileToFolder(int fileId, int folderId) async {
     await _fileDataSource.assignFileToFolder(fileId, folderId);
   }
 }

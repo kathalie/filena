@@ -5,14 +5,14 @@ class FolderSuggestionDto {
   final int colorHex;
   final String explanation;
   // TODO Think of getting rid of this dependency
-  final FolderDto suggestedFolder;
-  final List<String> assignedFileIds;
+  final int suggestedFolderId;
+  final List<int> assignedFileIds;
 
   FolderSuggestionDto({
     required this.id,
     required this.colorHex,
     required this.explanation,
-    required this.suggestedFolder,
+    required this.suggestedFolderId,
     required this.assignedFileIds,
   });
 }

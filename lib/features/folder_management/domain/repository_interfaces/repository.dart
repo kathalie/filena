@@ -8,7 +8,7 @@ abstract interface class FolderRepository {
 
   Future<FolderEntity> get rootFolder;
 
-  Future<FolderEntity?> getFolder(int id);
+  Future<FolderEntity> getFolder(int id);
 
   Future<List<FolderEntity>> getPathToFolder(int? folderId);
 

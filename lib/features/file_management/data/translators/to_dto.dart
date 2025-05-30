@@ -5,6 +5,7 @@ extension FileToDto on File {
   FileDto toDto() {
     return FileDto(
       id: id,
+      storageKey: storageKey,
       isPrioritized: isPrioritized,
       currentVersion: currentVersion,
       mimeType: mimeType,

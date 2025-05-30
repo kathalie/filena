@@ -4,7 +4,7 @@ import '../models/file_model.dart';
 extension FileCreateDtoToModel on FileCreateDto {
   File toModel() {
     return File(
-      id: id,
+      storageKey: storageKey,
       hash: hash,
       isPrioritized: false,
       embeddings: embeddings,

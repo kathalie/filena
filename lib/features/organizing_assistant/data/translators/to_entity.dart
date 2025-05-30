@@ -8,7 +8,7 @@ extension FolderSuggestionDtoToEntity on FolderSuggestionDto {
       id: id,
       colorHex: colorHex,
       explanation: explanation,
-      suggestedFolder: suggestedFolder.toEntity(),
+      suggestedFolderId: suggestedFolderId,
       assignedFileIds: assignedFileIds,
     );
   }

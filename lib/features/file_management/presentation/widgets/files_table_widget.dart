@@ -7,7 +7,8 @@ import '../../../organizing_assistant/presentation/change_notifiers/file_suggest
 import '../../domain/entities/file_entity.dart';
 import '../change_notifiers/filtered_files.dart';
 import 'file_control.dart';
-import 'file_row.dart';
+import 'file_row/file_row.dart';
+import 'file_row/suggested_file_row.dart';
 
 class FilesTable extends ConsumerWidget {
   const FilesTable({super.key});
@@ -30,11 +31,11 @@ class FilesTable extends ConsumerWidget {
               rows: [
                 ..._buildSuggestionRows(
                   suggestions,
-                  (String fileId) async {},
+                  (int fileId) async {},
                   ref,
                 ),
                 //TODO update file state
-                ..._buildFileRows(files, (String fileId) async {}),
+                ..._buildFileRows(files, (int fileId) async {}),
                 //TODO update file state
               ],
             );
@@ -49,8 +50,8 @@ class FilesTable extends ConsumerWidget {
   }
 
   List<DataRow> _buildSuggestionRows(
-    List<({int colorHex, List<FileEntity> files})> suggestions,
-    Future<void> Function(String) onToggleFavorite,
+    List<({int suggestionId, int colorHex, List<FileEntity> files})> suggestions,
+    Future<void> Function(int) onToggleFavorite,
     WidgetRef ref,
   ) {
     final suggestionRows = <DataRow>[];
@@ -59,15 +60,13 @@ class FilesTable extends ConsumerWidget {
 
     for (final suggestion in suggestions) {
       final rows = suggestion.files.map(
-        (fileEntity) => SuggestionFileRow(
+        (fileEntity) => SuggestedFileRow(
           fileEntity,
           onToggleFavorite,
-          (String fileId) => IconButton(
-            // onPressed: () async => await removeFileFromSuggestion(suggestion, [fileId]),
-            onPressed: () {},
+          (int fileId) => IconButton(
+            onPressed: () async => await removeFileFromSuggestion(suggestion.suggestionId, [fileId]),
             icon: const Icon(IconsConst.declineSuggestion),
           ),
-          // TODO controls for suggestion rows
           suggestion.colorHex,
         ).build(),
       );
@@ -79,14 +78,14 @@ class FilesTable extends ConsumerWidget {
 
   List<DataRow> _buildFileRows(
     List<FileEntity> files,
-    Future<void> Function(String) onToggleFavorite,
+    Future<void> Function(int) onToggleFavorite,
   ) {
     return files
         .map(
           (fileEntity) => FileRow(
             fileEntity,
             onToggleFavorite,
-            (String fileId) => FileControl(fileId),
+            (int fileId) => FileControl(fileId),
           ).build(),
         )
         .toList();

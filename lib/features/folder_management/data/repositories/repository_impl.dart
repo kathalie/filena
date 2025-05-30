@@ -1,3 +1,4 @@
+import '../../../../core/errors/folder_exception.dart';
 import '../../domain/entities/folder_entity.dart';
 import '../../domain/repository_interfaces/repository.dart';
 import '../../domain/types/folder_tree.dart';
@@ -38,10 +39,14 @@ class FolderRepositoryImpl implements FolderRepository {
   }
 
   @override
-  Future<FolderEntity?> getFolder(int id) async {
+  Future<FolderEntity> getFolder(int id) async {
     final folderDto = await _folderDataSource.getFolder(id);
 
-    if (folderDto == null) return null;
+    if (folderDto == null) {
+      throw FolderException.folderDoesNotExist(
+        title: 'Failed to get a folder with a specified id.',
+      );
+    }
 
     return folderDto.toEntity();
   }
