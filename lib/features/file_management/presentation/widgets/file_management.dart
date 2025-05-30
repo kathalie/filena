@@ -35,29 +35,47 @@ class _SplitView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SplitView(
-      gripColor: ThemeConsts.primaryLightColor,
-      gripColorActive: ThemeConsts.primaryColor,
-      gripSize: 8.0,
-      indicator: const SplitIndicator(
-        viewMode: SplitViewMode.Horizontal,
-      ),
-      activeIndicator: const SplitIndicator(
-        viewMode: SplitViewMode.Horizontal,
-        isActive: true,
-      ),
-      viewMode: SplitViewMode.Horizontal,
-      children: const [
-        _SideView(),
-        Column(
-          children: [
-            _SearchBar(),
-            Expanded(
-              child: _MainView(),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const double minWidthSideBar = 430.0;
+        const double maxWidthSideBar = 600.0;
+
+        final double totalWidth = constraints.maxWidth;
+
+        final double sideBarWeight = minWidthSideBar / totalWidth;
+        final double mainContentWeight = 1 - sideBarWeight;
+
+        final double maxSideBarWeight = maxWidthSideBar / totalWidth;
+
+        return SplitView(
+          controller: SplitViewController(
+            weights: [sideBarWeight, mainContentWeight],
+            limits: [WeightLimit(min: sideBarWeight, max: maxSideBarWeight)],
+          ),
+          gripColor: ThemeConsts.primaryLightColor,
+          gripColorActive: ThemeConsts.primaryColor,
+          gripSize: 8.0,
+          indicator: const SplitIndicator(
+            viewMode: SplitViewMode.Horizontal,
+          ),
+          activeIndicator: const SplitIndicator(
+            viewMode: SplitViewMode.Horizontal,
+            isActive: true,
+          ),
+          viewMode: SplitViewMode.Horizontal,
+          children: const [
+            _SideView(),
+            Column(
+              children: [
+                _SearchBar(),
+                Expanded(
+                  child: _MainView(),
+                ),
+              ],
             ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }
