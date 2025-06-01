@@ -33,7 +33,7 @@ class ObjectBox {
   }
 
   static Future<ObjectBox> create() async {
-    final appDir = await getApplicationDocumentsDirectory();
+    final appDir = await getApplicationSupportDirectory();
     print(appDir);
 
     if (!await Directory('${appDir.path}/objectbox-db').exists()) {
