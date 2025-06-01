@@ -90,6 +90,7 @@ class FileOperationsNotifier extends StateNotifier<AsyncValue<void>> {
       state = const AsyncValue.data(null);
     } catch (error, stack) {
       state = AsyncValue.error(error, stack);
+      rethrow;
     }
   }
 }

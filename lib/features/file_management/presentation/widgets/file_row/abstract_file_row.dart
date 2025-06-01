@@ -11,11 +11,12 @@ abstract class AbstractFileRow {
   final Future<void> Function(int) _onOpenFile;
   final Widget Function(FileEntity) _buildInfoButton;
 
-  AbstractFileRow(FileEntity fileEntity,
-      Future<void> Function(int) onToggleFavorite,
-      Future<void> Function(int) onOpenFile,
-      Widget Function(FileEntity) buildInfoButton,)
-      : presenter = FilePresenter(fileEntity),
+  AbstractFileRow(
+    FileEntity fileEntity,
+    Future<void> Function(int) onToggleFavorite,
+    Future<void> Function(int) onOpenFile,
+    Widget Function(FileEntity) buildInfoButton,
+  )   : presenter = FilePresenter(fileEntity),
         _onToggleFavorite = onToggleFavorite,
         _onOpenFile = onOpenFile,
         _buildInfoButton = buildInfoButton;
@@ -27,21 +28,13 @@ abstract class AbstractFileRow {
   List<DataCell> buildDataCells() {
     return [
       DataCell(buildFileIcon()),
-      DataCell(_buildFileName(presenter.fileEntity)),
+      DataCell(_FileName(presenter.fileEntity, _onOpenFile)),
       DataCell(_buildPrioritizedButton()),
       DataCell(_buildTextInfo(presenter.size)),
       DataCell(_buildTextInfo(presenter.lastModified)),
       DataCell(_buildTextInfo(presenter.dateCreated)),
       DataCell(_buildInfoButton(presenter.fileEntity)),
     ];
-  }
-
-  Widget _buildFileName(FileEntity fileEntity) {
-    return PlatformTextButton(
-      onPressed: () => _onOpenFile(fileEntity.id),
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Text(fileEntity.name),
-    );
   }
 
   Widget _buildTextInfo(String caption) {
@@ -58,4 +51,48 @@ abstract class AbstractFileRow {
       onPressed: () async => await _onToggleFavorite(presenter.id),
     );
   }
+}
+
+class _FileName extends StatelessWidget {
+  final FileEntity _fileEntity;
+  final Future<void> Function(int) _onOpenFile;
+
+  const _FileName(
+    this._fileEntity,
+    this._onOpenFile,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return PlatformTextButton(
+      // onPressed: () => _handleOpenFile(
+      //   context,
+      //   _fileEntity,
+      //   _onOpenFile,
+      // ),
+      onPressed: () => _onOpenFile(_fileEntity.id),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Text(_fileEntity.name),
+    );
+  }
+
+  // Future<void> _handleOpenFile(
+  //   BuildContext context,
+  //   FileEntity fileEntity,
+  //   Future<void> Function(int) onOpenFile,
+  // ) async {
+  //   try {
+  //     await onOpenFile(fileEntity.id);
+  //   } catch (e) {
+  //     if (context.mounted) {
+  //       SnackbarUtil.showError(
+  //         context: context,
+  //         message: 'Failed to open file',
+  //         onRetry: () => _handleOpenFile(context, fileEntity, onOpenFile),
+  //       );
+  //     }
+  //
+  //     print(e);
+  //   }
+  // }
 }
