@@ -80,6 +80,18 @@ class FileOperationsNotifier extends StateNotifier<AsyncValue<void>> {
       state = AsyncValue.error(error, stack);
     }
   }
+
+  Future<void> openFile(int fileId) async {
+    state = const AsyncValue.loading();
+
+    try {
+      await _fileRepo.openFile(fileId);
+
+      state = const AsyncValue.data(null);
+    } catch (error, stack) {
+      state = AsyncValue.error(error, stack);
+    }
+  }
 }
 
 final fileOperationsProvider =

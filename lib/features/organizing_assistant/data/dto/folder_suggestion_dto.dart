@@ -4,7 +4,6 @@ class FolderSuggestionDto {
   final int id;
   final int colorHex;
   final String explanation;
-  // TODO Think of getting rid of this dependency
   final int suggestedFolderId;
   final List<int> assignedFileIds;
 

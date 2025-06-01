@@ -6,6 +6,7 @@ import '../../../organizing_assistant/api/providers.dart';
 import '../../../organizing_assistant/presentation/change_notifiers/file_suggestions_in_folder.dart';
 import '../../api/providers.dart';
 import '../../domain/entities/file_entity.dart';
+import '../change_notifiers/file_operations.dart';
 import '../change_notifiers/filtered_files.dart';
 import 'file_control.dart';
 import 'file_row/file_row.dart';
@@ -20,6 +21,7 @@ class FilesTable extends ConsumerWidget {
     final filesAsync = ref.watch(filteredFilesProvider);
     final togglePrioritized =
         ref.read(fileRepositoryProvider).togglePrioritized;
+    final openFile = ref.read(fileOperationsProvider.notifier).openFile;
 
     return suggestionsAsync.when(
       data: (suggestions) {
@@ -31,11 +33,13 @@ class FilesTable extends ConsumerWidget {
                 ..._buildSuggestionRows(
                   suggestions,
                   togglePrioritized,
+                  openFile,
                   ref,
                 ),
                 ..._buildFileRows(
                   files,
                   togglePrioritized,
+                  openFile,
                 ),
               ],
             );
@@ -53,6 +57,7 @@ class FilesTable extends ConsumerWidget {
     List<({int suggestionId, int colorHex, List<FileEntity> files})>
         suggestions,
     Future<void> Function(int) onToggleFavorite,
+    Future<void> Function(int) openFile,
     WidgetRef ref,
   ) {
     final suggestionRows = <DataRow>[];
@@ -64,6 +69,7 @@ class FilesTable extends ConsumerWidget {
         (fileEntity) => SuggestedFileRow(
           fileEntity,
           onToggleFavorite,
+          openFile,
           (FileEntity fileEntity) => IconButton(
             onPressed: () async => await removeFileFromSuggestion(
                 suggestion.suggestionId, [fileEntity.id]),
@@ -81,12 +87,14 @@ class FilesTable extends ConsumerWidget {
   List<DataRow> _buildFileRows(
     List<FileEntity> files,
     Future<void> Function(int) onToggleFavorite,
+    Future<void> Function(int) openFile,
   ) {
     return files
         .map(
           (fileEntity) => FileRow(
             fileEntity,
             onToggleFavorite,
+            openFile,
             (FileEntity fileEntity) => FileControl(fileEntity),
           ).build(),
         )

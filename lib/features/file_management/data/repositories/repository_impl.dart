@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../common/helpers/file_category.dart';
@@ -158,4 +162,58 @@ class FileRepositoryImpl implements FileRepository {
   @override
   Future<List<int>> getParentFolderIds(int fileId) =>
       _fileDataSource.getParentFolderIds(fileId);
+
+  @override
+  Future<void> openFile(int fileId) async {
+    try {
+      final fileEntity = (await _fileDataSource.getFiles([fileId])).first;
+      final fileName = fileEntity.name;
+      final storageKey = fileEntity.storageKey;
+
+      final directory = await getTemporaryDirectory();
+      print('Temp dir.: $directory');
+
+      final filenaDir = Directory('${directory.path}/filena');
+      if (!await filenaDir.exists()) {
+        await filenaDir.create(recursive: true);
+        print('Created directory: ${filenaDir.path}');
+      }
+
+      final filePath = '${filenaDir.path}/$fileName';
+
+      await _storageManager.downloadToFile(
+        objectName: storageKey,
+        savePath: filePath,
+      );
+
+      final result = await OpenFilex.open(filePath);
+
+      if (result.type != ResultType.done) {
+        print('Could not open the file: ${result.message}');
+        throw 'Failed to open the file';
+      }
+    } catch (e) {
+      print('Error opening file: $e');
+      throw 'Failed to open the file';
+    }
+  }
+
+  Future<void> cleanupAllTempFiles() async {
+    try {
+      final directory = await getTemporaryDirectory();
+
+      final String filenaPath = '${directory.path}/filena';
+
+      final filenaDir = Directory(filenaPath);
+
+      if (await filenaDir.exists()) {
+        await filenaDir.delete(recursive: true);
+        print('Successfully deleted directory: $filenaPath');
+      } else {
+        print('Directory does not exist: $filenaPath');
+      }
+    } catch (e) {
+      print('Error deleting directory: $e');
+    }
+  }
 }

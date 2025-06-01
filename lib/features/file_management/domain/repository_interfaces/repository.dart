@@ -32,4 +32,6 @@ abstract interface class FileRepository {
   Future<void> assignFileToFolder(int fileId, int folderId);
 
   Future<List<int>> getParentFolderIds(int fileId);
+
+  Future<void> openFile(int fileId);
 }

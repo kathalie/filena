@@ -39,10 +39,14 @@ final fileRepositoryProvider = Provider<FileRepository>((ref) {
   final embeddingsClient = ref.watch(_embeddingsClientProvider);
   final summaryClient = ref.watch(_summaryClientProvider);
 
-  return FileRepositoryImpl(
+  final repository = FileRepositoryImpl(
     fileDataSource: datasource,
     storageManager: storageManager,
     embeddingsClient: embeddingsClient,
     summaryClient: summaryClient,
   );
+
+  repository.cleanupAllTempFiles();
+
+  return repository;
 });

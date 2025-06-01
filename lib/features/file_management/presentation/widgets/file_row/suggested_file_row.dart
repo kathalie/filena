@@ -10,6 +10,7 @@ class SuggestedFileRow extends AbstractFileRow {
   SuggestedFileRow(
       super.fileEntity,
       super.onToggleFavorite,
+      super.onOpenFile,
       super.buildInfoButton,
       int colorHex,
       ) : _colorHex = colorHex;

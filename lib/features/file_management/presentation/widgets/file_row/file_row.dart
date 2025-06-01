@@ -8,6 +8,7 @@ class FileRow extends AbstractFileRow {
   FileRow(
       super.fileEntity,
       super.onToggleFavorite,
+      super.onOpenFile,
       super.buildInfoButton,
       );
 
