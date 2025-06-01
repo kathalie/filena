@@ -44,8 +44,12 @@ class UploadFileButton extends ConsumerWidget {
           ? null
           : () => _pickAndUploadFiles(context, ref, selectedFolderAsync),
       icon: uploadState.isLoading
-          ? const CircularProgressIndicator(
-              padding: EdgeInsets.all(8.0),
+          ? const SizedBox(
+              width: 32.0,
+              height: 32.0,
+              child: CircularProgressIndicator(
+                padding: EdgeInsets.all(8.0),
+              ),
             )
           : const Icon(IconsConst.upload),
     );
