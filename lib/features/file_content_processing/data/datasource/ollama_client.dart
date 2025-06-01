@@ -34,9 +34,9 @@ class FileContentProcessingOllamaClient implements FileContentProcessingClient {
     final payload = {
       'model': _FileProcessingConst.model,
       'stream': false,
-      'format': _FileProcessingConst.format,
-      'system': _FileProcessingConst.system,
+      'prompt': _FileProcessingConst.system,
       'images': [base64],
+      'format': _FileProcessingConst.format,
     };
 
     final result = await _processFileContent(payload);
@@ -49,9 +49,9 @@ class FileContentProcessingOllamaClient implements FileContentProcessingClient {
     final payload = {
       'model': _FileProcessingConst.model,
       'stream': false,
-      'format': _FileProcessingConst.format,
       'system': _FileProcessingConst.system,
       'prompt': content,
+      'format': _FileProcessingConst.format,
     };
 
     final result = await _processFileContent(payload);
