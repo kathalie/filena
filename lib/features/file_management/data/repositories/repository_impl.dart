@@ -46,8 +46,14 @@ class FileRepositoryImpl implements FileRepository {
   }
 
   @override
-  Future<List<FileEntity>> getUnclassifiedFiles(FileCategory? category) async {
-    final fileDtos = await _fileDataSource.getUnclassifiedFiles(category);
+  Future<List<FileEntity>> getUnclassifiedFiles(
+    FileCategory? category,
+    bool onlyPrioritized,
+  ) async {
+    final fileDtos = await _fileDataSource.getUnclassifiedFiles(
+      category,
+      onlyPrioritized,
+    );
 
     return _getFileEntities(fileDtos);
   }
@@ -81,6 +87,7 @@ class FileRepositoryImpl implements FileRepository {
 
   @override
   Stream get fileChanges => _fileDataSource.fileChanges;
+
   @override
   Stream get fileInFolderChanges => _fileDataSource.fileInFolderChanges;
 
@@ -149,5 +156,6 @@ class FileRepositoryImpl implements FileRepository {
   }
 
   @override
-  Future<List<int>> getParentFolderIds(int fileId) => _fileDataSource.getParentFolderIds(fileId);
+  Future<List<int>> getParentFolderIds(int fileId) =>
+      _fileDataSource.getParentFolderIds(fileId);
 }

@@ -2,6 +2,7 @@ import 'package:objectbox/objectbox.dart';
 
 import '../../../organizing_assistant/data/models/folder_suggestion_model.dart';
 import '../../../folder_management/data/models/folder_model.dart';
+import '../../common/helpers/file_category.dart';
 import 'file_in_folder_model.dart';
 
 @Entity()
@@ -20,12 +21,14 @@ class File {
 
   String mimeType;
 
+  int categoryId;
+
+  FileCategory get category => FileCategory.values[categoryId];
+  set category(FileCategory cat) => categoryId = cat.index;
+
   @HnswIndex(dimensions: 10, distanceType: VectorDistanceType.cosine)
   @Property(type: PropertyType.floatVector)
   List<double> embeddings;
-
-  // @Backlink('assignedFiles')
-  // final parentFolders = ToMany<Folder>();
 
   @Backlink('assignedFile')
   final folderAssignments = ToMany<FileInFolder>();
@@ -40,5 +43,5 @@ class File {
     required this.mimeType,
     required this.isPrioritized,
     required this.embeddings,
-  });
+  }): categoryId = FileCategory.fromMimeType(mimeType).index;
 }

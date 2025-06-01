@@ -13,7 +13,10 @@ abstract interface class FileDataSource {
     bool includeFromSubfolders,
   );
 
-  Future<List<FileDto>> getUnclassifiedFiles (FileCategory? category);
+  Future<List<FileDto>> getUnclassifiedFiles(
+    FileCategory? category,
+    bool onlyPrioritized,
+  );
 
   Future<List<FileDto>> getFiles(List<int> fileIds);
 

@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "7:3198910070472308778",
-      "lastPropertyId": "10:3094178268294704851",
+      "lastPropertyId": "11:8564677779928440512",
       "name": "File",
       "properties": [
         {
@@ -47,6 +47,11 @@
           "id": "10:3094178268294704851",
           "name": "name",
           "type": 9
+        },
+        {
+          "id": "11:8564677779928440512",
+          "name": "categoryId",
+          "type": 6
         }
       ],
       "relations": []

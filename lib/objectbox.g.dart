@@ -25,7 +25,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(7, 3198910070472308778),
       name: 'File',
-      lastPropertyId: const obx_int.IdUid(10, 3094178268294704851),
+      lastPropertyId: const obx_int.IdUid(11, 8564677779928440512),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -68,6 +68,11 @@ final _entities = <obx_int.ModelEntity>[
             id: const obx_int.IdUid(10, 3094178268294704851),
             name: 'name',
             type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(11, 8564677779928440512),
+            name: 'categoryId',
+            type: 6,
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
@@ -333,7 +338,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final embeddingsOffset = fbb.writeListFloat32(object.embeddings);
           final storageKeyOffset = fbb.writeString(object.storageKey);
           final nameOffset = fbb.writeString(object.name);
-          fbb.startTable(11);
+          fbb.startTable(12);
           fbb.addInt64(0, object.id);
           fbb.addOffset(3, mimeTypeOffset);
           fbb.addBool(4, object.isPrioritized);
@@ -341,6 +346,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           fbb.addInt64(6, object.currentVersion);
           fbb.addOffset(8, storageKeyOffset);
           fbb.addOffset(9, nameOffset);
+          fbb.addInt64(10, object.categoryId);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -367,7 +373,9 @@ obx_int.ModelDefinition getObjectBoxModel() {
               mimeType: mimeTypeParam,
               isPrioritized: isPrioritizedParam,
               embeddings: embeddingsParam)
-            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
+            ..categoryId =
+                const fb.Int64Reader().vTableGet(buffer, rootOffset, 24, 0);
           obx_int.InternalToManyAccess.setRelInfo<File>(
               object.folderAssignments,
               store,
@@ -548,6 +556,10 @@ class File_ {
 
   /// See [File.name].
   static final name = obx.QueryStringProperty<File>(_entities[0].properties[6]);
+
+  /// See [File.categoryId].
+  static final categoryId =
+      obx.QueryIntegerProperty<File>(_entities[0].properties[7]);
 
   /// see [File.folderAssignments]
   static final folderAssignments =

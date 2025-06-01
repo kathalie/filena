@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:objectbox/objectbox.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../../../core/errors/file_exception.dart';
 import '../../../../core/errors/folder_exception.dart';
@@ -54,31 +53,34 @@ class FileDatasourceLocal implements FileDataSource {
   }
 
   @override
-  Future<List<FileDto>> getUnclassifiedFiles(FileCategory? category) async {
-    final files =
-        _fileBox.query(_getUnclassifiedCondition(category)).build().find();
+  Future<List<FileDto>> getUnclassifiedFiles(
+    FileCategory? category,
+    bool onlyPrioritized,
+  ) async {
+    final files = _fileBox
+        .query(_getUnclassifiedCondition(category, onlyPrioritized))
+        .build()
+        .find();
 
     return files.map((file) => file.toDto()).toList();
   }
 
-  Condition<File> _getUnclassifiedCondition(FileCategory? category) {
-    final filterUnclassifiedCondition =
-        File_.folderAssignments.relationCount(1);
+  Condition<File> _getUnclassifiedCondition(
+    FileCategory? category,
+    bool onlyPrioritized,
+  ) {
+    var filterUnclassifiedCondition = File_.folderAssignments.relationCount(1);
+    if (onlyPrioritized) {
+      filterUnclassifiedCondition =
+          filterUnclassifiedCondition.and(File_.isPrioritized.equals(true));
+    }
 
     // All unclassified
     if (category == null) return filterUnclassifiedCondition;
 
-    // Unclassified of other types
-    if (category == FileCategory.other) {
-      return FileCategory.allPrefixes.fold(
-        filterUnclassifiedCondition,
-        (cond, prefix) => cond.and(File_.mimeType.notEquals(prefix)),
-      );
-    }
-
-    // Unclassified of a specific type
+    // Unclassified of a specific category type
     return filterUnclassifiedCondition
-        .and(File_.mimeType.oneOf(category.mimeTypePrefixes));
+        .and(File_.categoryId.equals(category.index));
   }
 
   @override
@@ -214,9 +216,12 @@ class FileDatasourceLocal implements FileDataSource {
     final file = _fileBox.get(fileId);
 
     if (file == null) {
-      throw FileException.fileDoesNotExist(title: 'Failed to get parent folders');
+      throw FileException.fileDoesNotExist(
+          title: 'Failed to get parent folders');
     }
 
-    return file.folderAssignments.map((f) => f.assignedFolder.targetId).toList();
+    return file.folderAssignments
+        .map((f) => f.assignedFolder.targetId)
+        .toList();
   }
 }

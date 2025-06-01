@@ -22,19 +22,7 @@ class FolderDatasourceLocal implements FolderDataSource {
   FolderDatasourceLocal(Store store) : _store = store;
 
   @override
-  // Stream get folderChanges => _folderBox.query().watch();
-  Stream get folderChanges {
-    final fileInFolderStream = _fileInFolderBox.query().watch();
-    final folderStream = _folderBox.query().watch();
-
-    return Rx.combineLatest2(
-      fileInFolderStream,
-      folderStream,
-          (fileInFolderSnapshot, folderSnapshot) {
-        return _folderBox.getAll();
-      },
-    );
-  }
+  Stream get folderChanges => _folderBox.query().watch();
 
   @override
   Future<List<FolderDto>> get allFolders async {

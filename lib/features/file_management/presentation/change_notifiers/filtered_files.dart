@@ -5,6 +5,7 @@ import '../../../folder_management/presentation/change_notifiers/folder_structur
 import '../../../folder_management/presentation/change_notifiers/selected_folder.dart';
 import '../../api/providers.dart';
 import '../../domain/entities/file_entity.dart';
+import 'current_file_type.dart';
 import 'file_filters.dart';
 import 'file_repository_changes.dart';
 
@@ -18,7 +19,12 @@ final filteredFilesProvider = FutureProvider<List<FileEntity>>((ref) async {
   ref.watch(fileInFolderChangesProvider);
 
   if (folderStructureMode == FolderStructureMode.unclassified) {
-    
+    final selectedCategory = ref.watch(selectedFileCategoryProvider);
+
+    return fileRepo.getUnclassifiedFiles(
+      selectedCategory,
+      filterState.showOnlyFavorites,
+    );
   }
 
   return fileRepo.getFilteredFiles(

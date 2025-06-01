@@ -3,6 +3,7 @@ import '../../domain/entities/file_entity.dart';
 
 abstract interface class FileRepository {
   Stream get fileChanges;
+
   Stream get fileInFolderChanges;
 
   Future<List<FileEntity>> getFilteredFiles(
@@ -11,7 +12,10 @@ abstract interface class FileRepository {
     bool includeFromSubfolders,
   );
 
-  Future<List<FileEntity>> getUnclassifiedFiles (FileCategory? category);
+  Future<List<FileEntity>> getUnclassifiedFiles(
+    FileCategory? category,
+    bool onlyPrioritized,
+  );
 
   Future<List<FileEntity>> getFiles(List<int> fileIds);
 
