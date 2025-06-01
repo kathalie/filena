@@ -7,6 +7,7 @@ import '../../domain/types/folder_structure_mode.dart';
 import '../change_notifiers/folder_structure_mode.dart';
 import 'folder_tree.dart';
 import 'folder_structure_control.dart';
+import 'unclassified_view.dart';
 
 class FolderStructureSideBar extends ConsumerWidget {
   const FolderStructureSideBar({super.key});
@@ -38,10 +39,9 @@ class _BarContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (_mode) {
-      FolderStructureMode.classified => Expanded(child: FoldersTreeView()),
-      //TODO unclassified view
-      FolderStructureMode.unclassified => Expanded(child: Placeholder()),
-      FolderStructureMode.suggestions => Expanded(child: SuggestionsView()),
+      FolderStructureMode.classified => const Expanded(child: FoldersTreeView()),
+      FolderStructureMode.unclassified => const Expanded(child: UnclassifiedView()),
+      FolderStructureMode.suggestions => const Expanded(child: SuggestionsView()),
     };
   }
 }

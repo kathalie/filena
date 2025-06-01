@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_view/split_view.dart';
 
 import '../../../../core/const/theme_const.dart';
+import '../../../folder_management/presentation/change_notifiers/folder_path.dart';
+import '../../../folder_management/presentation/change_notifiers/selected_folder.dart';
 import '../../../folder_management/presentation/widgets/folder_structure_side_bar_widget.dart';
 import '../../../prompt_analyzer/presentation/widgets/prompt_bar.dart';
 import 'files_table_widget.dart';
@@ -85,11 +88,7 @@ class _SideView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 350,
-      color: ThemeConsts.primaryBgColor,
-      child: const FolderStructureSideBar(),
-    );
+    return const FolderStructureSideBar();
   }
 }
 
@@ -136,26 +135,42 @@ class _SearchBar extends StatelessWidget {
   }
 }
 
-class _BreadCrumbsRow extends StatelessWidget {
+class _BreadCrumbsRow extends ConsumerWidget {
   const _BreadCrumbsRow();
 
   @override
-  Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Breadcrumbs(),
-            ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final folderPathAsync = ref.watch(folderPathProvider);
+
+    return folderPathAsync.when(
+      data: (folderPath) {
+        final navigateFoFolder =
+            ref.read(selectedFolderProvider.notifier).select;
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Breadcrumbs(
+                    folderPath: folderPath,
+                    navigateFoFolder: navigateFoFolder,
+                  ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: FolderControl(),
+              ),
+            ],
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: FolderControl(),
-          ),
-        ],
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => const Center(
+        child: Text('Failed to load breadcrumbs'),
       ),
     );
   }

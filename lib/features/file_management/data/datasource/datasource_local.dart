@@ -1,10 +1,15 @@
 import 'dart:async';
 
+import 'package:objectbox/objectbox.dart';
+import 'package:rxdart/rxdart.dart';
+
 import '../../../../core/errors/file_exception.dart';
 import '../../../../core/errors/folder_exception.dart';
 import '../../../../objectbox.g.dart';
+import '../../common/helpers/file_category.dart';
 import '../dto/file_create_dto.dart';
 import '../dto/file_dto.dart';
+import '../models/file_in_folder_model.dart';
 import '../models/file_model.dart';
 import '../../../folder_management/data/models/folder_model.dart';
 import '../datasource_interfaces/datasource.dart';
@@ -15,11 +20,15 @@ class FileDatasourceLocal implements FileDataSource {
   final Store _store;
   late final _fileBox = _store.box<File>();
   late final _folderBox = _store.box<Folder>();
+  late final _fileInFolderBox = _store.box<FileInFolder>();
 
   FileDatasourceLocal(Store store) : _store = store;
 
   @override
   Stream get fileChanges => _fileBox.query().watch();
+
+  @override
+  Stream get fileInFolderChanges => _fileInFolderBox.query().watch();
 
   @override
   Future<Set<FileDto>> getFilteredFiles(
@@ -32,15 +41,44 @@ class FileDatasourceLocal implements FileDataSource {
     if (parentFolder == null) return {};
 
     final Set<Folder> acceptableFolders = includeFromSubfolders
-        ? {parentFolder, ...(await _getAllDeeplyNestedFolders(parentFolder))}
+        ? {parentFolder, ...parentFolder.allNestedFolders}
         : {parentFolder};
 
     final Set<File> filteredFiles = acceptableFolders
-        .expand((folder) => folder.assignedFiles)
+        .expand((folder) => folder.fileAssignments)
+        .map((fileInFolder) => fileInFolder.assignedFile.target!)
         .where((file) => onlyPrioritized ? file.isPrioritized : true)
         .toSet();
 
     return filteredFiles.map((file) => file.toDto()).toSet();
+  }
+
+  @override
+  Future<List<FileDto>> getUnclassifiedFiles(FileCategory? category) async {
+    final files =
+        _fileBox.query(_getUnclassifiedCondition(category)).build().find();
+
+    return files.map((file) => file.toDto()).toList();
+  }
+
+  Condition<File> _getUnclassifiedCondition(FileCategory? category) {
+    final filterUnclassifiedCondition =
+        File_.folderAssignments.relationCount(1);
+
+    // All unclassified
+    if (category == null) return filterUnclassifiedCondition;
+
+    // Unclassified of other types
+    if (category == FileCategory.other) {
+      return FileCategory.allPrefixes.fold(
+        filterUnclassifiedCondition,
+        (cond, prefix) => cond.and(File_.mimeType.notEquals(prefix)),
+      );
+    }
+
+    // Unclassified of a specific type
+    return filterUnclassifiedCondition
+        .and(File_.mimeType.oneOf(category.mimeTypePrefixes));
   }
 
   @override
@@ -49,22 +87,6 @@ class FileDatasourceLocal implements FileDataSource {
         await _fileBox.query(File_.id.oneOf(fileIds)).build().findAsync();
 
     return files.map((file) => file.toDto()).toList();
-  }
-
-  Future<Set<Folder>> _getAllDeeplyNestedFolders(Folder parentFolder) async {
-    Set<int> collectNestedIds(Folder folder) {
-      return {
-        ...folder.nestedFolders.map((child) => child.id),
-        ...folder.nestedFolders.expand(collectNestedIds),
-      };
-    }
-
-    final nestedFoldersIds = collectNestedIds(parentFolder).toList();
-
-    final isInFoldersQuery =
-        _folderBox.query(Folder_.id.oneOf(nestedFoldersIds)).build();
-
-    return isInFoldersQuery.find().toSet();
   }
 
   @override
@@ -84,24 +106,15 @@ class FileDatasourceLocal implements FileDataSource {
   }
 
   @override
-  Future<void> createFiles(List<FileCreateDto> createFileDtos) async {
-    final fileModels =
-        createFileDtos.map((fileDto) => fileDto.toModel()).toList();
-
-    await _fileBox.putManyAsync(fileModels);
-  }
-
-  @override
   Future<void> deleteFile(int fileId) async {
-    final fileToRemove = await _fileBox.getAsync(fileId);
+    final fileInFolderIdsToRemove = _fileInFolderBox
+        .query(FileInFolder_.assignedFile.equals(fileId))
+        .build()
+        .findIds();
 
-    if (fileToRemove == null) {
-      throw FileException.fileDoesNotExist(
-        title: 'Failed to delete a file',
-      );
-    }
+    _fileInFolderBox.removeMany(fileInFolderIdsToRemove);
 
-    await _fileBox.removeAsync(fileToRemove.id);
+    await _fileBox.removeAsync(fileId);
   }
 
   @override
@@ -125,9 +138,13 @@ class FileDatasourceLocal implements FileDataSource {
           );
         }
 
-        final updatedFile = file..parentFolders.add(folder);
+        final fileInFolder = FileInFolder();
+        fileInFolder.assignedFile.target = file;
+        fileInFolder.assignedFolder.target = folder;
 
-        _fileBox.put(updatedFile);
+        print('Creating fileInFolder ${fileInFolder.id}');
+
+        _fileInFolderBox.put(fileInFolder);
       },
     );
   }
@@ -143,9 +160,20 @@ class FileDatasourceLocal implements FileDataSource {
         );
       }
 
-      folder.assignedFiles.removeWhere((file) => fileIds.contains(file.id));
+      final List<int> fileInFolderIds = [];
+      for (final fileId in fileIds) {
+        final ids = _fileInFolderBox
+            .query(
+              FileInFolder_.assignedFolder
+                  .equals(folderId)
+                  .and(FileInFolder_.assignedFile.equals(fileId)),
+            )
+            .build()
+            .findIds();
+        fileInFolderIds.addAll(ids);
+      }
 
-      _folderBox.put(folder);
+      _fileInFolderBox.removeMany(fileInFolderIds);
     });
   }
 
@@ -179,5 +207,16 @@ class FileDatasourceLocal implements FileDataSource {
 
       _fileBox.put(file);
     });
+  }
+
+  @override
+  Future<List<int>> getParentFolderIds(int fileId) async {
+    final file = _fileBox.get(fileId);
+
+    if (file == null) {
+      throw FileException.fileDoesNotExist(title: 'Failed to get parent folders');
+    }
+
+    return file.folderAssignments.map((f) => f.assignedFolder.targetId).toList();
   }
 }

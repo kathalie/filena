@@ -5,34 +5,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/const/icons_const.dart';
 import '../../domain/entities/folder_entity.dart';
-import '../change_notifiers/folder_path.dart';
-import '../change_notifiers/selected_folder.dart';
 
 class Breadcrumbs extends ConsumerWidget {
-  const Breadcrumbs({super.key});
+  final List<FolderEntity> _folderPath;
+  final void Function(FolderEntity) _navigateFoFolder;
+
+  const Breadcrumbs({
+    required List<FolderEntity> folderPath,
+    required void Function(FolderEntity) navigateFoFolder,
+    super.key,
+  })  : _folderPath = folderPath,
+        _navigateFoFolder = navigateFoFolder;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final folderPathAsync = ref.watch(folderPathProvider);
-
-    return folderPathAsync.when(
-      data: (folderPath) {
-        final navigateFoFolder =
-            ref.read(selectedFolderProvider.notifier).select;
-
-        return BreadCrumb.builder(
-          itemCount: folderPath.length,
-          builder: (index) => _buildBreadCrumb(
-            folderPath[index],
-            navigateFoFolder,
-          ),
-          divider: const Icon(IconsConst.chevronRight),
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => const Center(
-        child: Text('Failed to load breadcrumbs'),
+    return BreadCrumb.builder(
+      itemCount: _folderPath.length,
+      builder: (index) => _buildBreadCrumb(
+        _folderPath[index],
+        _navigateFoFolder,
       ),
+      divider: const Icon(IconsConst.chevronRight),
     );
   }
 

@@ -7,3 +7,9 @@ final fileChangesProvider = StreamProvider<void>((ref) {
 
   return fileRepo.fileChanges;
 });
+
+final fileInFolderChangesProvider = StreamProvider<void>((ref) {
+  final fileRepo = ref.watch(fileRepositoryProvider);
+
+  return fileRepo.fileInFolderChanges;
+});

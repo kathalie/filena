@@ -21,13 +21,18 @@ class FolderTreeNode extends StatefulWidget {
 }
 
 class _FolderTreeNodeState extends State<FolderTreeNode> {
-  final GlobalKey<TreeViewChildState> treeViewKey =
-      GlobalKey<TreeViewChildState>();
+  final GlobalKey<TreeViewChildState> treeViewKey = GlobalKey<TreeViewChildState>();
+  bool isExpanded = true;
 
   void toggleExpansion() {
-    if (treeViewKey.currentState != null) {
-      treeViewKey.currentState!.toggleExpanded();
-    }
+    final treeViewCurrentState = treeViewKey.currentState;
+
+    if (treeViewCurrentState == null) return;
+
+    setState(() {
+      treeViewCurrentState.toggleExpanded();
+      isExpanded = !isExpanded;
+    });
   }
 
   @override
@@ -35,11 +40,11 @@ class _FolderTreeNodeState extends State<FolderTreeNode> {
     return TreeViewChild(
       key: treeViewKey,
       onTap: () {},
-      startExpanded: false,
+      startExpanded: true,
       parent: DirectoryWidget(
         folderEntity: widget.folderEntity,
         hasNestedFolders: widget.hasNestedFolders,
-        isExpanded: treeViewKey.currentState?.isExpanded ?? false,
+        isExpanded: isExpanded,
         toggleExpansion: toggleExpansion,
       ),
       children: widget.children,

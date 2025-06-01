@@ -15,7 +15,7 @@ abstract interface class FolderDataSource {
 
   Future<int> createFolder(FolderCreateDto createFolderDto);
 
-  Future<void> deleteFolder(int folderId);
+  Future<void> deleteFolderWithChildren(int folderId);
 
   Future<void> updateFolder(FolderUpdateDto folderUpdateDto);
 }

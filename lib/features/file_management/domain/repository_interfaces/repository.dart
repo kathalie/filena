@@ -1,7 +1,9 @@
+import '../../common/helpers/file_category.dart';
 import '../../domain/entities/file_entity.dart';
 
 abstract interface class FileRepository {
   Stream get fileChanges;
+  Stream get fileInFolderChanges;
 
   Future<List<FileEntity>> getFilteredFiles(
     int parentFolderId,
@@ -9,11 +11,11 @@ abstract interface class FileRepository {
     bool includeFromSubfolders,
   );
 
+  Future<List<FileEntity>> getUnclassifiedFiles (FileCategory? category);
+
   Future<List<FileEntity>> getFiles(List<int> fileIds);
 
   Future<void> createFile(String filePath, int parentFolderId);
-
-  Future<void> updateFile(String filePath);
 
   Future<void> togglePrioritized(int fileId);
 
@@ -24,4 +26,6 @@ abstract interface class FileRepository {
   Future<void> removeFilesFromFolder(List<int> fileIds, int folderId);
 
   Future<void> assignFileToFolder(int fileId, int folderId);
+
+  Future<List<int>> getParentFolderIds(int fileId);
 }

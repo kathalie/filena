@@ -48,7 +48,7 @@ class DirectoryWidget extends ConsumerWidget {
           ),
           child: PlatformListTile(
             leading: _DirectoryIcon(_presenter),
-            title: _DirectoryTitle(_presenter),
+            title: _DirectoryTitle(_presenter.name),
             trailing: _presenter.hasNestedFolders
                 ? _ExpandButton(_toggleExpansion, _isExpanded)
                 : null,
@@ -80,19 +80,18 @@ class _DirectoryIcon extends StatelessWidget {
 }
 
 class _DirectoryTitle extends StatelessWidget {
-  final FolderPresenter _presenter;
+  final String _caption;
 
-  const _DirectoryTitle(this._presenter);
+  const _DirectoryTitle(this._caption);
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = TextStyle(
+    const textStyle = TextStyle(
       fontSize: 16,
-      fontWeight: _presenter.isRoot ? FontWeight.w700 : FontWeight.w500,
       color: Colors.black54,
     );
 
-    return Text(_presenter.name, style: textStyle);
+    return Text(_caption, style: textStyle);
   }
 }
 

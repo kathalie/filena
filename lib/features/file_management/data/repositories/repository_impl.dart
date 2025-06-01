@@ -1,9 +1,10 @@
 import 'package:uuid/uuid.dart';
 
+import '../../common/helpers/file_category.dart';
 import '../../common/helpers/fs_file_wrapper.dart';
 import '../../domain/entities/file_metadata_entity.dart';
 import '../../domain/entities/file_entity.dart';
-import '../../domain/repository_interfaces/file_repository.dart';
+import '../../domain/repository_interfaces/repository.dart';
 import '../datasource_interfaces/embeddings_client.dart';
 import '../datasource_interfaces/datasource.dart';
 import '../datasource_interfaces/storage_manager.dart';
@@ -45,6 +46,13 @@ class FileRepositoryImpl implements FileRepository {
   }
 
   @override
+  Future<List<FileEntity>> getUnclassifiedFiles(FileCategory? category) async {
+    final fileDtos = await _fileDataSource.getUnclassifiedFiles(category);
+
+    return _getFileEntities(fileDtos);
+  }
+
+  @override
   Future<List<FileEntity>> getFiles(List<int> fileIds) async {
     final fileDtos = await _fileDataSource.getFiles(fileIds);
 
@@ -73,6 +81,8 @@ class FileRepositoryImpl implements FileRepository {
 
   @override
   Stream get fileChanges => _fileDataSource.fileChanges;
+  @override
+  Stream get fileInFolderChanges => _fileDataSource.fileInFolderChanges;
 
   @override
   Future<void> createFile(String filePath, int parentFolderId) async {
@@ -112,12 +122,6 @@ class FileRepositoryImpl implements FileRepository {
   }
 
   @override
-  Future<void> updateFile(updateFileEntity) async {
-    // TODO: implement updateFile
-    throw UnimplementedError();
-  }
-
-  @override
   Future<void> deleteFile(int fileId) async {
     await _storageManager.removeFile(fileStoragePath: fileId.toString());
 
@@ -143,4 +147,7 @@ class FileRepositoryImpl implements FileRepository {
   Future<void> togglePrioritized(int fileId) async {
     await _fileDataSource.togglePrioritized(fileId);
   }
+
+  @override
+  Future<List<int>> getParentFolderIds(int fileId) => _fileDataSource.getParentFolderIds(fileId);
 }

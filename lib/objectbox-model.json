@@ -88,13 +88,7 @@
           "relationTarget": "Folder"
         }
       ],
-      "relations": [
-        {
-          "id": "4:2727919847388667980",
-          "name": "assignedFiles",
-          "targetId": "7:3198910070472308778"
-        }
-      ]
+      "relations": []
     },
     {
       "id": "10:9157757429217051349",
@@ -133,10 +127,40 @@
           "targetId": "7:3198910070472308778"
         }
       ]
+    },
+    {
+      "id": "11:8479146484119265588",
+      "lastPropertyId": "3:4547588227963074128",
+      "name": "FileInFolder",
+      "properties": [
+        {
+          "id": "1:5900135750993747274",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5996380692695491396",
+          "name": "assignedFileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "18:7006904024449307119",
+          "relationTarget": "File"
+        },
+        {
+          "id": "3:4547588227963074128",
+          "name": "assignedFolderId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "19:6144062705078831971",
+          "relationTarget": "Folder"
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "10:9157757429217051349",
-  "lastIndexId": "17:6548433182222302740",
+  "lastEntityId": "11:8479146484119265588",
+  "lastIndexId": "19:6144062705078831971",
   "lastRelationId": "6:8590250266704814531",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
@@ -207,7 +231,8 @@
   "retiredRelationUids": [
     751356814963857588,
     673942337030042630,
-    4878034946052678015
+    4878034946052678015,
+    2727919847388667980
   ],
   "version": 1
 }

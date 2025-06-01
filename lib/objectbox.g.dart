@@ -14,6 +14,7 @@ import 'package:objectbox/internal.dart'
 import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
+import 'features/file_management/data/models/file_in_folder_model.dart';
 import 'features/file_management/data/models/file_model.dart';
 import 'features/folder_management/data/models/folder_model.dart';
 import 'features/organizing_assistant/data/models/folder_suggestion_model.dart';
@@ -72,9 +73,9 @@ final _entities = <obx_int.ModelEntity>[
       relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[
         obx_int.ModelBacklink(
-            name: 'parentFolders',
-            srcEntity: 'Folder',
-            srcField: 'assignedFiles'),
+            name: 'folderAssignments',
+            srcEntity: 'FileInFolder',
+            srcField: 'assignedFile'),
         obx_int.ModelBacklink(
             name: 'folderSuggestions',
             srcEntity: 'FolderSuggestion',
@@ -119,17 +120,16 @@ final _entities = <obx_int.ModelEntity>[
             indexId: const obx_int.IdUid(14, 3524152134377728438),
             relationTarget: 'Folder')
       ],
-      relations: <obx_int.ModelRelation>[
-        obx_int.ModelRelation(
-            id: const obx_int.IdUid(4, 2727919847388667980),
-            name: 'assignedFiles',
-            targetId: const obx_int.IdUid(7, 3198910070472308778))
-      ],
+      relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[
         obx_int.ModelBacklink(
             name: 'nestedFolders',
             srcEntity: 'Folder',
             srcField: 'parentFolder'),
+        obx_int.ModelBacklink(
+            name: 'fileAssignments',
+            srcEntity: 'FileInFolder',
+            srcField: 'assignedFolder'),
         obx_int.ModelBacklink(
             name: 'folderSuggestions',
             srcEntity: 'FolderSuggestion',
@@ -170,6 +170,34 @@ final _entities = <obx_int.ModelEntity>[
             name: 'files',
             targetId: const obx_int.IdUid(7, 3198910070472308778))
       ],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(11, 8479146484119265588),
+      name: 'FileInFolder',
+      lastPropertyId: const obx_int.IdUid(3, 4547588227963074128),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 5900135750993747274),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 5996380692695491396),
+            name: 'assignedFileId',
+            type: 11,
+            flags: 520,
+            indexId: const obx_int.IdUid(18, 7006904024449307119),
+            relationTarget: 'File'),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 4547588227963074128),
+            name: 'assignedFolderId',
+            type: 11,
+            flags: 520,
+            indexId: const obx_int.IdUid(19, 6144062705078831971),
+            relationTarget: 'Folder')
+      ],
+      relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[])
 ];
 
@@ -208,8 +236,8 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(10, 9157757429217051349),
-      lastIndexId: const obx_int.IdUid(17, 6548433182222302740),
+      lastEntityId: const obx_int.IdUid(11, 8479146484119265588),
+      lastIndexId: const obx_int.IdUid(19, 6144062705078831971),
       lastRelationId: const obx_int.IdUid(6, 8590250266704814531),
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [
@@ -278,7 +306,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
       retiredRelationUids: const [
         751356814963857588,
         673942337030042630,
-        4878034946052678015
+        4878034946052678015,
+        2727919847388667980
       ],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -289,8 +318,9 @@ obx_int.ModelDefinition getObjectBoxModel() {
         model: _entities[0],
         toOneRelations: (File object) => [],
         toManyRelations: (File object) => {
-              obx_int.RelInfo<Folder>.toManyBacklink(4, object.id):
-                  object.parentFolders,
+              obx_int.RelInfo<FileInFolder>.toOneBacklink(2, object.id,
+                      (FileInFolder srcObject) => srcObject.assignedFile):
+                  object.folderAssignments,
               obx_int.RelInfo<FolderSuggestion>.toManyBacklink(6, object.id):
                   object.folderSuggestions
             },
@@ -338,8 +368,11 @@ obx_int.ModelDefinition getObjectBoxModel() {
               isPrioritized: isPrioritizedParam,
               embeddings: embeddingsParam)
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
-          obx_int.InternalToManyAccess.setRelInfo<File>(object.parentFolders,
-              store, obx_int.RelInfo<Folder>.toManyBacklink(4, object.id));
+          obx_int.InternalToManyAccess.setRelInfo<File>(
+              object.folderAssignments,
+              store,
+              obx_int.RelInfo<FileInFolder>.toOneBacklink(2, object.id,
+                  (FileInFolder srcObject) => srcObject.assignedFile));
           obx_int.InternalToManyAccess.setRelInfo<File>(
               object.folderSuggestions,
               store,
@@ -350,11 +383,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
         model: _entities[1],
         toOneRelations: (Folder object) => [object.parentFolder],
         toManyRelations: (Folder object) => {
-              obx_int.RelInfo<Folder>.toMany(4, object.id):
-                  object.assignedFiles,
               obx_int.RelInfo<Folder>.toOneBacklink(6, object.id,
                       (Folder srcObject) => srcObject.parentFolder):
                   object.nestedFolders,
+              obx_int.RelInfo<FileInFolder>.toOneBacklink(3, object.id,
+                      (FileInFolder srcObject) => srcObject.assignedFolder):
+                  object.fileAssignments,
               obx_int.RelInfo<FolderSuggestion>.toOneBacklink(4, object.id,
                       (FolderSuggestion srcObject) => srcObject.folder):
                   object.folderSuggestions
@@ -393,13 +427,16 @@ obx_int.ModelDefinition getObjectBoxModel() {
           object.parentFolder.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
           object.parentFolder.attach(store);
-          obx_int.InternalToManyAccess.setRelInfo<Folder>(object.assignedFiles,
-              store, obx_int.RelInfo<Folder>.toMany(4, object.id));
           obx_int.InternalToManyAccess.setRelInfo<Folder>(
               object.nestedFolders,
               store,
               obx_int.RelInfo<Folder>.toOneBacklink(
                   6, object.id, (Folder srcObject) => srcObject.parentFolder));
+          obx_int.InternalToManyAccess.setRelInfo<Folder>(
+              object.fileAssignments,
+              store,
+              obx_int.RelInfo<FileInFolder>.toOneBacklink(3, object.id,
+                  (FileInFolder srcObject) => srcObject.assignedFolder));
           obx_int.InternalToManyAccess.setRelInfo<Folder>(
               object.folderSuggestions,
               store,
@@ -447,6 +484,37 @@ obx_int.ModelDefinition getObjectBoxModel() {
               store,
               obx_int.RelInfo<FolderSuggestion>.toMany(6, object.id));
           return object;
+        }),
+    FileInFolder: obx_int.EntityDefinition<FileInFolder>(
+        model: _entities[3],
+        toOneRelations: (FileInFolder object) =>
+            [object.assignedFile, object.assignedFolder],
+        toManyRelations: (FileInFolder object) => {},
+        getId: (FileInFolder object) => object.id,
+        setId: (FileInFolder object, int id) {
+          object.id = id;
+        },
+        objectToFB: (FileInFolder object, fb.Builder fbb) {
+          fbb.startTable(4);
+          fbb.addInt64(0, object.id);
+          fbb.addInt64(1, object.assignedFile.targetId);
+          fbb.addInt64(2, object.assignedFolder.targetId);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = FileInFolder()
+            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          object.assignedFile.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
+          object.assignedFile.attach(store);
+          object.assignedFolder.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0);
+          object.assignedFolder.attach(store);
+          return object;
         })
   };
 
@@ -480,6 +548,10 @@ class File_ {
 
   /// See [File.name].
   static final name = obx.QueryStringProperty<File>(_entities[0].properties[6]);
+
+  /// see [File.folderAssignments]
+  static final folderAssignments =
+      obx.QueryBacklinkToMany<FileInFolder, File>(FileInFolder_.assignedFile);
 }
 
 /// [Folder] entity fields to define ObjectBox queries.
@@ -504,13 +576,13 @@ class Folder_ {
   static final parentFolder =
       obx.QueryRelationToOne<Folder, Folder>(_entities[1].properties[4]);
 
-  /// see [Folder.assignedFiles]
-  static final assignedFiles =
-      obx.QueryRelationToMany<Folder, File>(_entities[1].relations[0]);
-
   /// see [Folder.nestedFolders]
   static final nestedFolders =
       obx.QueryBacklinkToMany<Folder, Folder>(Folder_.parentFolder);
+
+  /// see [Folder.fileAssignments]
+  static final fileAssignments = obx.QueryBacklinkToMany<FileInFolder, Folder>(
+      FileInFolder_.assignedFolder);
 
   /// see [Folder.folderSuggestions]
   static final folderSuggestions =
@@ -539,4 +611,19 @@ class FolderSuggestion_ {
   /// see [FolderSuggestion.files]
   static final files = obx.QueryRelationToMany<FolderSuggestion, File>(
       _entities[2].relations[0]);
+}
+
+/// [FileInFolder] entity fields to define ObjectBox queries.
+class FileInFolder_ {
+  /// See [FileInFolder.id].
+  static final id =
+      obx.QueryIntegerProperty<FileInFolder>(_entities[3].properties[0]);
+
+  /// See [FileInFolder.assignedFile].
+  static final assignedFile =
+      obx.QueryRelationToOne<FileInFolder, File>(_entities[3].properties[1]);
+
+  /// See [FileInFolder.assignedFolder].
+  static final assignedFolder =
+      obx.QueryRelationToOne<FileInFolder, Folder>(_entities[3].properties[2]);
 }

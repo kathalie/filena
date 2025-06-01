@@ -17,19 +17,19 @@ class ObjectBox {
     final folderBox = store.box<Folder>();
 
     if (!folderBox.isEmpty()) {
-      print("Root folder already exists.");
+      print('Root folder already exists.');
 
       return;
     }
 
     final newRootFolder = Folder(
-      name: "Root",
+      name: 'All',
       embeddings: [],
     );
 
     final newFolderId = folderBox.put(newRootFolder);
 
-    print("Root folder created with ID: ${newFolderId}");
+    print('Root folder created with ID: ${newFolderId}');
   }
 
   static Future<ObjectBox> create() async {

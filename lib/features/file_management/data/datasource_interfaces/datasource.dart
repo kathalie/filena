@@ -1,8 +1,11 @@
+import '../../common/helpers/file_category.dart';
 import '../dto/file_create_dto.dart';
 import '../dto/file_dto.dart';
 
 abstract interface class FileDataSource {
   Stream get fileChanges;
+
+  Stream get fileInFolderChanges;
 
   Future<Set<FileDto>> getFilteredFiles(
     int parentFolderId,
@@ -10,11 +13,11 @@ abstract interface class FileDataSource {
     bool includeFromSubfolders,
   );
 
+  Future<List<FileDto>> getUnclassifiedFiles (FileCategory? category);
+
   Future<List<FileDto>> getFiles(List<int> fileIds);
 
   Future<int> createFile(FileCreateDto createFileDto, int parentFolderId);
-
-  Future<void> createFiles(List<FileCreateDto> createFileDtos);
 
   Future<void> togglePrioritized(int fileId);
 
@@ -25,4 +28,6 @@ abstract interface class FileDataSource {
   Future<void> assignFileToFolder(int fileId, int folderId);
 
   Future<void> deleteFile(int fileId);
+
+  Future<List<int>> getParentFolderIds(int folderId);
 }

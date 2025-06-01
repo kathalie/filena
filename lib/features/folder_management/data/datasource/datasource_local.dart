@@ -1,7 +1,11 @@
 import 'dart:async';
 
+import 'package:rxdart/rxdart.dart';
+
 import '../../../../core/errors/folder_exception.dart';
 import '../../../../objectbox.g.dart';
+import '../../../file_management/data/models/file_in_folder_model.dart';
+import '../../../organizing_assistant/data/models/folder_suggestion_model.dart';
 import '../dto/folder_create_dto.dart';
 import '../dto/folder_dto.dart';
 import '../dto/folder_update_dto.dart';
@@ -12,31 +16,60 @@ import '../translators/to_dto.dart';
 class FolderDatasourceLocal implements FolderDataSource {
   final Store _store;
   late final _folderBox = _store.box<Folder>();
+  late final _fileInFolderBox = _store.box<FileInFolder>();
+  late final _folderSuggestionBox = _store.box<FolderSuggestion>();
 
   FolderDatasourceLocal(Store store) : _store = store;
 
   @override
-  Stream get folderChanges => _folderBox.query().watch();
+  // Stream get folderChanges => _folderBox.query().watch();
+  Stream get folderChanges {
+    final fileInFolderStream = _fileInFolderBox.query().watch();
+    final folderStream = _folderBox.query().watch();
+
+    return Rx.combineLatest2(
+      fileInFolderStream,
+      folderStream,
+          (fileInFolderSnapshot, folderSnapshot) {
+        return _folderBox.getAll();
+      },
+    );
+  }
 
   @override
   Future<List<FolderDto>> get allFolders async {
-    final folders = await _folderBox.getAllAsync();
+    final folders = await _store.runInTransactionAsync<List<Folder>, void>(
+      TxMode.read,
+      (Store store, void _) {
+        final folderBox = Box<Folder>(store);
+        return folderBox.getAll();
+      },
+      null,
+    );
 
     return folders.map((folder) => folder.toDto()).toList();
   }
 
   @override
   Future<FolderDto> get rootFolder async {
-    final rootFolder = await _folderBox
-        .query(Folder_.parentFolder.equals(0))
-        .build()
-        .findFirstAsync();
+    final rootFolder = await _store.runInTransactionAsync<Folder, void>(
+      TxMode.read,
+      (Store store, void _) {
+        final folderBox = Box<Folder>(store);
 
-    if (rootFolder == null) {
-      throw FolderException.folderDoesNotExist(
-        title: 'Root folder is not found.',
-      );
-    }
+        final rootFolder =
+            folderBox.query(Folder_.parentFolder.equals(0)).build().findFirst();
+
+        if (rootFolder == null) {
+          throw FolderException.folderDoesNotExist(
+            title: 'Root folder is not found.',
+          );
+        }
+
+        return rootFolder;
+      },
+      null,
+    );
 
     return rootFolder.toDto();
   }
@@ -108,15 +141,65 @@ class FolderDatasourceLocal implements FolderDataSource {
           );
         }
 
-        final updatedFolder = folder..name = folderUpdateDto.name;
+        folder.name = folderUpdateDto.name;
+        folder.embeddings = folderUpdateDto.embeddings;
 
-        _folderBox.put(updatedFolder);
+        _folderBox.put(folder);
       },
     );
   }
 
   @override
-  Future<void> deleteFolder(int id) async {
-    await _folderBox.removeAsync(id);
+  Future<void> deleteFolderWithChildren(int id) async {
+    if (await _isRootFolder(id)) {
+      throw FolderException.failedToDeleteFolder(
+        folderName: 'All',
+        explanation: 'Deletion of a root folder is forbidden.',
+      );
+    }
+
+    final folderToDelete = _folderBox.get(id);
+
+    if (folderToDelete == null) {
+      throw FolderException.folderDoesNotExist(
+        title: 'Failed to delete a folder',
+      );
+    }
+
+    final childrenIds =
+        folderToDelete.allNestedFolders.map((folder) => folder.id).toList();
+    final folderIdsToDelete = [id, ...childrenIds];
+
+    print('Removing folders with ids: $folderIdsToDelete');
+
+    await _removeFolderAssignments(folderIdsToDelete);
+    await _removeFolderSuggestions(folderIdsToDelete);
+    await _folderBox.removeManyAsync(folderIdsToDelete);
+  }
+
+  Future<bool> _isRootFolder(int folderId) async {
+    return (await rootFolder).id == folderId;
+  }
+
+  Future<void> _removeFolderAssignments(List<int> folderIds) async {
+    final fileInFolderIdsToRemove = await (_fileInFolderBox.query()
+          ..link(FileInFolder_.assignedFolder, Folder_.id.oneOf(folderIds)))
+        .build()
+        .findIdsAsync();
+
+    print('Removed file assignments: $fileInFolderIdsToRemove');
+
+    await _fileInFolderBox.removeManyAsync(fileInFolderIdsToRemove);
+  }
+
+  Future<void> _removeFolderSuggestions(List<int> folderIds) async {
+    final folderSuggestionIdsToRemove = await (_folderSuggestionBox.query()
+      ..link(FolderSuggestion_.folder, Folder_.id.oneOf(folderIds)))
+        .build()
+        .findIdsAsync();
+
+    print('Removed folder suggestions: $folderSuggestionIdsToRemove');
+
+    await _folderSuggestionBox.removeManyAsync(folderSuggestionIdsToRemove);
   }
 }

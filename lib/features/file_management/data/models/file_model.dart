@@ -2,6 +2,7 @@ import 'package:objectbox/objectbox.dart';
 
 import '../../../organizing_assistant/data/models/folder_suggestion_model.dart';
 import '../../../folder_management/data/models/folder_model.dart';
+import 'file_in_folder_model.dart';
 
 @Entity()
 class File {
@@ -23,8 +24,11 @@ class File {
   @Property(type: PropertyType.floatVector)
   List<double> embeddings;
 
-  @Backlink('assignedFiles')
-  final parentFolders = ToMany<Folder>();
+  // @Backlink('assignedFiles')
+  // final parentFolders = ToMany<Folder>();
+
+  @Backlink('assignedFile')
+  final folderAssignments = ToMany<FileInFolder>();
 
   @Backlink('files')
   final folderSuggestions = ToMany<FolderSuggestion>();

@@ -3,6 +3,7 @@ import 'dart:async';
 import '../../../../core/errors/folder_exception.dart';
 import '../../../../core/errors/folder_suggestion_exception.dart';
 import '../../../../objectbox.g.dart';
+import '../../../file_management/data/models/file_in_folder_model.dart';
 import '../../../file_management/data/models/file_model.dart';
 import '../../../folder_management/data/models/folder_model.dart';
 import '../../common/helpers/random_color_generator.dart';
@@ -16,6 +17,8 @@ class FolderSuggestionDatasourceLocal implements FolderSuggestionDatasource {
   late final _folderSuggestionBox = _store.box<FolderSuggestion>();
   late final _fileBox = _store.box<File>();
   late final _folderBox = _store.box<Folder>();
+  late final _fileInFolderBox = _store.box<FileInFolder>();
+
 
   FolderSuggestionDatasourceLocal(Store store) : _store = store;
 
@@ -206,7 +209,10 @@ class FolderSuggestionDatasourceLocal implements FolderSuggestionDatasource {
 
     // Assign suggested files to a suggested folder
     for (final file in folderSuggestion.files) {
-      folder.assignedFiles.add(file);
+      final fileInFolder = FileInFolder();
+      fileInFolder.assignedFile.target = file;
+      fileInFolder.assignedFolder.target = folder;
+      _fileInFolderBox.put(fileInFolder);
     }
 
     _folderBox.put(folder);

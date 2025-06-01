@@ -10,7 +10,7 @@ import '../data/datasource_interfaces/datasource.dart';
 import '../data/datasource/embeddings_client_impl.dart';
 import '../data/datasource_interfaces/summary_client.dart';
 import '../data/repositories/repository_impl.dart';
-import '../domain/repository_interfaces/file_repository.dart';
+import '../domain/repository_interfaces/repository.dart';
 
 // Data sources
 final _fileDatasourceProvider = Provider<FileDataSource>((ref) {

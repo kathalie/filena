@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../folder_management/domain/entities/folder_entity.dart';
 import '../../api/providers.dart';
-import '../../domain/repository_interfaces/file_repository.dart';
+import '../../domain/repository_interfaces/repository.dart';
 
 final fileUploadStateProvider = StateNotifierProvider<UploadStateNotifier, UploadState>((ref) {
   return UploadStateNotifier(ref.watch(fileRepositoryProvider));

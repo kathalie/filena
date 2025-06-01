@@ -74,7 +74,7 @@ class FolderRepositoryImpl implements FolderRepository {
 
   @override
   Future<void> deleteFolder(int folderId) async {
-    await _folderDataSource.deleteFolder(folderId);
+    await _folderDataSource.deleteFolderWithChildren(folderId);
   }
 
   @override

@@ -9,6 +9,7 @@ import '../../../../core/presentation/dialogs/text_field_dialog.dart';
 import '../../api/providers.dart';
 import '../../domain/entities/file_entity.dart';
 import '../change_notifiers/file_operations.dart';
+import 'file_info_popup.dart';
 
 typedef FileControlOption = ({
   String caption,
@@ -48,6 +49,11 @@ class FileControl extends ConsumerWidget {
           void Function() action,
         })> controlOptions = [
       (
+        caption: 'Folders',
+        icon: IconsConst.anyFolderSuggestion,
+        action: () => _openFileInfoPopup(context, ref),
+      ),
+      (
         caption: 'Rename file',
         icon: IconsConst.edit,
         action: () async => await _renameFile(context, ref),
@@ -82,6 +88,19 @@ class FileControl extends ConsumerWidget {
     }).toList();
   }
 
+  void _openFileInfoPopup(
+    BuildContext context,
+    WidgetRef ref,
+  ) {
+    showDialog<String>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return FileInfoPopup(_fileEntity);
+      },
+    );
+  }
+
   Future<void> _renameFile(
     BuildContext context,
     WidgetRef ref,
@@ -90,13 +109,12 @@ class FileControl extends ConsumerWidget {
       context,
       title: 'Rename file',
       inputHint: 'New file name...',
-      initialValue: _fileEntity.name
+      initialValue: _fileEntity.name,
     );
 
     if (newFileName == null) return;
 
-    final renameFile =
-        ref.read(fileRepositoryProvider).renameFile;
+    final renameFile = ref.read(fileRepositoryProvider).renameFile;
 
     await renameFile(_fileEntity.id, newFileName);
   }
@@ -120,9 +138,9 @@ class FileControl extends ConsumerWidget {
   }
 
   Future<void> _deleteFileFromSystem(
-      BuildContext context,
-      WidgetRef ref,
-      ) async {
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
     final agreed = await showConfirmationDialog(
       context,
       'Delete folder',
