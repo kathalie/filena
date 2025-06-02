@@ -19,7 +19,6 @@ class FolderSuggestionDatasourceLocal implements FolderSuggestionDatasource {
   late final _folderBox = _store.box<Folder>();
   late final _fileInFolderBox = _store.box<FileInFolder>();
 
-
   FolderSuggestionDatasourceLocal(Store store) : _store = store;
 
   @override
@@ -27,7 +26,7 @@ class FolderSuggestionDatasourceLocal implements FolderSuggestionDatasource {
 
   @override
   Future<List<FolderSuggestionDto>> get allSuggestions async {
-    final suggestions = await _folderSuggestionBox.getAllAsync();
+    final suggestions = _folderSuggestionBox.getAll();
 
     return suggestions.map((suggestions) => suggestions.toDto()).toList();
   }
@@ -137,14 +136,17 @@ class FolderSuggestionDatasourceLocal implements FolderSuggestionDatasource {
 
     folderModel.parentFolder.target = parentFolder;
 
-    final newFolderId = await _folderBox.putAsync(folderModel);
-    final newFolder = await _folderBox.getAsync(newFolderId);
+    return _store.runInTransaction(TxMode.write,
+        () {
+      final newFolderId = _folderBox.put(folderModel);
+      final newFolder = _folderBox.get(newFolderId);
 
-    if (newFolder == null) {
-      throw FolderException.failedToCreateFolder(folderName: 'name');
-    }
+      if (newFolder == null) {
+        throw FolderException.failedToCreateFolder(folderName: 'name');
+      }
 
-    return newFolder;
+      return newFolder;
+    });
   }
 
   Future<void> _saveSuggestion(
@@ -160,12 +162,12 @@ class FolderSuggestionDatasourceLocal implements FolderSuggestionDatasource {
     newSuggestionModel.folder.target = folder;
     newSuggestionModel.files.addAll(files);
 
-    await _folderSuggestionBox.putAsync(newSuggestionModel);
+    _folderSuggestionBox.put(newSuggestionModel);
   }
 
   @override
   Future<void> acceptAll() async {
-    return _store.runInTransaction(
+    _store.runInTransaction(
       TxMode.write,
       () {
         final allFolderSuggestions = _folderSuggestionBox.getAll();

@@ -5,6 +5,7 @@ import 'package:objectbox/objectbox.dart';
 import '../../../../core/errors/file_exception.dart';
 import '../../../../core/errors/folder_exception.dart';
 import '../../../../objectbox.g.dart';
+import '../../../organizing_assistant/data/models/folder_suggestion_model.dart';
 import '../../common/helpers/file_category.dart';
 import '../dto/file_create_dto.dart';
 import '../dto/file_dto.dart';
@@ -20,6 +21,7 @@ class FileDatasourceLocal implements FileDataSource {
   late final _fileBox = _store.box<File>();
   late final _folderBox = _store.box<Folder>();
   late final _fileInFolderBox = _store.box<FileInFolder>();
+  late final _folderSuggestionBox = _store.box<FolderSuggestion>();
 
   FileDatasourceLocal(Store store) : _store = store;
 
@@ -92,68 +94,108 @@ class FileDatasourceLocal implements FileDataSource {
   }
 
   @override
+  Future<List<int>> getParentFolderIds(int fileId) async {
+    final file = _fileBox.get(fileId);
+
+    if (file == null) {
+      throw FileException.fileDoesNotExist(
+          title: 'Failed to get parent folders');
+    }
+
+    return file.folderAssignments
+        .map((f) => f.assignedFolder.targetId)
+        .toList();
+  }
+
+  @override
   Future<int> createFile(
     FileCreateDto createFileDto,
     int parentFolderId,
   ) async {
     final fileModel = createFileDto.toModel();
 
-    final newFileId = await _fileBox.putAsync(fileModel);
+    return await _store.runInTransaction(TxMode.write, () {
+      final newFileId = _fileBox.put(fileModel);
 
-    final newFile = _fileBox.get(newFileId)!;
+      final newFile = _fileBox.get(newFileId)!;
 
-    await assignFileToFolder(newFile.id, parentFolderId);
+      _assignFileToFolder(newFile.id, parentFolderId);
 
-    return newFileId;
+      return newFileId;
+    });
   }
 
-  @override
-  Future<void> deleteFile(int fileId) async {
-    final fileInFolderIdsToRemove = _fileInFolderBox
-        .query(FileInFolder_.assignedFile.equals(fileId))
-        .build()
-        .findIds();
+  void _assignFileToFolder(int fileId, int folderId) {
+    final folder = _folderBox.get(folderId);
+    final file = _fileBox.query(File_.id.equals(fileId)).build().findFirst();
 
-    _fileInFolderBox.removeMany(fileInFolderIdsToRemove);
+    if (folder == null) {
+      throw FolderException.folderDoesNotExist(
+        title: 'Failed to assign file to a folder',
+      );
+    }
 
-    await _fileBox.removeAsync(fileId);
+    if (file == null) {
+      throw FileException.fileDoesNotExist(
+        title: 'Failed to assign file to a folder',
+      );
+    }
+
+    final fileInFolder = FileInFolder();
+    fileInFolder.assignedFile.target = file;
+    fileInFolder.assignedFolder.target = folder;
+
+    print('Creating fileInFolder ${fileInFolder.id}');
+
+    _fileInFolderBox.put(fileInFolder);
   }
 
   @override
   Future<void> assignFileToFolder(int fileId, int folderId) async {
-    return _store.runInTransaction(
-      TxMode.write,
-      () {
-        final folder = _folderBox.get(folderId);
-        final file =
-            _fileBox.query(File_.id.equals(fileId)).build().findFirst();
+    _store.runInTransaction(TxMode.write, () {
+      _assignFileToFolder(fileId, folderId);
+    });
+  }
 
-        if (folder == null) {
-          throw FolderException.folderDoesNotExist(
-            title: 'Failed to assign file to a folder',
-          );
-        }
+  @override
+  Future<void> togglePrioritized(int fileId) async {
+    _store.runInTransaction(TxMode.write, () {
+      final file = _fileBox.get(fileId);
 
-        if (file == null) {
-          throw FileException.fileDoesNotExist(
-            title: 'Failed to assign file to a folder',
-          );
-        }
+      if (file == null) {
+        throw FileException.fileDoesNotExist(
+          title: 'Failed to change priority for a file',
+        );
+      }
 
-        final fileInFolder = FileInFolder();
-        fileInFolder.assignedFile.target = file;
-        fileInFolder.assignedFolder.target = folder;
+      file.isPrioritized = !file.isPrioritized;
 
-        print('Creating fileInFolder ${fileInFolder.id}');
+      _fileBox.put(file);
+    });
+  }
 
-        _fileInFolderBox.put(fileInFolder);
-      },
-    );
+  @override
+  Future<void> renameFile(int fileId, String newName) async {
+    _store.runInTransaction(TxMode.write,
+        () {
+      final file = _fileBox.get(fileId);
+
+      if (file == null) {
+        throw FileException.fileDoesNotExist(
+          title: 'Failed to rename a file',
+        );
+      }
+
+      file.name = newName;
+
+      _fileBox.put(file);
+    });
   }
 
   @override
   Future<void> removeFilesFromFolder(List<int> fileIds, int folderId) async {
-    return _store.runInTransaction(TxMode.write, () {
+    _store.runInTransaction(TxMode.write,
+        () {
       final folder = _folderBox.get(folderId);
 
       if (folder == null) {
@@ -180,48 +222,43 @@ class FileDatasourceLocal implements FileDataSource {
   }
 
   @override
-  Future<void> togglePrioritized(int fileId) async {
-    _store.runInTransaction(TxMode.write, () {
-      final file = _fileBox.get(fileId);
+  Future<void> deleteFile(int fileId) async {
+    _store.runInTransaction(TxMode.write,
+        () {
+      _removeFileAssignments(fileId);
+      _removeFromFolderSuggestions(fileId);
 
-      if (file == null) {
-        throw FileException.fileDoesNotExist(
-          title: 'Failed to change priority for a file',
-        );
-      }
-
-      file.isPrioritized = !file.isPrioritized;
-
-      _fileBox.put(file);
+      _fileBox.remove(fileId);
     });
   }
 
-  @override
-  Future<void> renameFile(int fileId, String newName) async {
-    _store.runInTransaction(TxMode.write, () {
-      final file = _fileBox.get(fileId);
+  void _removeFileAssignments(int fileId) {
+    final fileInFolderIdsToRemove = _fileInFolderBox
+        .query(FileInFolder_.assignedFile.equals(fileId))
+        .build()
+        .findIds();
 
-      if (file == null) {
-        throw FileException.fileDoesNotExist(title: 'Failed to rename a file');
-      }
+    print('Removing folder assignments with ids: $fileInFolderIdsToRemove');
 
-      file.name = newName;
-
-      _fileBox.put(file);
-    });
+    _fileInFolderBox.removeMany(fileInFolderIdsToRemove);
   }
 
-  @override
-  Future<List<int>> getParentFolderIds(int fileId) async {
-    final file = _fileBox.get(fileId);
+  void _removeFromFolderSuggestions(int fileId) {
+    final folderSuggestions = (_folderSuggestionBox.query()
+          ..linkMany(FolderSuggestion_.files, File_.id.equals(fileId)))
+        .build()
+        .find();
 
-    if (file == null) {
-      throw FileException.fileDoesNotExist(
-          title: 'Failed to get parent folders');
+    for (final folderSuggestion in folderSuggestions) {
+      print('Removing from folder suggestion with id: ${folderSuggestion.id}');
+
+      folderSuggestion.files.removeWhere((file) => file.id == fileId);
+
+      if (folderSuggestion.files.isEmpty) {
+        _folderSuggestionBox.remove(folderSuggestion.id);
+      } else {
+        _folderSuggestionBox.put(folderSuggestion);
+      }
     }
-
-    return file.folderAssignments
-        .map((f) => f.assignedFolder.targetId)
-        .toList();
   }
 }

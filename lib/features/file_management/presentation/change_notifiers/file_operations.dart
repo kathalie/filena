@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../folder_management/api/providers.dart';
 import '../../../folder_management/presentation/change_notifiers/selected_folder.dart';
 import '../../api/providers.dart';
 import '../../domain/entities/file_entity.dart';
@@ -18,6 +19,12 @@ class FileOperationsNotifier extends StateNotifier<AsyncValue<void>> {
 
       if (selectedFolder == null) {
         print('Folder is not selected');
+        state = const AsyncValue.data(null);
+        return;
+      }
+
+      if (selectedFolder.isRoot) {
+        print('Cannot remove file from a root folder');
         state = const AsyncValue.data(null);
         return;
       }

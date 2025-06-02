@@ -142,7 +142,9 @@ class FileRepositoryImpl implements FileRepository {
 
   @override
   Future<void> deleteFile(int fileId) async {
-    await _storageManager.removeFile(fileStoragePath: fileId.toString());
+    final file = (await _fileDataSource.getFiles([fileId])).first;
+
+    await _storageManager.removeFile(fileStoragePath: file.storageKey);
 
     await _fileDataSource.deleteFile(fileId);
   }
