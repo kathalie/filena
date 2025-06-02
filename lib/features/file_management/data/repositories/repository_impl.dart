@@ -117,7 +117,15 @@ class FileRepositoryImpl implements FileRepository {
     );
 
     final summary = await _summaryClient.generateSummary(fsFileWrapper);
-    final embeddings = await _embeddingsClient.generateEmbeddings(summary);
+
+    final infoForEmbeddings = '''
+    file mime type: $mimeType.
+    date created: ${metadata.modified}.
+    file content summary: $summary.
+    ''';
+
+    final embeddings =
+        await _embeddingsClient.generateEmbeddings(infoForEmbeddings);
 
     final fileCreateDto = FileCreateDto(
       storageKey: uuid,

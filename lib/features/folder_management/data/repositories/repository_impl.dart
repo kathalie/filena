@@ -58,9 +58,21 @@ class FolderRepositoryImpl implements FolderRepository {
     return folderDtos.map((folderDto) => folderDto.toEntity()).toList();
   }
 
+  Future<String> _getPathForEmbeddings(int? parentFolderId, String name) async {
+    final path = (await _folderDataSource.getPathTo(parentFolderId))
+        .map((folder) => folder.name)
+        .toList();
+    path.removeAt(0);
+    path.add(name);
+
+    return path.join(' > ');
+  }
+
   @override
   Future<void> createFolder(int? parentFolderId, String name) async {
-    final embeddings = await _embeddingsClient.getEmbeddings(name);
+    final embeddings = await _embeddingsClient.getEmbeddings(
+      await _getPathForEmbeddings(parentFolderId, name),
+    );
 
     await _folderDataSource.createFolder(
       FolderCreateDto(
@@ -79,7 +91,9 @@ class FolderRepositoryImpl implements FolderRepository {
 
   @override
   Future<void> updateFolder(int folderId, String newName) async {
-    final embeddings = await _embeddingsClient.getEmbeddings(newName);
+    final embeddings = await _embeddingsClient.getEmbeddings(
+      await _getPathForEmbeddings(folderId, newName),
+    );
 
     await _folderDataSource.updateFolder(
       FolderUpdateDto(
