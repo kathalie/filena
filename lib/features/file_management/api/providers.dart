@@ -47,6 +47,7 @@ final fileRepositoryProvider = Provider<FileRepository>((ref) {
   );
 
   repository.cleanupAllTempFiles();
+  repository.removeOrphanedFiles();
 
   return repository;
 });

@@ -32,6 +32,16 @@ class FileDatasourceLocal implements FileDataSource {
   Stream get fileInFolderChanges => _fileInFolderBox.query().watch();
 
   @override
+  Future<List<String>> get allFileKeys async {
+    return _fileBox
+        .query()
+        .build()
+        .find()
+        .map((file) => file.storageKey)
+        .toList();
+  }
+
+  @override
   Future<Set<FileDto>> getFilteredFiles(
     int parentFolderId,
     bool onlyPrioritized,
@@ -176,8 +186,7 @@ class FileDatasourceLocal implements FileDataSource {
 
   @override
   Future<void> renameFile(int fileId, String newName) async {
-    _store.runInTransaction(TxMode.write,
-        () {
+    _store.runInTransaction(TxMode.write, () {
       final file = _fileBox.get(fileId);
 
       if (file == null) {
@@ -194,8 +203,7 @@ class FileDatasourceLocal implements FileDataSource {
 
   @override
   Future<void> removeFilesFromFolder(List<int> fileIds, int folderId) async {
-    _store.runInTransaction(TxMode.write,
-        () {
+    _store.runInTransaction(TxMode.write, () {
       final folder = _folderBox.get(folderId);
 
       if (folder == null) {
@@ -223,8 +231,7 @@ class FileDatasourceLocal implements FileDataSource {
 
   @override
   Future<void> deleteFile(int fileId) async {
-    _store.runInTransaction(TxMode.write,
-        () {
+    _store.runInTransaction(TxMode.write, () {
       _removeFileAssignments(fileId);
       _removeFromFolderSuggestions(fileId);
 
@@ -260,5 +267,21 @@ class FileDatasourceLocal implements FileDataSource {
         _folderSuggestionBox.put(folderSuggestion);
       }
     }
+  }
+
+  @override
+  Future<void> removeFile(String fileKey) async {
+    _store.runInTransaction(TxMode.write, () {
+      final fileId = _fileBox
+          .query(File_.storageKey.equals(fileKey))
+          .build()
+          .findIds()
+          .first;
+
+      _removeFileAssignments(fileId);
+      _removeFromFolderSuggestions(fileId);
+
+      _fileBox.remove(fileId);
+    });
   }
 }

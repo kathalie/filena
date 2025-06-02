@@ -28,4 +28,6 @@ abstract interface class StorageManager {
   Future<void> removeFile({
     required String fileStoragePath,
   });
+
+  Future<List<String>> listFileKeys();
 }

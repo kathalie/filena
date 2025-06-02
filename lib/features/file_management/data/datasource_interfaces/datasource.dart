@@ -3,6 +3,8 @@ import '../dto/file_create_dto.dart';
 import '../dto/file_dto.dart';
 
 abstract interface class FileDataSource {
+  Future<List<String>> get allFileKeys;
+
   Stream get fileChanges;
 
   Stream get fileInFolderChanges;
@@ -27,6 +29,8 @@ abstract interface class FileDataSource {
   Future<void> renameFile(int fileId, String newName);
 
   Future<void> removeFilesFromFolder(List<int> fileIds, int folderId);
+
+  Future<void> removeFile(String fileKey);
 
   Future<void> assignFileToFolder(int fileId, int folderId);
 

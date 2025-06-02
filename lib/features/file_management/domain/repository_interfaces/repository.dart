@@ -34,4 +34,6 @@ abstract interface class FileRepository {
   Future<List<int>> getParentFolderIds(int fileId);
 
   Future<void> openFile(int fileId);
+
+  Future<void> removeOrphanedFiles();
 }

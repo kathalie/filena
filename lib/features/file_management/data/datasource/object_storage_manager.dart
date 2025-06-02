@@ -178,6 +178,30 @@ class MinioStorageManager implements StorageManager {
       fileStoragePath,
     );
   }
+
+  @override
+  Future<List<String>> listFileKeys() async {
+    try {
+      final objectNames = <String>[];
+
+      final stream = _minio.listObjects(
+        _mainBucketName,
+      );
+
+      await for (final objects in stream) {
+        for (final object in objects.objects) {
+          final objectName = object.key;
+
+          if (objectName != null) objectNames.add(objectName);
+        }
+      }
+
+      return objectNames;
+    } catch (e) {
+      print('Error listing objects from MinIO: $e');
+      rethrow;
+    }
+  }
 }
 
 extension on FileMetadataEntity {

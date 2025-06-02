@@ -116,28 +116,33 @@ class FileRepositoryImpl implements FileRepository {
       ),
     );
 
-    final summary = await _summaryClient.generateSummary(fsFileWrapper);
+    try {
+      final summary = await _summaryClient.generateSummary(fsFileWrapper);
 
-    final infoForEmbeddings = '''
+      final infoForEmbeddings = '''
     file mime type: $mimeType.
     date created: ${metadata.modified}.
     file content summary: $summary.
     ''';
 
-    final embeddings =
-        await _embeddingsClient.generateEmbeddings(infoForEmbeddings);
+      final embeddings =
+          await _embeddingsClient.generateEmbeddings(infoForEmbeddings);
 
-    final fileCreateDto = FileCreateDto(
-      storageKey: uuid,
-      name: name,
-      mimeType: mimeType,
-      embeddings: embeddings,
-    );
+      final fileCreateDto = FileCreateDto(
+        storageKey: uuid,
+        name: name,
+        mimeType: mimeType,
+        embeddings: embeddings,
+      );
 
-    await _fileDataSource.createFile(
-      fileCreateDto,
-      parentFolderId,
-    );
+      await _fileDataSource.createFile(
+        fileCreateDto,
+        parentFolderId,
+      );
+    } catch (e) {
+      await _storageManager.removeFile(fileStoragePath: uuid);
+      rethrow;
+    }
   }
 
   @override
@@ -224,6 +229,31 @@ class FileRepositoryImpl implements FileRepository {
       }
     } catch (e) {
       print('Error deleting directory: $e');
+    }
+  }
+
+  @override
+  Future<void> removeOrphanedFiles() async {
+    final fileKeysInStorage = (await _storageManager.listFileKeys()).toSet();
+    final fileKeysInDb = (await _fileDataSource.allFileKeys).toSet();
+
+    print('File keys in storage: ${fileKeysInStorage.length}');
+    print('File keys in db: ${fileKeysInDb.length}');
+
+    if (fileKeysInStorage.length > fileKeysInDb.length) {
+      final difference = fileKeysInStorage.difference(fileKeysInDb).toList();
+
+      for (final fileKey in difference) {
+        await _storageManager.removeFile(fileStoragePath: fileKey);
+      }
+    }
+
+    if (fileKeysInStorage.length < fileKeysInDb.length) {
+      final difference = fileKeysInDb.difference(fileKeysInStorage).toList();
+
+      for (final fileKey in difference) {
+        await _fileDataSource.removeFile(fileKey);
+      }
     }
   }
 }
