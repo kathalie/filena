@@ -72,27 +72,30 @@ class _FileName extends StatelessWidget {
       // ),
       onPressed: () => _onOpenFile(_fileEntity.id),
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Text(_fileEntity.name),
+      child: Text(
+        _fileEntity.name,
+        style: const TextStyle(inherit: false, color: Colors.black87),
+      ),
     );
   }
 
-  // Future<void> _handleOpenFile(
-  //   BuildContext context,
-  //   FileEntity fileEntity,
-  //   Future<void> Function(int) onOpenFile,
-  // ) async {
-  //   try {
-  //     await onOpenFile(fileEntity.id);
-  //   } catch (e) {
-  //     if (context.mounted) {
-  //       SnackbarUtil.showError(
-  //         context: context,
-  //         message: 'Failed to open file',
-  //         onRetry: () => _handleOpenFile(context, fileEntity, onOpenFile),
-  //       );
-  //     }
-  //
-  //     print(e);
-  //   }
-  // }
+// Future<void> _handleOpenFile(
+//   BuildContext context,
+//   FileEntity fileEntity,
+//   Future<void> Function(int) onOpenFile,
+// ) async {
+//   try {
+//     await onOpenFile(fileEntity.id);
+//   } catch (e) {
+//     if (context.mounted) {
+//       SnackbarUtil.showError(
+//         context: context,
+//         message: 'Failed to open file',
+//         onRetry: () => _handleOpenFile(context, fileEntity, onOpenFile),
+//       );
+//     }
+//
+//     print(e);
+//   }
+// }
 }
