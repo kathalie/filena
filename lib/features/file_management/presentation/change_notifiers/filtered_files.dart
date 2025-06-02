@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../folder_management/domain/types/folder_structure_mode.dart';
@@ -27,9 +28,11 @@ final filteredFilesProvider = FutureProvider<List<FileEntity>>((ref) async {
     );
   }
 
-  return fileRepo.getFilteredFiles(
+  final files = await fileRepo.getFilteredFiles(
     selectedFolder.id,
     filterState.showOnlyFavorites,
     filterState.showSubfolderFiles,
   );
+
+  return files.sortedBy<String>((file) => file.name);
 });

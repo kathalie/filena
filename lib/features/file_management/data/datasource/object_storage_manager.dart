@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:minio/minio.dart';
+import 'package:minio/models.dart';
 
 import '../../../../core/errors/minio_exception.dart';
 import '../../domain/entities/file_metadata_entity.dart';
@@ -11,7 +13,6 @@ import '../datasource_interfaces/storage_manager.dart';
 class MinioStorageManager implements StorageManager {
   static const _mainBucketName = 'files';
 
-  //TODO 1. user registration and logic 2. securely store the key
   final Minio _minio = Minio(
     endPoint: 'localhost',
     port: 9000,
@@ -43,6 +44,33 @@ class MinioStorageManager implements StorageManager {
       print('Filed to ensure bucket exists: $e');
       throw MinioException('Filed to ensure bucket exists.');
     }
+  }
+
+  Future<void> setupEncryption() async {
+    final sseDefault = ServerSideEncryptionByDefault(
+      null,
+      'AES256',
+    );
+
+    final sseRule = ServerSideEncryptionRule(sseDefault);
+    final sseConfig = ServerSideEncryptionConfiguration(sseRule);
+
+    final configMap = {
+      'ServerSideEncryptionConfiguration': {
+        'Rule': [
+          {
+            'ApplyServerSideEncryptionByDefault': {
+              'SSEAlgorithm': sseDefault.sSEAlgorithm,
+              if (sseDefault.kMSMasterKeyID != null)
+                'KMSMasterKeyID': sseDefault.kMSMasterKeyID,
+            }
+          }
+        ]
+      }
+    };
+
+    final body = utf8.encode(jsonEncode(configMap));
+
   }
 
   @override

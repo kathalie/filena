@@ -8,7 +8,6 @@ import 'core/presentation/app/loading_app.dart';
 import 'features/file_management/data/datasource/object_storage_manager.dart';
 
 void main() async {
-  //TODO register an login to minio
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(const LoadingApp());
@@ -20,7 +19,6 @@ void main() async {
     ProviderScope(
       overrides: [
         storeProvider.overrideWithValue(objectBox.store),
-        // rootFolderIdProvider.overrideWithValue(objectBox.rootFolderId),
         storageManagerProvider.overrideWithValue(storageManager),
       ],
       child: const FilenaApp(),
